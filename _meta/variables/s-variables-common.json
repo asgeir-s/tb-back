@@ -1,0 +1,19 @@
+{
+  "project": "tb-back",
+  "stage": "dev",
+  "fromEmail-subcriptionInfo": "test@coinsignals.com",
+  "serviceUrl-tbStreams": "http://tb-staging-streams.elasticbeanstalk.com",
+  "serviceApiKey-tbStreams": "secret",
+  "sns-region": "us-west-2",
+  "dynamo-table-subscription": "subscriptions-staging",
+  "dynamo-region": "us-west-2",
+  "fromEmail-signalNotify": "test@coinsignals.com",
+  "auth0-getUsers-secret": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJLbW8xMFFHcENPeEtIRFg2VEhKQzJzWmJlWEpYMktDbiIsInNjb3BlcyI6eyJ1c2VycyI6eyJhY3Rpb25zIjpbInJlYWQiXX19LCJpYXQiOjE0NTUxMTUxODQsImp0aSI6ImMzMjhmOTlhY2M1MjJjODljNjc4OTEyN2I4NTIxMzFlIn0.RWMDR_2XtMs6nfP6Erx1GVSW7S2BHOKxxQdVagOnVvM",
+  "dynamo-table-storage": "storage-test",
+  "serviceUrl-tbPayment": "http://tb-staging-payment.elasticbeanstalk.com",
+  "serviceApiKey-tbPayment": "secret",
+  "scuset": "secret2",
+  "serviceUrl-tbSignals": "http://tb-staging-signals.elasticbeanstalk.com",
+  "serviceApiKey-tbSignals": "secret",
+  "sns-topic-trade": "arn:aws:sns:us-west-2:525932482084:trades-staging"
+}

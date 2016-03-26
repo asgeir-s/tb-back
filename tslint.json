@@ -1,0 +1,70 @@
+{
+  "rules": {
+    "class-name": true,
+    "comment-format": [
+      true,
+      "check-space",
+      "check-lowercase"
+    ],
+    "indent": [
+      true,
+      "spaces"
+    ],
+    "no-duplicate-variable": true,
+    "no-eval": true,
+    "no-internal-module": false,
+    "no-trailing-whitespace": true,
+    "no-var-keyword": true,
+    "one-line": [
+      true,
+      "check-open-brace",
+      "check-whitespace"
+    ],
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
+    ],
+    "semicolon": [
+      true,
+      "never"
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      }
+    ],
+    "variable-name": [
+      true,
+      "check-format",
+      "ban-keywords"
+    ],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-module",
+      "check-operator",
+      "check-separator",
+      "check-type",
+      "check-typecast"
+    ],
+    "curly": true,
+    "no-unreachable": true,
+    "max-line-length": [
+      true,
+      120
+    ],
+    "jsdoc-format": true,
+    "no-consecutive-blank-lines": true
+  }
+}

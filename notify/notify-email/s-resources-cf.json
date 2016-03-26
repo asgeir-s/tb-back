@@ -1,0 +1,16 @@
+{
+  "Resources": {},
+  "LambdaIamPolicyStatements": [
+    {
+      "Resource": [
+        "arn:aws:dynamodb:${region}::table/${dynamo-table-subscription}/*",
+        "arn:aws:ses:${region}::"
+      ],
+      "Action": [
+        "dynamodb:Query",
+        "ses:SendEmail"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}

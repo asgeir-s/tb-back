@@ -1,0 +1,15 @@
+machine:
+  node:
+    version: 0.10.36
+
+dependencies:
+  pre:
+    - npm install -g typescript
+    - cd node-comp && npm install 
+    - cd node-comp && ./node_modules/typings/dist/bin.js install
+    
+test:
+  override:
+    - cd node-comp && npm run test-cov-html
+  post:
+    - mv node-comp/coverage $CIRCLE_ARTIFACTS/coverage

@@ -1,0 +1,8 @@
+instrumentation:
+    excludes: [ '**/*.tap.js' ]
+
+reporting:
+    print: summary
+    reports: 
+      - none
+    dir: .trash

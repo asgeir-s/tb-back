@@ -1,0 +1,32 @@
+{
+  "name": "tb-back",
+  "version": "0.0.1",
+  "description": "A Serverless Project and its Serverless Plugin dependencies.",
+  "author": "me",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
+  },
+    "scripts": {
+    "test": "tsc && tape -- '**/*.tap.js' | tap-spec",
+    "test-cov": "tsc && istanbul --config=.istanbul.none.yml cover tape -- '**/*.tap.js' | tap-spec",
+    "test-cov-html": "tsc && istanbul cover tape -- '**/*.tap.js' | tap-spec",
+    "compile": "tsc",
+    "compile-w": "tsc --watch"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.2.12",
+    "istanbul": "^0.4.2",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.5.1",
+    "typings": "^0.7.9",
+    "sinon": "^1.17.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.0.5",
+    "ramda": "^0.18.0",
+    "request": "^2.67.0"
+  }
+}
