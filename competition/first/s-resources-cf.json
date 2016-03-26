@@ -1,0 +1,15 @@
+{
+  "Resources": {},
+  "LambdaIamPolicyStatements": [
+    {
+      "Resource": "*",
+      "Action": [
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:BatchGetItem"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}

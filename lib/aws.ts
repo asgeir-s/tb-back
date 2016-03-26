@@ -5,7 +5,7 @@ import * as _ from 'ramda'
 export module DynamoDb {
   export function documentClientAsync(region: string): any {
     const documentClient = new AWS.DynamoDB.DocumentClient({
-      "region": region
+      'region': region
     })
     Promise.promisifyAll(Object.getPrototypeOf(documentClient))
     return documentClient
@@ -16,7 +16,7 @@ export module DynamoDb {
 
     return documentclient.getAsync({
       TableName: storageTable,
-      Key: { "id": id },
+      Key: { 'id': id },
       AttributesToGet: attributes
     }).then((res: any) => res.Item)
   }
