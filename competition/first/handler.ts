@@ -14,6 +14,7 @@ const endTime = 1457222340000
 
 const inject: Inject = {
   documentClient: DynamoDb.documentClientAsync(process.env.AWS_DYNAMO_REGION),
+  streamTableName: process.env.STREAMS_TABLE,
   getSignals: (GRID: string, streamId: string) => _.curry(SignalService.getSignalsBefore)(process.env.SERVICE_SIGNALS,
     process.env.SERVICE_SIGNALS_APIKEY, endTime, GRID, streamId),
   timeNow: () => new Date().getTime()

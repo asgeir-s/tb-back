@@ -6,7 +6,7 @@ import { EmailTemplete } from '../../lib/email-template'
 import { SES, DynamoDb } from '../../lib/aws'
 import { SubscriptionUtil } from '../../lib/subscription-util'
 import { logger } from '../../lib/logger'
-import { Responds } from '../../lib/typings/responds';
+import { Responds } from '../../lib/typings/responds'
 
 export interface Inject {
   sendEmail: (email: SES.Email) => Promise<any>,

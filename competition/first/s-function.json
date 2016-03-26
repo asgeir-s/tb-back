@@ -16,7 +16,11 @@
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "STREAMS_TABLE": "${dynamo-table-streams}",
+    "AWS_DYNAMO_REGION": "${dynamo-region}",
+    "SERVICE_SIGNALS": "${serviceUrl-tbSignals}",
+    "SERVICE_SIGNALS_APIKEY": "${serviceApiKey-tbSignals}"
   },
   "vpc": {
     "securityGroupIds": [],
