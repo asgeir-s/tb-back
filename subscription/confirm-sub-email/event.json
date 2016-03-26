@@ -1,0 +1,60 @@
+{
+    "Records": [
+        {
+            "eventID": "267cea627ce6c03ff3f74b3ee46352af",
+            "eventName": "INSERT",
+            "eventVersion": "1.0",
+            "eventSource": "aws:dynamodb",
+            "awsRegion": "us-west-2",
+            "dynamodb": {
+                "Keys": {
+                    "streamId": {
+                        "S": "0a9ea22b-5d62-4951-be3b-bf619ab6411d"
+                    },
+                    "expirationTime": {
+                        "N": "1449244472378"
+                    }
+                },
+                "NewImage": {
+                    "refundAddress": {
+                        "S": "mxySwQbGdDbCzZaDfccB6rzp2tjXm31Heg"
+                    },
+                    "paymentUSD": {
+                        "N": "3"
+                    },
+                    "creationTime": {
+                        "N": "1449241880000"
+                    },
+                    "streamId": {
+                        "S": "TEST-STREAM-ID"
+                    },
+                    "orderId": {
+                        "S": "MHJ1DPEO"
+                    },
+                    "receiveAddress": {
+                        "S": "mtgAxax8z99YjYgVCgpsR9shT28nBgSHkE"
+                    },
+                    "expirationTime": {
+                        "N": "1449244472378"
+                    },
+                    "paymentBTC": {
+                        "N": "0.003"
+                    },
+                    "autoTrader": {
+                        "S": "false"
+                    },
+                    "email": {
+                        "S": "sogasg@gmail.com"
+                    },
+                    "transactionId": {
+                        "S": "5661ad3ca4376201c700020e"
+                    }
+                },
+                "SequenceNumber": "301597500000000002400687865",
+                "SizeBytes": 315,
+                "StreamViewType": "NEW_IMAGE"
+            },
+            "eventSourceARN": "arn:aws:dynamodb:us-west-2:525932482084:table/subscriptions-staging/stream/2016-02-10T09:59:51.776"
+        }
+    ]
+}

@@ -8,6 +8,7 @@ import { PaymentService } from '../../lib/payment-service'
 import { logger } from '../../lib/logger'
 import { StreamService } from '../../lib/stream-service'
 import { SignalService } from '../../lib/signal-service'
+import { Responds } from '../../lib/typings/responds'
 
 export interface Inject {
   documentClient: any,
@@ -19,7 +20,7 @@ export interface Inject {
 export module FirstCompitition {
   const minimumClosedTrades = 17
 
-  export function action(inn: Inject, event: any, context: Context): Promise<any> {
+  export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
     const log = logger(context.awsRequestId)
 
     // get streams
@@ -32,7 +33,7 @@ export module FirstCompitition {
       }
     })
       .then((res: any) => res.Items)
-      .map((stream: { id: string}) => {
+      .map((stream: { id: string }) => {
 
         // get signals
         return inn.getSignals(context.awsRequestId, stream.id)
@@ -41,20 +42,34 @@ export module FirstCompitition {
             const length = signals.length
             if (signals[length - 1].signal === 0) {
               return {
-                'id': stream.id,
-                'value': signals[length - 1].valueInclFee,
-                'numberOfSignalsInPeriod': length + 1
+                GRID: context.awsRequestId,
+                success: true,
+                message: {
+                  'id': stream.id,
+                  'value': signals[length - 1].valueInclFee,
+                  'numberOfSignalsInPeriod': length + 1
+                }
               }
+
+
             }
             else if (signals[length - 2].signal === 0) {
               return {
-                'id': stream.id,
-                'value': signals[length - 2].valueInclFee,
-                'numberOfSignalsInPeriod': length + 1
+                GRID: context.awsRequestId,
+                success: true,
+                message: {
+                  'id': stream.id,
+                  'value': signals[length - 2].valueInclFee,
+                  'numberOfSignalsInPeriod': length + 1
+                }
               }
             }
             else {
-              return 'ERROR!!!'
+              return {
+                GRID: context.awsRequestId,
+                success: false,
+                message: 'error'
+              }
             }
           })
       })
