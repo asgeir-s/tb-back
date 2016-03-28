@@ -17,7 +17,7 @@ export function handler(event: any, context: Context) {
   ConfirmSubscriptionEmail.action(inject, event, context)
     .then((result: any) => context.done(null, result))
     .catch((error: any) => {
-      console.error('error [' + context.awsRequestId + '] ' + error)
+      console.error('error [' + context.awsRequestId + ']: ' + error)
       return context.done({
         GRID: context.awsRequestId,
         message: 'Internal Server Error',

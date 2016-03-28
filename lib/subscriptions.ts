@@ -1,9 +1,10 @@
-import * as Promise from 'bluebird';
+import * as Promise from 'bluebird'
+import { Subscription } from './typings/subscription'
 
 export module Subscriptions {
 
   export function getActiveSubscriptions(documentClient: any, subscriptionTable: string,
-    streamId: string, time: number): Promise<Array<any>> {
+    streamId: string, time: number): Promise<Array<Subscription>> {
 
     return documentClient.queryAsync({
       TableName: subscriptionTable,
@@ -18,7 +19,7 @@ export module Subscriptions {
   }
 
   export function getActiveAutotraderSubscriptions(documentClient: any, subscriptionTable: string,
-    streamId: string, time: number): Promise<Array<any>> {
+    streamId: string, time: number): Promise<Array<Subscription>> {
 
     return documentClient.queryAsync({
       TableName: subscriptionTable,
@@ -37,7 +38,7 @@ export module Subscriptions {
    * Returns subscriptions from (inclusive) start too (inclusive) end time in ms 
    */
   export function getExpieringSubscriptions(documentClient: any, subscriptionTable: string,
-    fromTime: number, toTime: number): Promise<Array<any>> {
+    fromTime: number, toTime: number): Promise<Array<Subscription>> {
 
     return documentClient.scanAsync({
       TableName: subscriptionTable,

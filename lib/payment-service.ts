@@ -10,8 +10,8 @@ const getApiSecret = _.propOr('', 'apiSecret')
 export module PaymentService {
 
   export interface PaymentCode {
-    id: string;
-    embed_code: string;
+    id: string
+    embed_code: string
   }
 
   export function getPaymentCode(paymentServiceUrl: string, paymentServiceApiKey: string,

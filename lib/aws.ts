@@ -26,7 +26,7 @@ export module DynamoDb {
 
     return documentclient.putAsync({
       TableName: storageTable,
-      Item: _.reduce((obj: any, item: Array<any>) => _.assoc(item[0], item[1], obj), { "id": id }, items)
+      Item: _.reduce((obj: any, item: Array<any>) => _.assoc(item[0], item[1], obj), { 'id': id }, items)
     })
   }
 }

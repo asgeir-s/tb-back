@@ -10,7 +10,7 @@ import { Stream } from '../../lib/typings/stream'
 import { Responds } from '../../lib/typings/responds'
 
 export interface Inject {
-  sendEmail: (email: SES.Email) => any,
+  sendEmail: (email: SES.Email) => any
   getStream: (GRID: string, streamId: string) => Promise<Stream>
   timeNow: () => number
 }
