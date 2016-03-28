@@ -5,14 +5,14 @@ import { Context } from '../../lib/typings/aws-lambda'
 import { NotifyEmail, Inject } from './action'
 import { EmailTemplete } from '../../lib/email-template'
 import { SES, DynamoDb } from '../../lib/aws'
-import { SubscriptionUtil } from '../../lib/subscription-util'
+import { Subscriptions } from '../../lib/subscriptions'
 import { logger } from '../../lib/logger'
 import { Responds } from '../../lib/typings/responds';
 
 
 const inject: Inject = {
   sendEmail: _.curry(SES.send)(SES.sesClientAsync(process.env.AWS_SNS_REGION), process.env.FROM_EMAIL_SIGNAL_NOTIFY),
-  getActiveSubscriptions: _.curry(SubscriptionUtil.getActiveSubscriptions)(DynamoDb.documentClientAsync(
+  getActiveSubscriptions: _.curry(Subscriptions.getActiveSubscriptions)(DynamoDb.documentClientAsync(
     process.env.AWS_DYNAMO_REGION), process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE),
   timeNow: () => new Date().getTime()
 }

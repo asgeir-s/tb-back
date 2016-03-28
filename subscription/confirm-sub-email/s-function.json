@@ -16,7 +16,11 @@
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "SNS_REGION": "${sns-region}",
+    "FROM_EMAIL_SUBSCRIPTION_INFO": "${fromEmail-subcriptionInfo}",
+    "DYNAMO_TABLE_STREAMS": "${dynamo-table-streams}",
+    "DYNAMO_REGION": "${dynamo-region}"
   },
   "vpc": {
     "securityGroupIds": [],

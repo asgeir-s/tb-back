@@ -7,7 +7,7 @@ import { EmailTemplete } from '../../lib/email-template'
 import { PaymentService } from '../../lib/payment-service'
 import { logger } from '../../lib/logger'
 import { Streams } from '../../lib/streams'
-import { SignalService } from '../../lib/signal-service'
+import { Signals } from '../../lib/signals'
 import { Responds } from '../../lib/typings/responds'
 
 export interface Inject {

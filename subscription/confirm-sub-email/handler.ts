@@ -1,16 +1,15 @@
 import * as _ from 'ramda'
 
-import { SES } from '../../lib/aws'
+import { SES, DynamoDb } from '../../lib/aws'
 import { ConfirmSubscriptionEmail, Inject } from './action'
 import { Context } from '../../lib/typings/aws-lambda'
 import { Streams, AuthLevel } from '../../lib/streams'
 
-
 const inject: Inject = {
-  sendEmail: _.curry(SES.send)(SES.sesClientAsync(process.env.AWS_SNS_REGION),
-    process.env.SUBSCRIPTION_INFO_FROM_EMAIL),
-  getStream: _.curry(Streams.getStream)(process.env.SERVICE_STREAMS, process.env.SERVICE_STREAMS_APIKEY,
-    AuthLevel.Private),
+  sendEmail: _.curry(SES.send)(SES.sesClientAsync(process.env.SNS_REGION),
+    process.env.FROM_EMAIL_SUBSCRIPTION_INFO),
+  getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
+    process.env.DYNAMO_TABLE_STREAMS, AuthLevel.Private),
   timeNow: () => new Date().getTime()
 }
 

@@ -1,6 +1,6 @@
 import * as Promise from 'bluebird';
 
-export module SubscriptionUtil {
+export module Subscriptions {
 
   export function getActiveSubscriptions(documentClient: any, subscriptionTable: string,
     streamId: string, time: number): Promise<Array<any>> {

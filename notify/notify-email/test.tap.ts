@@ -3,7 +3,7 @@ import * as _ from 'ramda'
 import * as sinon from 'sinon'
 
 import { NotifyEmail, Inject } from './action'
-import { SubscriptionUtil } from '../../lib/subscription-util'
+import { Subscriptions } from '../../lib/subscriptions'
 import { SES, DynamoDb } from '../../lib/aws'
 import { Context } from '../../lib/typings/aws-lambda'
 
@@ -26,7 +26,7 @@ test('NotifyEmail:', (ot) => {
       timeNow: () => 12345766876
     }
 
-    const sendEmailSpy = sinon.spy(inject, 'sendEmail');
+    const sendEmailSpy = sinon.spy(inject, 'sendEmail')
 
     NotifyEmail.action(inject, event, <Context>{ awsRequestId: 'test-request' })
       .then((result: any) => {
@@ -45,7 +45,7 @@ test('NotifyEmail:', (ot) => {
       timeNow: () => 12345766876
     }
 
-    const sendEmailSpy = sinon.spy(inject, 'sendEmail');
+    const sendEmailSpy = sinon.spy(inject, 'sendEmail')
 
     NotifyEmail.action(inject, event, <Context>{ awsRequestId: 'test-request' })
       .then((result: any) => {

@@ -1,3 +1,5 @@
+import { Signal } from './signal'
+
 export interface Stats {
   timeOfLastSignal: number
   accumulatedLoss: number
@@ -19,17 +21,6 @@ export interface StreamPrivate {
   topicArn: string
   payoutAddress: string
   userId: string
-}
-
-export interface Signal {
-  timestamp: number
-  price: number
-  change: number
-  id: number
-  valueInclFee: number
-  changeInclFee: number
-  value: number
-  signal: number
 }
 
 export interface Stream {

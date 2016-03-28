@@ -4,7 +4,7 @@ import * as Promise from 'bluebird'
 import { Context } from '../../lib/typings/aws-lambda'
 import { EmailTemplete } from '../../lib/email-template'
 import { SES, DynamoDb } from '../../lib/aws'
-import { SubscriptionUtil } from '../../lib/subscription-util'
+import { Subscriptions } from '../../lib/subscriptions'
 import { logger } from '../../lib/logger'
 import { Responds } from '../../lib/typings/responds'
 
@@ -68,7 +68,6 @@ export module NotifyEmail {
     }
   }
 
-
   function generateEmailBody(streamId: string, streamName: string, signals: any) {
     const price: string = signals[0].price.toFixed(2);
     const date = new Date(signals[0].timestamp);
@@ -80,11 +79,11 @@ export module NotifyEmail {
         change = (signals[0].changeInclFee * 100).toFixed(2);
       }
 
-      signalContent = `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;` +
-        `font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: ` +
-        signalBackgroundColor(signals) + `;width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;` +
-        `padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">` +
-        signalFromNumber(signals[0].signal) + "</b></p>"
+      signalContent = `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: ` +
+        signalBackgroundColor(signals) + `;width: 100%;text-align: center;/* border-radius: 10px; 
+        */padding-top: 20px; padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">` +
+        signalFromNumber(signals[0].signal) + `</b></p>`
 
     }
     else {
@@ -92,15 +91,18 @@ export module NotifyEmail {
       pluralOr = 'signals'
       change = ((signals[0].changeInclFee + signals[1].changeInclFee) * 100).toFixed(2);
 
-      signalContent = "<p>First:</p>" + `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, ` +
-        `Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;` +
-        `background-color: rgb(234, 234, 234);width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;` +
-        `padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">CLOSE</b></p>` +
-        "<p>Then:</p>" +
-        `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; ` +
-        `line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: ` + signalBackgroundColor(signals) +
-        `;width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;padding-bottom: 10px;margin-top: 30px;">` +
-        `<b style="font-size: 2em;font-weight: 400;">` + signalFromNumber(lastSignal.signal) + `</b></p>`
+      signalContent = `<p>First:</p> <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica,
+        Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;
+        background-color: rgb(234, 234, 234);width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;
+        padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">CLOSE</b></p>
+        <p>Then:</p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; 
+        line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: `
+        + signalBackgroundColor(signals) +
+        `;width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;padding-bottom: 10px;
+        margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">` +
+        signalFromNumber(lastSignal.signal) +
+        `</b></p>`
     }
     const chnage = _.equals(change, '') ? '' : `<li><b>Change(incl.fee): </b>` + change + `%</li>`
 

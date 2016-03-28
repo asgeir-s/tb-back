@@ -1,4 +1,6 @@
-import { Stream, Stats, StreamPrivate, Signal } from './typings/stream';
+import { Stream, Stats, StreamPrivate } from './typings/stream'
+import { Signal } from './typings/signal'
+
 import * as Promise from 'bluebird'
 import * as request from 'request'
 import * as _ from 'ramda'
