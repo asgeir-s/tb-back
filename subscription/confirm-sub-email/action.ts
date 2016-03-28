@@ -5,23 +5,17 @@ import { Context } from '../../lib/typings/aws-lambda'
 import { logger } from '../../lib/logger'
 import { SES } from '../../lib/aws'
 import { EmailTemplete } from '../../lib/email-template'
-import { StreamService } from '../../lib/stream-service'
+import { Streams } from '../../lib/streams'
 import { Stream } from '../../lib/typings/stream'
-import { SES } from '../../lib/aws'
-
 
 export interface Inject {
-  documentClient: any,
   sendEmail: (email: SES.Email) => any,
   getStream: (GRID: string, streamId: string) => any
   timeNow: () => number
 }
 
-const sendEmail = _.curry(SES.send)(SES.sesClientAsync(process.env.AWS_SNS_REGION), process.env.SUBSCRIPTION_INFO_FROM_EMAIL)
-const getStream = _.curry(StreamService.getStream)(process.env.SERVICE_STREAMS, process.env.SERVICE_STREAMS_APIKEY, 'private')
-
 export module ConfirmSubscriptionEmail {
-  export function action(event: any, context: Context): Promise<any> {
+  export function action(inn: Inject, event: any, context: Context): Promise<any> {
     const log = logger(context.awsRequestId)
     log.info('event: ' + JSON.stringify(event));
 
@@ -36,7 +30,7 @@ export module ConfirmSubscriptionEmail {
         const streamId = record.dynamodb.Keys.streamId.S;
         const subscriptionExpirationTime = new Date(record.dynamodb.NewImage.expirationTime.N * 1);
 
-        return getStream(context.awsRequestId, streamId)
+        return inn.getStream(context.awsRequestId, streamId)
           .then((stream: Stream) => {
             log.info('stream: ' + stream.id)
 
@@ -63,7 +57,7 @@ export module ConfirmSubscriptionEmail {
               )
             }
 
-            return sendEmail({
+            return inn.sendEmail({
               subject: "TradersBit: Subscription Confirmation",
               body: emailBody,
               resipians: [newSubscriberEmail]

@@ -85,10 +85,6 @@ export module SNS {
   }
 
   export function publish(snsClient: any, topicArn: string, message: any): Promise<Responds> {
-    
-    console.log('sns: ' + JSON.stringify(message));
-    
-    
     return snsClient.publishAsync({
       Message: JSON.stringify(message),
       TopicArn: topicArn

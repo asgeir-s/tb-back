@@ -6,7 +6,7 @@ import { Context } from '../../lib/typings/aws-lambda'
 import { EmailTemplete } from '../../lib/email-template'
 import { PaymentService } from '../../lib/payment-service'
 import { logger } from '../../lib/logger'
-import { StreamService } from '../../lib/stream-service'
+import { Streams } from '../../lib/streams'
 import { SignalService } from '../../lib/signal-service'
 import { Responds } from '../../lib/typings/responds'
 
