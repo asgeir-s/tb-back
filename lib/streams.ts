@@ -18,7 +18,7 @@ const publicAttributes: Array<string> = ["accumulatedLoss", "accumulatedProfit",
 
 export module Streams {
 
-  export function getStream(documentClient: any, streamTableName: string, authLevel: AuthLevel, GRID: string,
+  export function getStream(documentClient: any, streamTableName: string, authLevel: AuthLevel,
     streamId: string): Promise<Stream> {
     let attributesToGet: Array<string>
 
@@ -53,8 +53,8 @@ export module Streams {
   }
 
 
-  export function getAllStremsPublic(documentClient: any, streamTableName: string, authLevel: AuthLevel,
-    GRID: string): Promise<Array<Stream>> {
+  export function getAllStremsPublic(documentClient: any, streamTableName: string, authLevel: AuthLevel
+  ): Promise<Array<Stream>> {
     return documentClient.scanAsync({
       TableName: streamTableName,
       AttributesToGet: _.clone(publicAttributes)
@@ -63,7 +63,7 @@ export module Streams {
       .map((rawStreamJson: any) => json2Stream(AuthLevel.Public, rawStreamJson))
   }
 
-  const getJsonField: (p: string, obj: {}) => any = _.propOr(")
+  const getJsonField: (p: string, obj: {}) => any = _.propOr("")
 
   function json2Stream(authLevel: AuthLevel, json: any): Stream {
     const stats: Stats = {
@@ -96,7 +96,7 @@ export module Streams {
       case AuthLevel.Auth: {
         const lastSignalRaw = getJsonField("lastSignal", json)
 
-        if (lastSignalRaw === ") {
+        if (lastSignalRaw === "") {
           return {
             currencyPair: getJsonField("currencyPair", json),
             name: getJsonField("name", json),
@@ -131,7 +131,7 @@ export module Streams {
           userId: getJsonField("userId", json)
         }
 
-        if (lastSignalRaw === ") {
+        if (lastSignalRaw === "") {
           return {
             currencyPair: getJsonField("currencyPair", json),
             name: getJsonField("name", json),

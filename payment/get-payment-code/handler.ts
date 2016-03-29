@@ -1,0 +1,31 @@
+import * as _ from "ramda"
+
+import { Coinbase } from "../../lib/coinbase"
+import { Crypto } from "../../lib/crypto"
+import { DynamoDb } from "../../lib/aws"
+import { GetPaymentCode, Inject } from "./action"
+import { Context } from "../../lib/typings/aws-lambda"
+import { Streams, AuthLevel } from "../../lib/streams"
+
+const inject: Inject = {
+  getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
+    process.env.STREAMS_TABLE, AuthLevel.Public),
+  encryptSubscriptionInfo: _.curry(Crypto.encrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
+  createCheckout: _.curry(Coinbase.createCheckout)(Coinbase.coinbaseClient(process.env.COINBASE_APIKEY,
+    process.env.COINBASE_APISECRET)),
+    autoTraderPrice: process.env.AUTOTRADER_PRICE
+}
+
+
+export function handler(event: any, context: Context) {
+  GetPaymentCode.action(inject, event, context)
+    .then((result: any) => context.done(null, result))
+    .catch((error: any) => {
+      console.error("error [" + context.awsRequestId + "]: " + error)
+      return context.done({
+        "GRID": context.awsRequestId,
+        "message": "Internal Server Error",
+        "success": false
+      }, null)
+    })
+}

@@ -4,8 +4,8 @@ export module Coinbase {
     return new clientFac({ "apiKey": apiKey, "apiSecret": apiSecret })
   }
 
-  export function createCheckout(coinbaseClient: any, name: string, priceUSD: string, description:
-    string, cryptedMetadata: any): Promise<any> {
+  export function createCheckout(coinbaseClient: any, name: string, priceUSD: string,
+    description: string, cryptedMetadata: any): Promise<any> {
     return new Promise((resolve, reject) => {
       coinbaseClient.createCheckout({
         "amount": priceUSD,
