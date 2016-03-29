@@ -1,10 +1,10 @@
 import * as test from "tape"
-import { Payment } from "./payment"
+import { Coinbase } from "./coinbase"
 import * as _ from "ramda"
 import * as sinon from "sinon"
 
 
-test("Payment:", (ot) => {
+test("Payment:", (ot) => {''
   ot.plan(1)
 
   //const coinbaseCli = Payment.coinbaseClient("", "")
@@ -19,8 +19,7 @@ test("Payment:", (ot) => {
 
   ot.test("- should be able to create checkout", (t) => {
     t.plan(1)
-
-    Payment.createCheckout(sandboxClient, "Test-checkout", "99.99", "description", { "my-date": 1234 })
+    Coinbase.createCheckout(sandboxClient, "Test-checkout", "99.99", "description", { "my-date": 1234 })
       .then((res) =>
         t.equal(_.has("embed_code", res), true, "the responds should include the embed_code")
       )
