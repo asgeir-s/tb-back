@@ -42,12 +42,12 @@ export module FirstCompitition {
             const length = signals.length
             if (signals[length - 1].signal === 0) {
               return {
-                GRID: context.awsRequestId,
-                success: true,
-                message: {
-                  'id': stream.id,
-                  'value': signals[length - 1].valueInclFee,
-                  'numberOfSignalsInPeriod': length + 1
+                "GRID": context.awsRequestId,
+                "success": true,
+                "message": {
+                  "id": stream.id,
+                  "value": signals[length - 1].valueInclFee,
+                  "numberOfSignalsInPeriod": length + 1
                 }
               }
 
@@ -55,20 +55,20 @@ export module FirstCompitition {
             }
             else if (signals[length - 2].signal === 0) {
               return {
-                GRID: context.awsRequestId,
-                success: true,
-                message: {
-                  'id': stream.id,
-                  'value': signals[length - 2].valueInclFee,
-                  'numberOfSignalsInPeriod': length + 1
+                "GRID": context.awsRequestId,
+                "success": true,
+                "message": {
+                  "id": stream.id,
+                  "value": signals[length - 2].valueInclFee,
+                  "numberOfSignalsInPeriod": length + 1
                 }
               }
             }
             else {
               return {
-                GRID: context.awsRequestId,
-                success: false,
-                message: 'error'
+                "GRID": context.awsRequestId,
+                "success": false,
+                "message": 'error'
               }
             }
           })

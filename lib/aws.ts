@@ -1,11 +1,11 @@
-import * as AWS from 'aws-sdk'
-import * as Promise from 'bluebird'
-import * as _ from 'ramda'
+import * as AWS from "aws-sdk"
+import * as Promise from "bluebird"
+import * as _ from "ramda"
 
 export module DynamoDb {
   export function documentClientAsync(region: string): any {
     const documentClient = new AWS.DynamoDB.DocumentClient({
-      'region': region
+      "region": region
     })
     Promise.promisifyAll(Object.getPrototypeOf(documentClient))
     return documentClient
@@ -16,7 +16,7 @@ export module DynamoDb {
 
     return documentclient.getAsync({
       TableName: storageTable,
-      Key: { 'id': id },
+      Key: { "id": id },
       AttributesToGet: attributes
     }).then((res: any) => res.Item)
   }
@@ -26,7 +26,7 @@ export module DynamoDb {
 
     return documentclient.putAsync({
       TableName: storageTable,
-      Item: _.reduce((obj: any, item: Array<any>) => _.assoc(item[0], item[1], obj), { 'id': id }, items)
+      Item: _.reduce((obj: any, item: Array<any>) => _.assoc(item[0], item[1], obj), { "id": id }, items)
     })
   }
 }
@@ -34,7 +34,7 @@ export module DynamoDb {
 export module SES {
   export function sesClientAsync(region: string): any {
     const sesClient = new AWS.SES({
-      apiVersion: '2010-12-01',
+      apiVersion: "2010-12-01",
       region: region
     })
     Promise.promisifyAll(Object.getPrototypeOf(sesClient))
@@ -56,12 +56,12 @@ export module SES {
         Body: {
           Html: {
             Data: email.body,
-            Charset: 'UTF-8'
+            Charset: "UTF-8"
           }
         },
         Subject: {
           Data: email.subject,
-          Charset: 'UTF-8'
+          Charset: "UTF-8"
         }
       },
       Source: fromEmail
@@ -72,7 +72,7 @@ export module SES {
 export module SNS {
   export function snsClientAsync(region: string): any {
     const snsClient = new AWS.SNS({
-      apiVersion: '2010-03-31',
+      apiVersion: "2010-03-31",
       region: region
     })
     Promise.promisifyAll(Object.getPrototypeOf(snsClient))

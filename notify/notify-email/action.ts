@@ -29,9 +29,9 @@ export module NotifyEmail {
         if (_.isEmpty(subscriptions)) {
           log.info('theire are no active email subscribers for stream with id: ' + message.streamId)
           return {
-            GRID: context.awsRequestId,
-            message: 'no active email subscribers',
-            success: true
+            "GRID": context.awsRequestId,
+            "message": "no active email subscribers",
+            "success": true
           }
         }
         else {
@@ -46,9 +46,9 @@ export module NotifyEmail {
 
           return inn.sendEmail(email).then((responds: any) => {
             return {
-              GRID: context.awsRequestId,
-              message: responds,
-              success: true
+              "GRID": context.awsRequestId,
+              "message": responds,
+              "success": true
             }
           })
         }

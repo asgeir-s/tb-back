@@ -1,4 +1,4 @@
-import * as _ from 'ramda'
+import * as _ from "ramda"
 
 export interface Logger {
   info: (message: string) => void,
@@ -15,13 +15,13 @@ export function logger(GRID: string): Logger {
 }
 
 function info(GRID: string, message: string) {
-  return console.log('info [' + GRID + '] ' + message)
+  return console.log("info [" + GRID + "] " + message)
 }
 
 function error(GRID: string, message: string) {
-  return console.error('error [' + GRID + '] ' + message)
+  return console.error("error [" + GRID + "] " + message)
 }
 
 function event(GRID: string, event: any) {
-  return console.log('info [' + GRID + '] Event: ' + JSON.stringify(event))
+  return console.log("info [" + GRID + "] Event: " + JSON.stringify(event))
 }

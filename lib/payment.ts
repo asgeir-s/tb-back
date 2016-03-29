@@ -20,7 +20,24 @@
 
 
 export module Payment {
-  export function getPaymentCode(subscriptionInfo: any) {
+  export function coinbaseClient(apiKey: string, apiSecret: string) {
+    const clientFac = require("coinbase").Client
+    return new clientFac({ "apiKey": apiKey, "apiSecret": apiSecret })
+  }
+
+  // priceUSD, name, description, metadata
+  export function createCheckout(coinbaseClient: any, name: string, priceUSD: string, description:
+    string, metadata: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      coinbaseClient.createCheckout({
+        "amount": priceUSD,
+        "currency": "USD",
+        "name": name,
+        "description": description,
+        "metadata": metadata
+      }, (err: any, checkout: any) => err ? reject(err) : resolve(checkout)
+      )
+    })
 
   }
 

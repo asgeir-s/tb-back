@@ -52,9 +52,9 @@ export module ContinueSubscriptionEmail {
       .then((dynemoDBResponds: any) => {
         log.info('dynemoDBResponds: ' + JSON.stringify(dynemoDBResponds))
         return {
-          GRID: context.awsRequestId,
-          message: 'saved lastProsessedExpiration: ' + lastExpiration,
-          success: true
+          "GRID": context.awsRequestId,
+          "message": "saved lastProsessedExpiration: " + lastExpiration,
+          "success": true
         }
       })
   }

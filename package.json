@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git://github.com/"
   },
-    "scripts": {
+  "scripts": {
     "test": "tsc && tape -- '**/*.tap.js' | tap-spec",
     "test-cov": "tsc && istanbul --config=.istanbul.none.yml cover tape -- '**/*.tap.js' | tap-spec",
     "test-cov-html": "tsc && istanbul cover tape -- '**/*.tap.js' | tap-spec",
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "bluebird": "^3.0.5",
+    "coinbase": "^2.0.4",
     "ramda": "^0.18.0",
     "request": "^2.67.0"
   }

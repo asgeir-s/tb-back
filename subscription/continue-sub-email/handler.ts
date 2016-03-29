@@ -30,9 +30,9 @@ export function handler(event: any, context: Context) {
     .catch((error: any) => {
       console.error('error [' + context.awsRequestId + ']: ' + error)
       return context.done({
-        GRID: context.awsRequestId,
-        message: 'Internal Server Error',
-        success: false
+        "GRID": context.awsRequestId,
+        "message": "Internal Server Error",
+        "success": false
       }, null)
     })
 }

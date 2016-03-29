@@ -65,9 +65,9 @@ export module ConfirmSubscriptionEmail {
             }).then((res: any) => {
               log.info('SES send email responds: ' + JSON.stringify(res))
               return {
-                GRID: context.awsRequestId,
-                message: 'email sent to: ' + newSubscriberEmail,
-                success: true
+                "GRID": context.awsRequestId,
+                "message": "email sent to: " + newSubscriberEmail,
+                "success": true
               }
             })
           })
@@ -75,9 +75,9 @@ export module ConfirmSubscriptionEmail {
       else {
         log.info("noe emails sent, this was not a 'INSERT' event. Event type was: '" + record.eventName + "'.")
         return Promise.resolve({
-          GRID: context.awsRequestId,
-          message: 'not relevant event type',
-          success: true
+          "GRID": context.awsRequestId,
+          "message": "not relevant event type",
+          "success": true
         })
       }
 
