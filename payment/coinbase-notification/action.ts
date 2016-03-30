@@ -17,12 +17,12 @@ const monthMS = 2592000000
 export interface Inject {
   getStream: (streamId: string) => Promise<Stream> // must be stream Private
   decryptSubscriptionInfo: (cryptData: CryptedData) => Promise<SubscriptionRequest>
-  addSubscription: (subscription: Subscription) => Promise<AddSubscriptionResponds>  // must check that subscription with orderId does not already excist. If it ecists retun OK
+  addSubscription: (subscription: Subscription) => Promise<AddSubscriptionResponds>
   sendMoney: (payout: Coinbase.Payout) => Promise<any>
   transferMoney: (payout: Coinbase.Payout) => Promise<any>
   alert: (message: any) => Promise<any>
   timeNow: () => number
-  cludaPayoutAccount: string
+  cludaVault: string
 }
 
 export module CoinbaseNotification {
@@ -35,13 +35,13 @@ export module CoinbaseNotification {
           log.info("received order paid")
           log.info("subscriptionInfo: " + JSON.stringify(subscriptionInfo))
 
-          const renewing = R.prop("oldexpirationTime", subscriptionInfo) !== undefined
+          const renewing = _.prop("oldexpirationTime", subscriptionInfo) !== undefined
           const oldexpirationTime = renewing ? subscriptionInfo.oldexpirationTime : -1
           const btcAmout = parseFloat(event.data.resource.bitcoin_amount.amount)
           const orderId = event.data.resource.id
 
-          const cludaAmount = btcAmout * 0.3
-          const publisherAmount = btcAmout * 0.7
+          const cludaAmount = (btcAmout * 0.3).toFixed(8)
+          const publisherAmount = (btcAmout * 0.7).toFixed(8)
 
           return inn.addSubscription({
             creationTime: inn.timeNow(),
@@ -67,7 +67,7 @@ export module CoinbaseNotification {
             .then(stream => {
               const cludaPayout = {
                 type: "transfer",
-                to: inn.cludaPayoutAccount,
+                to: inn.cludaVault,
                 amount: cludaAmount.toString(),
                 currency: "BTC",
                 description: "Cluda payout for subscription with order id " + orderId,
@@ -94,8 +94,8 @@ export module CoinbaseNotification {
                   log.info("CLUDA PAYOUT RESPONDS: " + JSON.stringify(res[0]))
                   log.info("PUBLISHER PAYOUT RESPONDS: " + JSON.stringify(res[1]))
                   const respondsData: any = {
-                    "cludaPayoutId": res[0].data.id,
-                    "publisherPayoutId": res[1].data.id
+                    "cludaPayoutId": res[0].id,
+                    "publisherPayoutId": res[1].id
                   }
                   return {
                     "GRID": context.awsRequestId,

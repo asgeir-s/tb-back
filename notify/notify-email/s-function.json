@@ -19,6 +19,7 @@
     "SERVERLESS_REGION": "${region}",
     "AWS_DYNAMO_SUBSCRIPTIONTABLE": "${dynamo-table-subscription}",
     "AWS_SNS_REGION": "${sns-region}",
+    "AWS_SES_REGION": "${ses-region}",
     "AWS_DYNAMO_REGION": "${dynamo-region}",
     "FROM_EMAIL_SIGNAL_NOTIFY": "${fromEmail-signalNotify}"
   },

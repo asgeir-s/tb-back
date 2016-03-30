@@ -40,9 +40,9 @@ export module Coinbase {
     })
   }
 
-/**
- * send money to bitcoin address or email
- */
+  /**
+   * send money to bitcoin address or email
+   */
   export function sendMoney(coinbaseClient: any, payoutAccount: string, payout: Payout): Promise<any> {
     return new Promise((resolve, reject) => {
       coinbaseClient.getAccount(payoutAccount, (err: any, account: any) => {
@@ -61,9 +61,9 @@ export module Coinbase {
     })
   }
 
-/**
- * transfare money between my accounts
- */
+  /**
+   * transfare money between my accounts
+   */
   export function transferMoney(coinbaseClient: any, payoutAccount: string, payout: Payout): Promise<any> {
     return new Promise((resolve, reject) => {
       coinbaseClient.getAccount(payoutAccount, (err: any, account: any) => {
@@ -72,12 +72,22 @@ export module Coinbase {
           account.transferMoney(payout, (err: any, tx: any) => {
             if (err) { reject(err) }
             else {
-              console.log(tx)
               resolve(tx)
             }
           })
         }
 
+      })
+    })
+  }
+
+  export function getAccounts(coinbaseClient: any) {
+    return new Promise((resolve, reject) => {
+      coinbaseClient.getAccounts({}, (err: any, accounts: any) => {
+        if (err) { reject(err) }
+        else {
+          resolve(accounts)
+        }
       })
     })
   }

@@ -94,13 +94,12 @@ export module Subscriptions {
         // the subscription already exists
         else {
           return {
-            "streamId": res[0].streamId,
-            "expirationTime": res[0].expirationTime,
+            "streamId": res.Items[0].streamId,
+            "expirationTime": res.Items[0].expirationTime,
             "new": false
           }
         }
       })
-
 
   }
 }

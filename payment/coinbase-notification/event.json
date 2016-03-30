@@ -17,7 +17,7 @@
       "resource_path": "\/v2\/orders\/1f03b664-4c19-53d3-af34-62d6bad031b9",
       "status": "paid",
       "bitcoin_amount": {
-        "amount": "0.00006100",
+        "amount": "0.0030000",
         "currency": "BTC"
       },
       "payout_amount": null,
