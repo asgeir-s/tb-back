@@ -1,5 +1,5 @@
-import * as Promise from 'bluebird'
-import { Subscription } from './typings/subscription'
+import * as Promise from "bluebird"
+import { Subscription } from "./typings/subscription"
 
 export module Subscriptions {
 
@@ -8,12 +8,12 @@ export module Subscriptions {
 
     return documentClient.queryAsync({
       TableName: subscriptionTable,
-      KeyConditionExpression: 'streamId = :streamId AND expirationTime >= :timeNow',
-      FilterExpression: '(attribute_not_exists (renewed) OR renewed = :falseString)',
+      KeyConditionExpression: "streamId = :streamId AND expirationTime >= :timeNow",
+      FilterExpression: "(attribute_not_exists (renewed) OR renewed = :falseString)",
       ExpressionAttributeValues: {
-        ':streamId': streamId,
-        ':timeNow': time,
-        ':falseString': 'false',
+        ":streamId": streamId,
+        ":timeNow": time,
+        ":falseString": "false",
       }
     }).then((responds: any) => responds.Items)
   }
@@ -23,13 +23,13 @@ export module Subscriptions {
 
     return documentClient.queryAsync({
       TableName: subscriptionTable,
-      KeyConditionExpression: 'streamId = :streamId AND expirationTime >= :timeNow',
-      FilterExpression: 'autoTrader = :trueString AND (attribute_not_exists (renewed) OR renewed = :falseString)',
+      KeyConditionExpression: "streamId = :streamId AND expirationTime >= :timeNow",
+      FilterExpression: "autoTrader = :trueString AND (attribute_not_exists (renewed) OR renewed = :falseString)",
       ExpressionAttributeValues: {
-        ':streamId': streamId,
-        ':timeNow': time,
-        ':falseString': 'false',
-        ':trueString': 'true'
+        ":streamId": streamId,
+        ":timeNow": time,
+        ":falseString": "false",
+        ":trueString": "true"
       }
     }).then((responds: any) => responds.Items)
   }
@@ -42,10 +42,10 @@ export module Subscriptions {
 
     return documentClient.scanAsync({
       TableName: subscriptionTable,
-      FilterExpression: 'expirationTime BETWEEN :from_time AND :to_time',
+      FilterExpression: "expirationTime BETWEEN :from_time AND :to_time",
       ExpressionAttributeValues: {
-        ':from_time': fromTime,
-        ':to_time': toTime,
+        ":from_time": fromTime,
+        ":to_time": toTime,
       }
     }).then((responds: any) => responds.Items)
   }

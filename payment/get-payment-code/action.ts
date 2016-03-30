@@ -6,16 +6,8 @@ import { Stream } from "../../lib/typings/stream"
 import { Context } from "../../lib/typings/aws-lambda"
 import { logger } from "../../lib/logger"
 import { Responds } from "../../lib/typings/responds"
+import { SubscriptionRequest } from "../../lib/typings/subscription-request"
 
-
-export interface SubscriptionRequest {
-  email: string
-  streamId: string
-  autoTrader?: string
-  apiKey?: string
-  apiSecret?: string
-  oldexpirationTime?: number
-}
 
 export interface Inject {
   getStream: (streamId: string) => Promise<Stream>
