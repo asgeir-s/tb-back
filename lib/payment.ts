@@ -28,7 +28,7 @@ export module Payment {
     // encrypt SubscriptionRequest
     const encryptedSubscriptionRequest = Crypto.encrypt(cryptPassword, subscriptionInfo)
     // get stream price
-    return Streams.getStream(documentClient, streamsTableName, AuthLevel.Public, GRID, subscriptionInfo.streamId)
+    return Streams.getStream(documentClient, streamsTableName, AuthLevel.Public, subscriptionInfo.streamId)
 
       // request coinbase for paymentCode
       .then(stream => Coinbase.createCheckout(coinbaseClient, "Stream Subscription",

@@ -19,7 +19,7 @@ test("Subscriptions.addSubscription/.getActiveAutotraderSubscriptions:" +
       "creationTime": timestamp,
       "email": "sogasg@gmail.com",
       "expirationTime": expirationTime,
-      "orderId": "orderId",
+      "orderId": timestamp + "orderId",
       "paymentBTC": 1,
       "paymentUSD": 1000,
       "receiveAddress": "receiveAddress",
