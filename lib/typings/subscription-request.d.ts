@@ -5,4 +5,5 @@ export interface SubscriptionRequest {
   apiKey?: string
   apiSecret?: string
   oldexpirationTime?: number
+  autoTraderData?: any
 }

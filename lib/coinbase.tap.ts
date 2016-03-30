@@ -5,7 +5,7 @@ import * as sinon from "sinon"
 
 
 test("Payment:", (ot) => {''
-  ot.plan(1)
+  ot.plan(2)
 
   //const coinbaseCli = Payment.coinbaseClient("", "")
 
@@ -19,6 +19,40 @@ test("Payment:", (ot) => {''
 
   ot.test("- should be able to create checkout", (t) => {
     t.plan(1)
+    Coinbase.createCheckout(sandboxClient, "Test-checkout", "99.99", "description", { "my-date": 1234 })
+      .then((res) =>
+        t.equal(_.has("embed_code", res), true, "the responds should include the embed_code")
+      )
+  })
+
+  ot.test("- should be able to transfare money between my accounts", (t) => {
+    t.plan(1)
+
+    const transfareMoneyPayout: Coinbase.Payout = {
+    to: string
+    amount: string
+    currency: string
+    description?: string
+    idem?: string
+    }
+
+    Coinbase.createCheckout(sandboxClient, "Test-checkout", "99.99", "description", { "my-date": 1234 })
+      .then((res) =>
+        t.equal(_.has("embed_code", res), true, "the responds should include the embed_code")
+      )
+  })
+
+  ot.test("- should be able to send money to a bitcoin address", (t) => {
+    t.plan(1)
+
+    const sendMoneyPayout: Coinbase.Payout = {
+    to: string
+    amount: string
+    currency: string
+    description?: string
+    idem?: string
+    }
+
     Coinbase.createCheckout(sandboxClient, "Test-checkout", "99.99", "description", { "my-date": 1234 })
       .then((res) =>
         t.equal(_.has("embed_code", res), true, "the responds should include the embed_code")

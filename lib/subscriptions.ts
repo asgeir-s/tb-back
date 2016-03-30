@@ -1,6 +1,12 @@
 import * as Promise from "bluebird"
 import { Subscription } from "./typings/subscription"
 
+  export interface AddSubscriptionResponds {
+    streamId: string
+    expirationTime: number,
+    new: boolean
+  }
+  
 export module Subscriptions {
 
   export function getActiveSubscriptions(documentClient: any, subscriptionTable: string,
@@ -48,5 +54,53 @@ export module Subscriptions {
         ":to_time": toTime,
       }
     }).then((responds: any) => responds.Items)
+  }
+
+  /**
+   * 
+   * 1. checks stream with that orderId does not exists
+   * 2. can not owerwrite
+   * 
+   * returns the streamId and expirationTime for the subscription
+   * OBS: and the new attribute wheter the subscription was added now or excisted from before
+   */
+  export function addSubscription(documentClient: any, subscriptionTable: string,
+    subscription: Subscription): Promise<AddSubscriptionResponds> {
+
+    return documentClient.queryAsync({
+      TableName: subscriptionTable,
+      IndexName: "orderId-index",
+      KeyConditionExpression: "orderId = :orderId",
+      ExpressionAttributeValues: {
+        ":orderId": subscription.orderId
+      }
+    })
+      .then((res: any) => {
+        // this subscription does not existe
+        if (res.Count === 0) {
+          return documentClient.putAsync({
+            TableName: subscriptionTable,
+            Item: subscription,
+            ConditionExpression: "attribute_not_exists(streamId) AND attribute_not_exists(expirationTime)"
+          })
+            .then((res: any) => {
+              return {
+                "streamId": subscription.streamId,
+                "expirationTime": subscription.expirationTime,
+                "new": true
+              }
+            })
+        }
+        // the subscription already exists
+        else {
+          return {
+            "streamId": res[0].streamId,
+            "expirationTime": res[0].expirationTime,
+            "new": false
+          }
+        }
+      })
+
+
   }
 }

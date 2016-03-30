@@ -19,6 +19,9 @@ export interface Inject {
 export module GetPaymentCode {
   export function action(inn: Inject, event: SubscriptionRequest, context: Context): Promise<Responds> {
     const log = logger(context.awsRequestId)
+
+    // todo: encrypt apikey and secret with password
+
     return Promise.all([inn.getStream(event.streamId), inn.encryptSubscriptionInfo(event)])
       .then(res => {
         const stream = res[0]

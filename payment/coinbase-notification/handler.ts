@@ -7,16 +7,26 @@ import { CoinbaseNotification, Inject } from "./action"
 import { Context } from "../../lib/typings/aws-lambda"
 import { Streams, AuthLevel } from "../../lib/streams"
 import { handle } from "../../lib/handler"
+import { Subscriptions } from "../../lib/subscriptions"
+
+const documentClient = DynamoDb.documentClientAsync(process.env.DYNAMO_REGION)
 
 const inject: Inject = {
-  getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
-    process.env.STREAMS_TABLE, AuthLevel.Public),
-  encryptSubscriptionInfo: _.curry(Crypto.encrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
-  createCheckout: _.curry(Coinbase.createCheckout)(Coinbase.coinbaseClient(process.env.COINBASE_SANDBOX,
-    process.env.COINBASE_APIKEY, process.env.COINBASE_APISECRET)),
-  autoTraderPrice: process.env.AUTOTRADER_PRICE
-}
+  getStream: _.curry(Streams.getStream)(documentClient,
+    process.env.STREAMS_TABLE, AuthLevel.Private),
+  decryptSubscriptionInfo: _.curry(Crypto.decrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
+  addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, "subscriptions-staging"),
 
+  sendMoney: (payout: Coinbase.Payout) => Promise < any >,
+  transferMoney: (payout: Coinbase.Payout) => Promise < any >,
+  alert: (message: any) => Promise < any >, // new
+
+  timeNow: () => new Date().getTime(),
+  cludaPayoutAccount: process.env.ACCOUNT_FOR_PAYOUTS_TO_CLUDA
+}
 export function handler(event: any, context: Context) {
+  // validate callback
+
+  // compute if valide
   handle(CoinbaseNotification.action, inject, event, context)
 }
