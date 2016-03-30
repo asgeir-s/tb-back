@@ -3,7 +3,7 @@ import * as _ from "ramda"
 export interface Logger {
   info: (message: string) => void,
   error: (message: string) => void,
-  event: (message: string) => void
+  event: (message: any) => void
 }
 
 export function logger(GRID: string): Logger {

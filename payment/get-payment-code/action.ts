@@ -26,6 +26,8 @@ export interface Inject {
 
 export module GetPaymentCode {
   export function action(inn: Inject, event: SubscriptionRequest, context: Context): Promise<Responds> {
+    const log = logger(context.awsRequestId)
+    log.event(event)
     return Promise.all([inn.getStream(event.streamId), inn.encryptSubscriptionInfo(event)])
       .then(res => {
         const stream = res[0]
@@ -34,10 +36,15 @@ export module GetPaymentCode {
         let price = stream.subscriptionPriceUSD
         if (event.autoTrader) { price += inn.autoTraderPrice }
 
+        log.info("stream: " + stream.id + ", price: " + price)
+
         return inn.createCheckout("Stream Subscription", price.toString(), "Subscription to stream: " +
           stream.name + ", autoTrader: " + event.autoTrader, encryptedSubscriptionInfo)
       })
-      .then(checkout => checkout.embed_code)
+      .then(checkout => {
+        log.info("checkout: " + JSON.stringify(checkout))
+        return checkout.embed_code
+      })
   }
 }
 

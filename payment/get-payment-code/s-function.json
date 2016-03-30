@@ -42,7 +42,13 @@
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "DYNAMO_REGION": "${dynamo-region}",
+    "STREAMS_TABLE": "${dynamo-table-streams}",
+    "COINBASE_ENCRYPTION_PASSWORD": "${crypto-key-coinbase}",
+    "COINBASE_APIKEY": "${coinbase-apikey}",
+    "COINBASE_APISECRET": "${coinbase-apisecret}",
+    "COINBASE_SANDBOX": "${coinbase-sandbox}"
   },
   "vpc": {
     "securityGroupIds": [],

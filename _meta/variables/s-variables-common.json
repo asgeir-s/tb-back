@@ -16,5 +16,9 @@
   "scuset": "secret2",
   "serviceUrl-tbSignals": "http://tb-staging-signals.elasticbeanstalk.com",
   "serviceApiKey-tbSignals": "secret",
-  "sns-topic-trade": "arn:aws:sns:us-west-2:525932482084:trades-staging"
+  "sns-topic-trade": "arn:aws:sns:us-west-2:525932482084:trades-staging",
+  "coinbase-apikey": "Z0WPTliIqOaW9lb1",
+  "coinbase-apisecret": "zapgYMztFVblKr3evb2DVHzlkiolBXmT",
+  "coinbase-sandbox": "true",
+  "crypto-key-coinbase": "my-secret-key"
 }
