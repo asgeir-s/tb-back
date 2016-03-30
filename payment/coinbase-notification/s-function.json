@@ -13,15 +13,18 @@
   },
   "endpoints": [
     {
-      "path": "coinbase-notification",
+      "path": "notifications/coinbase/oiu3289t7234jhvnb234jhkg23rguydahjkl",
       "method": "GET",
       "type": "AWS",
       "authorizationType": "none",
       "authorizerFunction": false,
       "apiKeyRequired": false,
-      "requestParameters": {},
+      "requestParameters": {
+        "integration.request.path.integrationQueryParam": "method.request.querystring.scuset",
+        "integration.request.header.x-re-captcha": "method.request.header.X-Forwarded-For"
+      },
       "requestTemplates": {
-        "application/json": ""
+        "application/json": "{\"scuset\":\"$util.urlDecode($input.params('scuset'))\", \"source\":\"$util.urlDecode($input.params('X-Forwarded-For'))\", \"event\": $input.json('$') }"
       },
       "responses": {
         "400": {
@@ -52,7 +55,9 @@
     "COINBASE_ACCOUNT_PRIMARY": "${coinbase-account-primary}",
     "COINBASE_ACCOUNT_VAULT": "${coinbase-account-vault}",
     "SNS_REGION": "${sns-region}",
-    "SNS_ALERT_TOPIC": "${sns-topic-alert}"
+    "SNS_ALERT_TOPIC": "${sns-topic-alert}",
+    "SCUSET": "${coinbase-notification-scuset}",
+    "COINBASE_NOTIFICATION_IP_RANGE": "${coinbase-notification-ip-range}"
   },
   "vpc": {
     "securityGroupIds": [],

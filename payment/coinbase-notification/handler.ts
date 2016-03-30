@@ -9,10 +9,10 @@ import { Streams, AuthLevel } from "../../lib/streams"
 import { handle } from "../../lib/handler"
 import { Subscriptions } from "../../lib/subscriptions"
 
+const rangeCheck = require("range_check")
 const documentClient = DynamoDb.documentClientAsync(process.env.DYNAMO_REGION)
 const coinbaseClient = Coinbase.coinbaseClient(process.env.COINBASE_SANDBOX,
   process.env.COINBASE_APIKEY, process.env.COINBASE_APISECRET)
-
 
 const inject: Inject = {
   getStream: _.curry(Streams.getStream)(documentClient,
@@ -27,7 +27,18 @@ const inject: Inject = {
 }
 export function handler(event: any, context: Context) {
   // validate callback
+  //if (coinbaseClient.verifyCallback(event, context.clientContext. req.headers['CB-SIGNATURE'])) {
+  // Process callback
+  //}
 
-  // compute if valide
-  handle(CoinbaseNotification.action, inject, event, context)
+  if (event.scuset === process.env.SCUSET && rangeCheck.inRange(event.source,
+    process.env.COINBASE_NOTIFICATION_IP_RANGE)) {
+    console.info("AUTORIZED")
+    handle(CoinbaseNotification.action, inject, event.event, context)
+  }
+  else {
+    console.error("UNAUTORIZED")
+    console.error("request: " + JSON.stringify(event))
+    context.fail("UNAUTORIZED")
+  }
 }
