@@ -11,7 +11,7 @@ import { Responds } from "../../lib/typings/responds"
 export interface SubscriptionRequest {
   email: string
   streamId: string
-  autoTrader?: boolean
+  autoTrader?: string
   apiKey?: string
   apiSecret?: string
   oldexpirationTime?: number
@@ -27,14 +27,13 @@ export interface Inject {
 export module GetPaymentCode {
   export function action(inn: Inject, event: SubscriptionRequest, context: Context): Promise<Responds> {
     const log = logger(context.awsRequestId)
-    log.event(event)
     return Promise.all([inn.getStream(event.streamId), inn.encryptSubscriptionInfo(event)])
       .then(res => {
         const stream = res[0]
         const encryptedSubscriptionInfo = res[1]
 
         let price = stream.subscriptionPriceUSD
-        if (event.autoTrader) { price += inn.autoTraderPrice }
+        if (event.autoTrader === "true") { price += inn.autoTraderPrice }
 
         log.info("stream: " + stream.id + ", price: " + price)
 
@@ -43,7 +42,13 @@ export module GetPaymentCode {
       })
       .then(checkout => {
         log.info("checkout: " + JSON.stringify(checkout))
-        return checkout.embed_code
+        return {
+          "GRID": context.awsRequestId,
+          "success": true,
+          "data": {
+            "paymentCode": checkout.embed_code
+          }
+        }
       })
   }
 }

@@ -1,14 +1,10 @@
-import * as _ from 'ramda'
-import * as Promise from 'bluebird'
+import * as _ from "ramda"
 
-import { Context } from '../../lib/typings/aws-lambda'
-import { FirstCompitition, Inject } from './action'
-import { EmailTemplete } from '../../lib/email-template'
-import { SES, DynamoDb } from '../../lib/aws'
-import { Subscriptions } from '../../lib/subscriptions'
-import { logger } from '../../lib/logger'
-import { Responds } from '../../lib/typings/responds'
-import { Signals } from '../../lib/signals'
+import { Context } from "../../lib/typings/aws-lambda"
+import { FirstCompitition, Inject } from "./action"
+import { DynamoDb } from "../../lib/aws"
+import { Signals } from "../../lib/signals"
+import { handle } from "../../lib/handler"
 
 const endTime = 1457222340000
 
@@ -21,14 +17,5 @@ const inject: Inject = {
 }
 
 export function handler(event: any, context: Context) {
-  FirstCompitition.action(inject, event, context)
-    .then((result: any) => context.done(null, result))
-    .catch((error: any) => {
-      console.error('error [' + context.awsRequestId + '] ' + error)
-      return context.done({
-        "GRID": context.awsRequestId,
-        "message": "Internal Server Error",
-        "success": false
-      }, null)
-    })
+  handle(FirstCompitition.action, inject, event, context)
 }

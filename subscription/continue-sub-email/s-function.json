@@ -31,7 +31,12 @@
     "AWS_STORAGE_TABLE": "${dynamo-table-storage}",
     "AWS_DYNAMO_SUBSCRIPTIONTABLE": "${dynamo-table-subscription}",
     "SERVICE_PAYMENT": "${serviceUrl-tbPayment}",
-    "SERVICE_PAYMENT_APIKEY": "${serviceApiKey-tbPayment}"
+    "SERVICE_PAYMENT_APIKEY": "${serviceApiKey-tbPayment}",
+    "STREAMS_TABLE": "${dynamo-table-streams}",
+    "COINBASE_ENCRYPTION_PASSWORD": "${crypto-key-coinbase}",
+    "COINBASE_APIKEY": "${coinbase-apikey}",
+    "COINBASE_APISECRET": "${coinbase-apisecret}",
+    "COINBASE_SANDBOX": "${coinbase-sandbox}"
   },
   "vpc": {
     "securityGroupIds": [],

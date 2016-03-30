@@ -6,6 +6,7 @@ import { DynamoDb } from "../../lib/aws"
 import { GetPaymentCode, Inject } from "./action"
 import { Context } from "../../lib/typings/aws-lambda"
 import { Streams, AuthLevel } from "../../lib/streams"
+import { handle } from "../../lib/handler"
 
 const inject: Inject = {
   getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
@@ -16,16 +17,6 @@ const inject: Inject = {
   autoTraderPrice: process.env.AUTOTRADER_PRICE
 }
 
-
 export function handler(event: any, context: Context) {
-  GetPaymentCode.action(inject, event, context)
-    .then((result: any) => context.done(null, result))
-    .catch((error: any) => {
-      console.error("error [" + context.awsRequestId + "]: " + error)
-      return context.done({
-        "GRID": context.awsRequestId,
-        "message": "Internal Server Error",
-        "success": false
-      }, null)
-    })
+  handle(GetPaymentCode.action, inject, event, context)
 }

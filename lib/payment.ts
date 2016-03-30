@@ -10,7 +10,7 @@ import { Stream } from "./typings/stream"
 export interface SubscriptionRequest {
   email: string
   streamId: string
-  autoTrader?: boolean
+  autoTrader?: string
   apiKey?: string
   apiSecret?: string
   oldexpirationTime?: number

@@ -12,4 +12,6 @@ export interface Subscription {
   transactionId: string
   autoTrader?: string
   autoTraderData?: any
+  apiKey: string
+  apiSecret: string
 }

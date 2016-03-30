@@ -1,5 +1,5 @@
 export interface Responds {
   GRID: string
-  message: string
+  data: any
   success: boolean
 }

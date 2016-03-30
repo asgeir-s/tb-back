@@ -1,14 +1,10 @@
-import * as _ from 'ramda'
-import * as Promise from 'bluebird'
+import * as _ from "ramda"
 
-import { Context } from '../../lib/typings/aws-lambda'
-import { NotifyEmail, Inject } from './action'
-import { EmailTemplete } from '../../lib/email-template'
-import { SES, DynamoDb } from '../../lib/aws'
-import { Subscriptions } from '../../lib/subscriptions'
-import { logger } from '../../lib/logger'
-import { Responds } from '../../lib/typings/responds';
-
+import { Context } from "../../lib/typings/aws-lambda"
+import { NotifyEmail, Inject } from "./action"
+import { SES, DynamoDb } from "../../lib/aws"
+import { Subscriptions } from "../../lib/subscriptions"
+import { handle } from "../../lib/handler"
 
 const inject: Inject = {
   sendEmail: _.curry(SES.send)(SES.sesClientAsync(process.env.AWS_SNS_REGION), process.env.FROM_EMAIL_SIGNAL_NOTIFY),
@@ -18,14 +14,5 @@ const inject: Inject = {
 }
 
 export function handler(event: any, context: Context) {
-  NotifyEmail.action(inject, event, context)
-    .then((result: any) => context.done(null, result))
-    .catch((error: any) => {
-      console.error('error [' + context.awsRequestId + '] ' + error)
-      return context.done({
-        "GRID": context.awsRequestId,
-        "message": "Internal Server Error",
-        "success": false
-      }, null)
-    })
+  handle(NotifyEmail.action, inject, event, context)
 }
