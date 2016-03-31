@@ -1,5 +1,5 @@
 import * as test from "tape"
-import { DynamoDb, SES, SNS } from "./aws"
+import { DynamoDb, SES, SNS, Lambda } from "./aws"
 import * as _ from "ramda"
 import { success } from "./test-util"
 import * as sinon from "sinon"
@@ -66,4 +66,21 @@ test("SNS: should succesfulle publish message to topic", (t) => {
     more: 22
   }).then(res => t.equal(res.MessageId.length > 0, true,
     "the responds should have a MessageId"))
+})
+
+test("SNS: should succesfulle subscribe a lambda to a SNS topic", (t) => {
+  t.plan(1)
+
+  const testTopic = "arn:aws:sns:us-west-2:525932482084:test-topic"
+  const snsCli = SNS.snsClientAsync("us-west-2")
+  const lambdaCli = Lambda.lambdaClientAsync("us-west-2")
+  const lambdaArn = "arn:aws:lambda:us-west-2:525932482084:function:test-func:dev"
+  const statmentId = new Date().getTime().toString()
+
+  SNS.subscribeLambda(snsCli, lambdaCli, testTopic, lambdaArn, statmentId)
+    .then((res: any) => {
+      console.log("res: " + JSON.stringify(lambdaArn))
+      t.equal(1, 1)
+    })
+
 })

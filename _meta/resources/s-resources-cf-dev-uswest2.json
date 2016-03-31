@@ -50,6 +50,13 @@
             {
               "Effect": "Allow",
               "Action": [
+                "lambda:AddPermission"
+              ],
+              "Resource": "arn:aws:lambda:us-west-2:*:*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
                 "sns:Publish"
               ],
               "Resource": "arn:aws:sns:us-west-2:*:*"
