@@ -28,5 +28,8 @@
   "coinbase-notification-ip-range": "54.175.255.192/27",
   "crypto-key-coinbase": "passwordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpassword",
   "coinbase-notification-scuset": "secret2",
-  "autotrader_price_usd": "15"
+  "autotrader_price_usd": "15",
+  "lambda-region": "us-west-2",
+  "lambda-arn-tradeGenerator": "arn:aws:lambda:us-west-2:525932482084:function:tb-back_autotrader_trade-generator:dev",
+  "lambda-arn-notifyEmail": "arn:aws:lambda:us-west-2:525932482084:function:tb-back_notify_notify-email:dev"
 }

@@ -57,7 +57,10 @@
     "SNS_REGION": "${sns-region}",
     "SNS_ALERT_TOPIC": "${sns-topic-alert}",
     "SCUSET": "${coinbase-notification-scuset}",
-    "COINBASE_NOTIFICATION_IP_RANGE": "${coinbase-notification-ip-range}"
+    "COINBASE_NOTIFICATION_IP_RANGE": "${coinbase-notification-ip-range}",
+    "LAMBDA_ARN_TRADE_GENERATOR": "${lambda-arn-tradeGenerator}",
+    "LAMBDA_ARN_NOTIFY_EMAIL": "${lambda-arn-notifyEmail}",
+    "LAMBDA_REGION": "${lambda-region}"
   },
   "vpc": {
     "securityGroupIds": [],

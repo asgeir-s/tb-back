@@ -75,31 +75,33 @@ export module NotifyEmail {
     let pluralOr = "signal"
     if (signals.length === 1) {
       if (signals[0].signal === 0) {
-        change = (signals[0].changeInclFee * 100).toFixed(2)
+        change = (signals[0].changeInclFee * 100).toFixed(2);
       }
 
-      signalContent = `<p style="font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-        font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: ` +
-        signalBackgroundColor(signals) + `;width: 100%;text-align: center;/* border-radius: 10px; 
-        */padding-top: 20px; padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">` +
-        signalFromNumber(signals[0].signal) + `</b></p>`
+      signalContent = `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;` +
+        `font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: ` +
+        signalBackgroundColor(signals) +
+        `;width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;` +
+        `padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">` +
+        signalFromNumber(signals[0].signal) +
+        "</b></p>"
 
     }
     else {
       const lastSignal = maxById(signals)
-      pluralOr = "signals"
-      change = ((signals[0].changeInclFee + signals[1].changeInclFee) * 100).toFixed(2)
+      pluralOr = 'signals'
+      change = ((signals[0].changeInclFee + signals[1].changeInclFee) * 100).toFixed(2);
 
-      signalContent = `<p>First:</p> <p style="font-family: "Helvetica Neue", "Helvetica", Helvetica,
-        Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;
-        background-color: rgb(234, 234, 234);width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;
-        padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">CLOSE</b></p>
-        <p>Then:</p>
-        <p style="font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-size: 14px; 
-        line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: `
-        + signalBackgroundColor(signals) +
-        `;width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;padding-bottom: 10px;
-        margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">` +
+      signalContent = "<p>First:</p>" + `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, ` +
+        `Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;` +
+        `background-color: rgb(234, 234, 234);width: 100%;text-align: center;/* border-radius: 10px; */padding-top: ` +
+        `20px;padding-bottom: 10px;margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">CLOSE</b></p>` +
+        "<p>Then:</p>" +
+        `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; ` +
+        `line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;background-color: ` +
+        signalBackgroundColor(signals) +
+        `;width: 100%;text-align: center;/* border-radius: 10px; */padding-top: 20px;padding-bottom: 10px;` +
+        `margin-top: 30px;"><b style="font-size: 2em;font-weight: 400;">` +
         signalFromNumber(lastSignal.signal) +
         `</b></p>`
     }

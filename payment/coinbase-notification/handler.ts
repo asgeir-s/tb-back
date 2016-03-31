@@ -2,7 +2,7 @@ import * as _ from "ramda"
 
 import { Coinbase } from "../../lib/coinbase"
 import { Crypto } from "../../lib/crypto"
-import { DynamoDb, SNS } from "../../lib/aws"
+import { DynamoDb, SNS, Lambda } from "../../lib/aws"
 import { CoinbaseNotification, Inject } from "./action"
 import { Context } from "../../lib/typings/aws-lambda"
 import { Streams, AuthLevel } from "../../lib/streams"
@@ -13,6 +13,8 @@ const rangeCheck = require("range_check")
 const documentClient = DynamoDb.documentClientAsync(process.env.DYNAMO_REGION)
 const coinbaseClient = Coinbase.coinbaseClient(process.env.COINBASE_SANDBOX,
   process.env.COINBASE_APIKEY, process.env.COINBASE_APISECRET)
+const snsClient = SNS.snsClientAsync(process.env.SNS_REGION)
+const lambdaClient = Lambda.lambdaClientAsync(process.env.LAMBDA_REGION)
 
 const inject: Inject = {
   getStream: _.curry(Streams.getStream)(documentClient,
@@ -21,9 +23,12 @@ const inject: Inject = {
   addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, "subscriptions-staging"),
   sendMoney: _.curry(Coinbase.sendMoney)(coinbaseClient, process.env.COINBASE_ACCOUNT_PRIMARY),
   transferMoney: _.curry(Coinbase.transferMoney)(coinbaseClient, process.env.COINBASE_ACCOUNT_PRIMARY),
-  alert: _.curry(SNS.publish)(SNS.snsClientAsync(process.env.SNS_REGION), process.env.SNS_ALERT_TOPIC), // new
+  alert: _.curry(SNS.publish)(snsClient, process.env.SNS_ALERT_TOPIC), // new
   timeNow: () => new Date().getTime(),
-  cludaVault: process.env.COINBASE_ACCOUNT_VAULT
+  cludaVault: process.env.COINBASE_ACCOUNT_VAULT,
+  snsSubscribeLambda: _.curry(SNS.subscribeLambda)(snsClient, lambdaClient),
+  tradeGeneratorLambdaArn: process.env.LAMBDA_ARN_TRADE_GENERATOR,
+  notifyEmailLambdaArn: process.env.LAMBDA_ARN_NOTIFY_EMAIL
 }
 
 export function handler(event: any, context: Context) {

@@ -25,8 +25,11 @@ export interface Inject {
   sendMoney: (payout: Coinbase.Payout) => Promise<any>
   transferMoney: (payout: Coinbase.Payout) => Promise<any>
   alert: (message: any) => Promise<any>
+  snsSubscribeLambda: (topicArn: string, lambdaArn: string, statementId: string) => Promise<any>
   timeNow: () => number
   cludaVault: string
+  tradeGeneratorLambdaArn: string,
+  notifyEmailLambdaArn: string
 }
 
 export module CoinbaseNotification {
@@ -90,24 +93,45 @@ export module CoinbaseNotification {
               log.info("CLUDA PAYOUT: " + JSON.stringify(cludaPayout))
               log.info("PUBLISHER PAYOUT: " + JSON.stringify(publisherPayout))
 
-              return Promise.all([
-                inn.transferMoney(cludaPayout),
-                inn.sendMoney(publisherPayout)
-              ])
-                .then(res => {
-                  log.info("CLUDA PAYOUT RESPONDS: " + JSON.stringify(res[0]))
-                  log.info("PUBLISHER PAYOUT RESPONDS: " + JSON.stringify(res[1]))
-                  const respondsData: any = {
-                    "cludaPayoutId": res[0].id,
-                    "publisherPayoutId": res[1].id
-                  }
-                  return {
-                    "GRID": context.awsRequestId,
-                    "success": true,
-                    "data": respondsData
-                  }
-                })
+              if (subscriptionInfo.autoTrader === "true") {
+                return Promise.all([
+                  inn.transferMoney(cludaPayout),
+                  inn.sendMoney(publisherPayout),
+                  inn.snsSubscribeLambda(stream.streamPrivate.topicArn, inn.notifyEmailLambdaArn,
+                    inn.timeNow().toString() + "1"),
+                  inn.snsSubscribeLambda(stream.streamPrivate.topicArn, inn.tradeGeneratorLambdaArn,
+                    inn.timeNow().toString() + "1")
+                ])
+              }
+              else {
+                return Promise.all([
+                  inn.transferMoney(cludaPayout),
+                  inn.sendMoney(publisherPayout),
+                  inn.snsSubscribeLambda(stream.streamPrivate.topicArn, inn.notifyEmailLambdaArn,
+                    inn.timeNow().toString() + "1")
+                ])
+              }
             })
+            .then(res => {
+              log.info("CLUDA PAYOUT RESPONDS: " + JSON.stringify(res[0]))
+              log.info("PUBLISHER PAYOUT RESPONDS: " + JSON.stringify(res[1]))
+              log.info("SNS EMAIL-NOTIFY SUBSCRIPTION RESPONDS: " + JSON.stringify(res[2]))
+
+              if (subscriptionInfo.autoTrader === "true") {
+                log.info("SNS TRADE-GENERATOR SUBSCRIPTION RESPONDS: " + JSON.stringify(res[3]))
+              }
+
+              const respondsData: any = {
+                "cludaPayoutId": res[0].id,
+                "publisherPayoutId": res[1].id
+              }
+              return {
+                "GRID": context.awsRequestId,
+                "success": true,
+                "data": respondsData
+              }
+            })
+
         }
 
         else if (event.type === "wallet:orders:mispaid") {

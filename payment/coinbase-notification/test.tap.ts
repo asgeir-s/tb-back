@@ -5,7 +5,7 @@ import * as sinon from "sinon"
 
 import { Context } from "../../lib/typings/aws-lambda"
 import { CoinbaseNotification, Inject } from "./action"
-import { SNS } from "../../lib/aws"
+import { SNS, Lambda } from "../../lib/aws"
 import { Coinbase } from "../../lib/coinbase"
 import { Crypto } from "../../lib/crypto"
 import { DynamoDb } from "../../lib/aws"
@@ -18,7 +18,7 @@ const event = require("./event.json")
 const DYNAMO_REGION = "us-west-2"
 const STREAMS_TABLE = "streams-staging"
 const COINBASE_ENCRYPTION_PASSWORD =
-"passwordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpassword"
+  "passwordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpassword"
 const COINBASE_SANDBOX = "true"
 const COINBASE_APIKEY = "Z0WPTliIqOaW9lb1"
 const COINBASE_APISECRET = "zapgYMztFVblKr3evb2DVHzlkiolBXmT"
@@ -27,7 +27,11 @@ const COINBASE_ACCOUNT_PRIMARY = "5d7213c3-0ea7-5e2c-b8b2-4d4c58a6f316"
 const SNS_REGION = "us-west-2"
 const SNS_ALERT_TOPIC = "arn:aws:sns:us-west-2:525932482084:alerts-staging"
 const COINBASE_ACCOUNT_VAULT = "2d0fc1a2-761f-5af0-8969-f80338a168e0"
-
+const LAMBDA_REGION = "us-west-2"
+const LAMBDA_ARN_TRADE_GENERATOR =
+  "arn:aws:lambda:us-west-2:525932482084:function:tb-back_autotrader_trade-generator:dev"
+const LAMBDA_ARN_NOTIFY_EMAIL =
+  "arn:aws:lambda:us-west-2:525932482084:function:tb-back_notify_notify-email:dev"
 
 test("CoinbaseNotification:", (ot) => {
   ot.plan(1)
@@ -39,6 +43,8 @@ test("CoinbaseNotification:", (ot) => {
     const documentClient = DynamoDb.documentClientAsync(DYNAMO_REGION)
     const coinbaseClient = Coinbase.coinbaseClient(COINBASE_SANDBOX,
       COINBASE_APIKEY, COINBASE_APISECRET)
+    const snsClient = SNS.snsClientAsync(SNS_REGION)
+    const lambdaClient = Lambda.lambdaClientAsync(LAMBDA_REGION)
 
     const inject: Inject = {
       getStream: _.curry(Streams.getStream)(documentClient,
@@ -47,9 +53,12 @@ test("CoinbaseNotification:", (ot) => {
       addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, "subscriptions-staging"),
       sendMoney: _.curry(Coinbase.sendMoney)(coinbaseClient, COINBASE_ACCOUNT_PRIMARY),
       transferMoney: _.curry(Coinbase.transferMoney)(coinbaseClient, COINBASE_ACCOUNT_PRIMARY),
-      alert: _.curry(SNS.publish)(SNS.snsClientAsync(SNS_REGION), SNS_ALERT_TOPIC), // new
+      alert: _.curry(SNS.publish)(snsClient, SNS_ALERT_TOPIC), // new
       timeNow: () => new Date().getTime(),
-      cludaVault: COINBASE_ACCOUNT_VAULT
+      cludaVault: COINBASE_ACCOUNT_VAULT,
+      snsSubscribeLambda: _.curry(SNS.subscribeLambda)(snsClient, lambdaClient),
+      tradeGeneratorLambdaArn: LAMBDA_ARN_TRADE_GENERATOR,
+      notifyEmailLambdaArn: LAMBDA_ARN_NOTIFY_EMAIL
     }
 
     handle(CoinbaseNotification.action, inject, event.event, <Context>{
