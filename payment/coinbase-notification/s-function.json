@@ -4,7 +4,7 @@
   "description": "Serverless Lambda function for project: tb-back",
   "customName": "tb-back_payment_coinbase-notification",
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "payment/coinbase-notification/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},

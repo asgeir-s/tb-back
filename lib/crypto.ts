@@ -1,7 +1,8 @@
+import * as Promise from "bluebird"
 import * as crypto from "crypto"
 
 const cryptAlgorithm = "aes-256-ctr"
-const digestAlgo = "sha256"
+const digestAlgo = "sha256" // add to pbkdf2 when node is updated on lambda
 
 export interface CryptedData {
   data: any
@@ -16,7 +17,7 @@ export module Crypto {
       const salt = crypto.randomBytes(192)
       const iv = crypto.randomBytes(16)
 
-      crypto.pbkdf2(password, salt, 59999, 16, digestAlgo, (err, key) => {
+      crypto.pbkdf2(password, salt, 59999, 16, (err, key) => {
         if (err) {
           console.log("error: " + err)
           reject(err)
@@ -41,7 +42,8 @@ export module Crypto {
       const iv = new Buffer(encrypt.iv, "hex")
       const data = encrypt.data
 
-      crypto.pbkdf2(password, salt, 59999, 16, digestAlgo, (err: any, key: any) => {
+      crypto.pbkdf2(password, salt, 59999, 16, (err: any, key: any) => {
+
         if (err) {
           console.log("error: " + err)
           reject(err)
@@ -49,7 +51,9 @@ export module Crypto {
         else {
           const decipher = crypto.createDecipheriv(cryptAlgorithm, key.toString("hex"), iv)
           let decrypted = decipher.update(data, "hex", "utf8")
+
           decrypted += decipher.final("utf8")
+
           try { resolve(JSON.parse(decrypted))}
           catch (e) { reject(e) }
         }

@@ -1,4 +1,5 @@
 import * as _ from "ramda"
+import * as Promise from "bluebird"
 
 import { Streams, AuthLevel } from "../../lib/streams"
 import { DynamoDb } from "../../lib/aws"
@@ -31,9 +32,9 @@ export interface Inject {
 export module CoinbaseNotification {
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
     const log = logger(context.awsRequestId)
+
     return inn.decryptSubscriptionInfo(event.data.resource.metadata)
       .then(subscriptionInfo => {
-
         if (event.type === "wallet:orders:paid") {
           log.info("received order paid")
           log.info("subscriptionInfo: " + JSON.stringify(subscriptionInfo))

@@ -1,4 +1,5 @@
 import * as Promise from "bluebird"
+
 import { Subscription } from "./typings/subscription"
 
   export interface AddSubscriptionResponds {

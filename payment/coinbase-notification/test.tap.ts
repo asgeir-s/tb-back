@@ -17,7 +17,8 @@ const event = require("./event.json")
 
 const DYNAMO_REGION = "us-west-2"
 const STREAMS_TABLE = "streams-staging"
-const COINBASE_ENCRYPTION_PASSWORD = "my-secret-key"
+const COINBASE_ENCRYPTION_PASSWORD =
+"passwordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpassword"
 const COINBASE_SANDBOX = "true"
 const COINBASE_APIKEY = "Z0WPTliIqOaW9lb1"
 const COINBASE_APISECRET = "zapgYMztFVblKr3evb2DVHzlkiolBXmT"
@@ -28,7 +29,7 @@ const SNS_ALERT_TOPIC = "arn:aws:sns:us-west-2:525932482084:alerts-staging"
 const COINBASE_ACCOUNT_VAULT = "2d0fc1a2-761f-5af0-8969-f80338a168e0"
 
 
-test("Trade-Generator:", (ot) => {
+test("CoinbaseNotification:", (ot) => {
   ot.plan(1)
 
   ot.test("- should handle the default event", (t) => {

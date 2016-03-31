@@ -1,3 +1,5 @@
+import * as Promise from "bluebird"
+
 export module Coinbase {
 
   export interface Payout {

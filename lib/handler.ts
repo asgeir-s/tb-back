@@ -1,6 +1,7 @@
+import * as Promise from "bluebird"
+
 import { Context } from "./typings/aws-lambda"
 import { Responds } from "./typings/responds"
-
 
 export function handle(
   action: (inject: any, event: any, context: Context) => Promise<Responds>,

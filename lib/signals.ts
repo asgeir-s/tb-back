@@ -1,7 +1,7 @@
-import * as Promise from 'bluebird'
-import * as request from 'request'
+import * as Promise from "bluebird"
+import * as request from "request"
 
-import { Signal } from './typings/signal'
+import { Signal } from "./typings/signal"
 
 const requestAsync = Promise.promisify(request)
 
@@ -10,12 +10,12 @@ export module Signals {
   export function getSignalsBefore(signalServiceUrl: string, signalServiceApiKey: string,
     beforeTime: number, GRID: string, streamId: string): Promise<Array<Signal>> {
     return requestAsync({
-      method: 'GET',
-      uri: signalServiceUrl + '/streams/' + streamId + '/signals?beforeTime=' + beforeTime,
+      method: "GET",
+      uri: signalServiceUrl + "/streams/" + streamId + "/signals?beforeTime=" + beforeTime,
       headers: {
-        'Global-Request-ID': GRID,
-        'content-type': 'application/json',
-        'Authorization': 'apikey ' + signalServiceApiKey
+        "Global-Request-ID": GRID,
+        "content-type": "application/json",
+        "Authorization": "apikey " + signalServiceApiKey
       },
       json: true
     }).then((res: any) => {

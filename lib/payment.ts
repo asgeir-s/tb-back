@@ -4,9 +4,6 @@ import { Crypto } from "./crypto"
 import { Coinbase } from "./coinbase"
 import { Stream } from "./typings/stream"
 
-
-
-
 export interface SubscriptionRequest {
   email: string
   streamId: string

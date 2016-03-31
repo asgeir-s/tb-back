@@ -1,3 +1,5 @@
+import * as Promise from "bluebird"
+
 import { Streams, AuthLevel } from "../../lib/streams"
 import { DynamoDb } from "../../lib/aws"
 import { Crypto, CryptedData } from "../../lib/crypto"

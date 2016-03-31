@@ -23,7 +23,7 @@ const COINBASE_APISECRET = "zapgYMztFVblKr3evb2DVHzlkiolBXmT"
 const AUTOTRADER_PRICE = "15"
 
 
-test("Trade-Generator:", (ot) => {
+test("GetPaymentCode:", (ot) => {
   ot.plan(1)
 
   ot.test("- should handle the default event", (t) => {

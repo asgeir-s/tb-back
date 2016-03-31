@@ -13,11 +13,9 @@ test("Crypto:", (ot) => {
     const password = "passwordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpassword"
 
     const rawData = {
-      "field1": "data",
-      "number": 22,
-      "map": {
-        "inner": "223"
-      }
+      "email": "sogasg@gmail.com",
+      "streamId": "43a2cfb3-6026-4a85-b3ab-2468f7d963aa",
+      "autoTrader": false
     }
 
     Crypto.encrypt(password, rawData)

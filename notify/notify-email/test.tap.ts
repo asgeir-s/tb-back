@@ -1,5 +1,6 @@
 import * as test from "tape"
 import * as _ from "ramda"
+import * as Promise from "bluebird"
 import * as sinon from "sinon"
 
 import { NotifyEmail, Inject } from "./action"

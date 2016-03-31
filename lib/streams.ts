@@ -1,9 +1,9 @@
-import { Stream, Stats, StreamPrivate } from "./typings/stream"
-import { Signal } from "./typings/signal"
-
 import * as Promise from "bluebird"
 import * as request from "request"
 import * as _ from "ramda"
+
+import { Stream, Stats, StreamPrivate } from "./typings/stream"
+import { Signal } from "./typings/signal"
 
 export enum AuthLevel {
   Public,
