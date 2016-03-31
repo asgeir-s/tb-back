@@ -7,6 +7,7 @@
   "sns-region": "us-west-2",
   "ses-region": "us-west-2",
   "dynamo-table-subscription": "subscriptions-staging",
+  "dynamo-table-stream-subscription": "arn:aws:dynamodb:us-west-2:525932482084:table/subscriptions-staging/stream/2016-02-10T09:59:51.776",
   "dynamo-table-streams": "streams-staging",
   "dynamo-region": "us-west-2",
   "fromEmail-signalNotify": "test@coinsignals.com",

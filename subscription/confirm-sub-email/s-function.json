@@ -4,7 +4,7 @@
   "description": "Serverless Lambda function for project: tb-back",
   "customName": "tb-back_subscription_confirm-sub-email",
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "subscription/confirm-sub-email/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -12,7 +12,18 @@
     "excludePatterns": []
   },
   "endpoints": [],
-  "events": [],
+  "events": [
+    {
+      "name": "confirm-sub-email_stream-subscription",
+      "type": "dynamodbstream",
+      "config": {
+        "streamArn": "${dynamo-table-stream-subscription}",
+        "startingPosition": "LATEST",
+        "batchSize": 1,
+        "enabled": true
+      }
+    }
+  ],
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
