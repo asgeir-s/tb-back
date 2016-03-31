@@ -36,7 +36,7 @@ export module CoinbaseNotification {
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
     const log = logger(context.awsRequestId)
 
-    return inn.decryptSubscriptionInfo(event.data.resource.metadata)
+    return inn.decryptSubscriptionInfo(event.data.metadata)
       .then(subscriptionInfo => {
         if (event.type === "wallet:orders:paid") {
           log.info("received order paid")
@@ -44,8 +44,8 @@ export module CoinbaseNotification {
 
           const renewing = _.prop("oldexpirationTime", subscriptionInfo) !== undefined
           const oldexpirationTime = renewing ? subscriptionInfo.oldexpirationTime : -1
-          const btcAmout = parseFloat(event.data.resource.bitcoin_amount.amount)
-          const orderId = event.data.resource.id
+          const btcAmout = parseFloat(event.data.bitcoin_amount.amount)
+          const orderId = event.data.id
 
           const cludaAmount = (btcAmout * 0.3).toFixed(8)
           const publisherAmount = (btcAmout * 0.7).toFixed(8)
@@ -55,13 +55,13 @@ export module CoinbaseNotification {
             email: subscriptionInfo.email,
             expirationTime: _.max(inn.timeNow() + monthMS, oldexpirationTime + monthMS),
             orderId: orderId,
-            paymentBTC: event.data.resource.bitcoin_amount.amount,
-            paymentUSD: event.data.resource.amount.amount,
-            receiveAddress: event.data.resource.bitcoin_address,
-            refundAddress: event.data.resource.refund_address,
+            paymentBTC: event.data.bitcoin_amount.amount,
+            paymentUSD: event.data.amount.amount,
+            receiveAddress: event.data.bitcoin_address,
+            refundAddress: event.data.refund_address,
             renewed: renewing.toString(),
             streamId: subscriptionInfo.streamId,
-            transactionId: event.data.resource.transaction.id,
+            transactionId: event.data.transaction.id,
             autoTrader: subscriptionInfo.autoTrader,
             autoTraderData: subscriptionInfo.autoTraderData,
             apiKey: subscriptionInfo.apiKey,
