@@ -50,6 +50,13 @@
             {
               "Effect": "Allow",
               "Action": [
+                "sns:Publish"
+              ],
+              "Resource": "arn:aws:sns:${region}:*:*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
                 "dynamodb:DescribeStream",
                 "dynamodb:GetRecords",
                 "dynamodb:GetShardIterator",

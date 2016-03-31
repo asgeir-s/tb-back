@@ -4,7 +4,7 @@
   "description": "Serverless Lambda function for project: tb-back",
   "customName": "tb-back_notify_notify-email",
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "notify/notify-email/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},

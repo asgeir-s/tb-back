@@ -4,7 +4,7 @@
   "description": "Serverless Lambda function for project: tb-back",
   "customName": "tb-back_autotrader_trade-generator",
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "autotrader/trade-generator/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -12,19 +12,15 @@
     "excludePatterns": []
   },
   "endpoints": [],
-  "events": [
-    {
-      "name": "mySchedule",
-      "type": "schedule",
-      "config": {
-        "schedule": "rate(5 minutes)"
-      }
-    }
-  ],
+  "events": [],
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "AWS_DYNAMO_REGION": "${dynamo-region}",
+    "AWS_DYNAMO_SUBSCRIPTIONTABLE": "${dynamo-table-subscription}",
+    "AWS_SNS_REGION": "${sns-region}",
+    "SNS_TRADE_TOPIC": "${sns-topic-trade}"
   },
   "vpc": {
     "securityGroupIds": [],

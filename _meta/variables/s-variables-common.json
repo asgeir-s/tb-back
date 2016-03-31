@@ -26,7 +26,7 @@
   "coinbase-account-primary": "5d7213c3-0ea7-5e2c-b8b2-4d4c58a6f316",
   "coinbase-account-vault": "2d0fc1a2-761f-5af0-8969-f80338a168e0",
   "coinbase-notification-ip-range": "54.175.255.192/27",
-  "crypto-key-coinbase": "my-secret-key",
+  "crypto-key-coinbase": "passwordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpasswordpassword",
   "coinbase-notification-scuset": "secret2",
   "autotrader_price_usd": "15"
 }
