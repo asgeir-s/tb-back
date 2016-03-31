@@ -37,7 +37,9 @@ export function handler(event: any, context: Context) {
   // Process callback
   //}
 
-  if (event.scuset === process.env.SCUSET && rangeCheck.inRange(event.source,
+  const source = (<string>event.source).split(/\s*,\s*/)[0]
+
+  if (event.scuset === process.env.SCUSET && rangeCheck.inRange(source,
     process.env.COINBASE_NOTIFICATION_IP_RANGE)) {
     console.info("AUTORIZED")
     handle(CoinbaseNotification.action, inject, event.event, context)
