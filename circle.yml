@@ -5,11 +5,11 @@ machine:
 dependencies:
   pre:
     - npm install -g typescript
-    - cd node-comp && npm install 
-    - cd node-comp && ./node_modules/typings/dist/bin.js install
+    - npm install 
+    - ./node_modules/typings/dist/bin.js install
     
 test:
   override:
-    - cd node-comp && npm run test-cov-html
+    - npm run test-cov-html
   post:
-    - mv node-comp/coverage $CIRCLE_ARTIFACTS/coverage
+    - mv coverage $CIRCLE_ARTIFACTS/coverage
