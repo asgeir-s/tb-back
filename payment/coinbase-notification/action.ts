@@ -100,7 +100,7 @@ export module CoinbaseNotification {
                   inn.snsSubscribeLambda(stream.streamPrivate.topicArn, inn.notifyEmailLambdaArn,
                     inn.timeNow().toString() + "1"),
                   inn.snsSubscribeLambda(stream.streamPrivate.topicArn, inn.tradeGeneratorLambdaArn,
-                    inn.timeNow().toString() + "1")
+                    inn.timeNow().toString() + "2")
                 ])
               }
               else {

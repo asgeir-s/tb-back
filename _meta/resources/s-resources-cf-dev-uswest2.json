@@ -57,7 +57,8 @@
             {
               "Effect": "Allow",
               "Action": [
-                "sns:Publish"
+                "sns:Publish",
+                "sns:Subscribe"
               ],
               "Resource": "arn:aws:sns:us-west-2:*:*"
             },
