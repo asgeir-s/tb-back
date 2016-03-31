@@ -1,5 +1,9 @@
 {
   "region": "us-west-2",
   "resourcesStackName": "tb-back-dev-r",
-  "iamRoleArnLambda": "arn:aws:iam::525932482084:role/tb-back-dev-r-IamRoleLambda-WH84CHDWRRHV"
+  "iamRoleArnLambda": "arn:aws:iam::525932482084:role/tb-back-dev-r-IamRoleLambda-WH84CHDWRRHV",
+  "eventID:subscriptionsStream": "41d7c04e-828c-4f6c-afe5-5628cd1c6d38",
+  "eventID:subscriptions-table-stream": "2283ca11-e874-4de2-8c27-164ed6f891a3",
+  "eventID:subscriptions-table-stream2": "bee349c2-c201-43b5-a645-c836e77d6d4b",
+  "eventID:subscriptions-table-stream1": "f2a106e4-969d-4136-9142-be110e41bfb9"
 }

@@ -4,7 +4,7 @@
   "description": "Serverless Lambda function for project: tb-back",
   "customName": "tb-back_subscription_pub-got-sub-email",
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "subscription/pub-got-sub-email/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -14,10 +14,13 @@
   "endpoints": [],
   "events": [
     {
-      "name": "mySchedule",
-      "type": "schedule",
+      "name": "subscription_pub-got-sub-email",
+      "type": "dynamodbstream",
       "config": {
-        "schedule": "rate(5 minutes)"
+        "streamArn": "${dynamo-table-stream-subscription}",
+        "startingPosition": "LATEST",
+        "batchSize": 1,
+        "enabled": true
       }
     }
   ],

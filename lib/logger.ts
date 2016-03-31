@@ -13,9 +13,9 @@ export function logger(GRID: string): Logger {
 }
 
 function info(GRID: string, message: string) {
-  return console.log("[" + GRID + "] INFO: " + message)
+  return console.log("[INFO] " + message)
 }
 
 function error(GRID: string, message: string) {
-  return console.error("[" + GRID + "] ERROR: " + message)
+  return console.error("[ERROR] " + message)
 }

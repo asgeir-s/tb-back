@@ -4,7 +4,7 @@
   "description": "Serverless Lambda function for project: tb-back",
   "customName": "tb-back_subscription_continue-sub-email",
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "subscription/continue-sub-email/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},

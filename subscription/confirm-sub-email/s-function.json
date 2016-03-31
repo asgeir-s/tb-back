@@ -14,7 +14,7 @@
   "endpoints": [],
   "events": [
     {
-      "name": "confirm-sub-email_stream-subscription",
+      "name": "subscription_confirm-sub-email",
       "type": "dynamodbstream",
       "config": {
         "streamArn": "${dynamo-table-stream-subscription}",
