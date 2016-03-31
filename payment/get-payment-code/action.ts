@@ -26,9 +26,7 @@ export module GetPaymentCode {
       .then(res => {
         const stream = res[0]
         const encryptedSubscriptionInfo = res[1]
-
-        let price = stream.subscriptionPriceUSD
-        if (event.autoTrader === "true") { price += inn.autoTraderPrice }
+        const price = totalPrice(stream.subscriptionPriceUSD, event.autoTrader === "true", inn.autoTraderPrice)
 
         log.info("stream: " + stream.id + ", price: " + price)
 
@@ -45,6 +43,18 @@ export module GetPaymentCode {
           }
         }
       })
+  }
+
+/**
+ * returns price with 8 decimal places (whats excetped by Coinbase)
+ */
+  function totalPrice(subscriptionPriceUsd: number, autoTrader: boolean, autoTraderPriceUsd: number): string {
+    if (autoTrader) {
+      return (subscriptionPriceUsd + autoTraderPriceUsd).toFixed(8)
+    }
+    else {
+      return subscriptionPriceUsd.toFixed(8)
+    }
   }
 }
 

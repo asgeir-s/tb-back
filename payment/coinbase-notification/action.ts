@@ -12,6 +12,9 @@ import { SubscriptionRequest } from "../../lib/typings/subscription-request"
 import { Subscription } from "../../lib/typings/subscription"
 import { AddSubscriptionResponds } from "../../lib/subscriptions"
 
+/**
+ * ToDo: should add subscription to streams topic for notify-email and trade-generator if autotrader is true
+ */
 
 const monthMS = 2592000000
 export interface Inject {

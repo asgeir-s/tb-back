@@ -48,7 +48,8 @@
     "COINBASE_ENCRYPTION_PASSWORD": "${crypto-key-coinbase}",
     "COINBASE_APIKEY": "${coinbase-apikey}",
     "COINBASE_APISECRET": "${coinbase-apisecret}",
-    "COINBASE_SANDBOX": "${coinbase-sandbox}"
+    "COINBASE_SANDBOX": "${coinbase-sandbox}",
+    "AUTOTRADER_PRICE": "${autotrader_price_usd}"
   },
   "vpc": {
     "securityGroupIds": [],

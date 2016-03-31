@@ -25,6 +25,7 @@ const inject: Inject = {
   timeNow: () => new Date().getTime(),
   cludaVault: process.env.COINBASE_ACCOUNT_VAULT
 }
+
 export function handler(event: any, context: Context) {
   // validate callback
   //if (coinbaseClient.verifyCallback(event, context.clientContext. req.headers['CB-SIGNATURE'])) {
