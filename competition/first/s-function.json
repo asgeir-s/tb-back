@@ -2,7 +2,7 @@
   "name": "first",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": "tb-backend-competition-first",
+  "customName": "tb-back_competition_first",
   "customRole": false,
   "handler": "handler.handler",
   "timeout": 6,

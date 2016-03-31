@@ -2,7 +2,7 @@
   "name": "continue-sub-email",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": false,
+  "customName": "tb-back_subscription_continue-sub-email",
   "customRole": false,
   "handler": "handler.handler",
   "timeout": 6,

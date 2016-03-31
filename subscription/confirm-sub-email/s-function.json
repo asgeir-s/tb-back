@@ -2,7 +2,7 @@
   "name": "confirm-sub-email",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": "tb-backend-lambda-node-comp-subscription-confirmSubEmail",
+  "customName": "tb-back_subscription_confirm-sub-email",
   "customRole": false,
   "handler": "handler.handler",
   "timeout": 6,

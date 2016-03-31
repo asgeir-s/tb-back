@@ -2,7 +2,7 @@
   "name": "coinbase-notification",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": false,
+  "customName": "tb-back_payment_coinbase-notification",
   "customRole": false,
   "handler": "handler.handler",
   "timeout": 6,

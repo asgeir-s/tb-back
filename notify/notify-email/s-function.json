@@ -2,7 +2,7 @@
   "name": "notify-email",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": "tb-backend-lambda-node-comp-notify-email",
+  "customName": "tb-back_notify_notify-email",
   "customRole": false,
   "handler": "handler.handler",
   "timeout": 6,

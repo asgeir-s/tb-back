@@ -2,7 +2,7 @@
   "name": "get-payment-code",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": false,
+  "customName": "tb-back_payment_get-payment-code",
   "customRole": false,
   "handler": "handler.handler",
   "timeout": 6,

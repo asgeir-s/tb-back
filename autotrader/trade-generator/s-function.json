@@ -2,7 +2,7 @@
   "name": "trade-generator",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": false,
+  "customName": "tb-back_autotrader_trade-generator",
   "customRole": false,
   "handler": "handler.handler",
   "timeout": 6,
