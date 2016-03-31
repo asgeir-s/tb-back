@@ -75,7 +75,7 @@ export module NotifyEmail {
     let pluralOr = "signal"
     if (signals.length === 1) {
       if (signals[0].signal === 0) {
-        change = (signals[0].changeInclFee * 100).toFixed(2);
+        change = (signals[0].changeInclFee * 100).toFixed(2)
       }
 
       signalContent = `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;` +
@@ -89,8 +89,8 @@ export module NotifyEmail {
     }
     else {
       const lastSignal = maxById(signals)
-      pluralOr = 'signals'
-      change = ((signals[0].changeInclFee + signals[1].changeInclFee) * 100).toFixed(2);
+      pluralOr = "signals"
+      change = ((signals[0].changeInclFee + signals[1].changeInclFee) * 100).toFixed(2)
 
       signalContent = "<p>First:</p>" + `<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, ` +
         `Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;` +
@@ -142,7 +142,6 @@ export module NotifyEmail {
       }
     }
   }
-
 
   const byId = (n: any) => +_.propOr(0, "id")(n)
   const maxById = (signals: Array<any>) => _.reduce(_.maxBy(byId), 0, signals)
