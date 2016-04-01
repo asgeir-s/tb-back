@@ -8,9 +8,6 @@ export interface Logger {
   raw: (raw: any) => void
 }
 
-/**
- * if no user id pass "" for user id
- */
 export const log: Logger = {
   info: _.curry(logMessage)("INFO"),
   error: _.curry(logMessage)("ERROR"),
