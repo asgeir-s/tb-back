@@ -6,5 +6,7 @@
   "eventID:subscriptions-table-stream": "2283ca11-e874-4de2-8c27-164ed6f891a3",
   "eventID:subscriptions-table-stream2": "bee349c2-c201-43b5-a645-c836e77d6d4b",
   "eventID:subscriptions-table-stream1": "f2a106e4-969d-4136-9142-be110e41bfb9",
-  "apiGatewayApi": "tb-back"
+  "apiGatewayApi": "tb-back",
+  "eventID:subscription_confirm-sub-email": "471026b5-87f4-4ee0-a0e2-0a55e4a767b1",
+  "eventID:subscription_pub-got-sub-email": "7cf061db-ef2c-47d3-80e9-3a7b61b79cba"
 }
