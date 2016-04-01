@@ -1,21 +1,39 @@
 import * as _ from "ramda"
 
 export interface Logger {
-  info: (message: string) => void,
-  error: (message: string) => void
+  info: (message: string, data: any) => void,
+  error: (message: string, data: any) => void,
+  exception: (message: string, error: Error) => void,
+  log: (infoLevel: string, message: string, data: any) => void,
+  raw: (raw: any) => void
 }
 
-export function logger(GRID: string): Logger {
-  return {
-    info: _.curry(info)(GRID),
-    error: _.curry(error)(GRID)
-  }
+/**
+ * if no user id pass "" for user id
+ */
+export const log: Logger = {
+  info: _.curry(logMessage)("INFO"),
+  error: _.curry(logMessage)("ERROR"),
+  exception: exception,
+  log: logMessage,
+  raw: console.log
 }
 
-function info(GRID: string, message: string) {
-  return console.log("[INFO] " + message)
+
+function logMessage(logLevel: string, message: any, data: any) {
+  return console.log(JSON.stringify({
+    "level": logLevel,
+    "message": message,
+    "data": data
+  }))
 }
 
-function error(GRID: string, message: string) {
-  return console.error("[ERROR] " + message)
+function exception(message: string, error: Error) {
+  return console.log(JSON.stringify({
+    "level": "EXCEPTION",
+    "message": message,
+    "exceptionName": error.name,
+    "exceptionMessage": error.message,
+    "stack": error.stack
+  }))
 }

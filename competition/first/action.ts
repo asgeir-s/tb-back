@@ -4,7 +4,7 @@ import * as Promise from "bluebird"
 import { DynamoDb, SES } from "../../lib/aws"
 import { Context } from "../../lib/typings/aws-lambda"
 import { EmailTemplete } from "../../lib/email-template"
-import { logger } from "../../lib/logger"
+import { log } from "../../lib/logger"
 import { Streams } from "../../lib/streams"
 import { Signals } from "../../lib/signals"
 import { Responds } from "../../lib/typings/responds"
@@ -20,7 +20,6 @@ export module FirstCompitition {
   const minimumClosedTrades = 17
 
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
-    const log = logger(context.awsRequestId)
 
     // get streams
     return inn.documentClient.scanAsync({

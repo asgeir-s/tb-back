@@ -6,7 +6,7 @@ import { Context } from "../../lib/typings/aws-lambda"
 import { EmailTemplete } from "../../lib/email-template"
 import { Subscriptions } from "../../lib/subscriptions"
 import { SubscriptionRequest } from "../../lib/payment"
-import { logger } from "../../lib/logger"
+import { log } from "../../lib/logger"
 import { Subscription } from "../../lib/typings/subscription"
 import { Responds } from "../../lib/typings/responds"
 import { Stream } from "../../lib/typings/stream"
@@ -29,13 +29,14 @@ export module ContinueSubscriptionEmail {
   const msInDay = 86400000
 
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
-    const log = logger(context.awsRequestId)
     let lastExpiration: number = 0
 
     return inn.load(["lastProsessedExpiration"])
       .then((res: any) => {
         lastExpiration = res.lastProsessedExpiration
-        log.info("loaded lastProsessedExpiration: " + lastExpiration)
+        log.info("loaded lastProsessedExpiration", {
+          "lastExpiration": lastExpiration
+        })
         return inn.getExpieringSubscriptions(lastExpiration + 1, inn.timeNow() + msInDay * 5)
       })
       .map((subscription: Subscription) => {
@@ -50,7 +51,7 @@ export module ContinueSubscriptionEmail {
           "oldexpirationTime": subscription.expirationTime
         }
 
-        log.info("subscriptionRequest: " + JSON.stringify(subscriptionRequest))
+        log.info("subscriptionRequest", subscriptionRequest)
 
         return Promise.all([
           inn.getStream(subscriptionRequest.streamId),
@@ -63,30 +64,33 @@ export module ContinueSubscriptionEmail {
             let price = stream.subscriptionPriceUSD
             if (event.autoTrader === "true") { price += inn.autoTraderPrice }
 
-            log.info("stream: " + stream.id + ", price: " + price)
+            log.info("price", price)
 
             return inn.createCheckout("Stream Subscription", price.toString(), "Subscription to stream: " +
               stream.name + ", autoTrader: " + event.autoTrader, encryptedSubscriptionInfo)
           })
           .then(checkout => {
-            log.info("checkout: " + JSON.stringify(checkout))
+            log.info("checkout from coinbase", checkout)
             return composeEmail("Subscription Expiring Soon", subscription, checkout.embed_code)
           })
           .then(email => {
-            log.info("sending email: '" + email.subject + "' to " + email.resipians)
+            log.info("sending email", {
+              "subject": email.subject,
+              "resipians": email.resipians
+            })
             inn.sendEmail(email)
           })
       })
       .then((sesRespondses: Array<any>) => {
         _.isEmpty(sesRespondses) ?
-          log.info("no new emails to send") :
-          log.info("snsRespondses: " + JSON.stringify(sesRespondses))
+          log.info("no new emails to send", "") :
+          log.info("snsRespondses", sesRespondses)
         return _.isEmpty(sesRespondses) ?
           "did NOT save anything to DynemoDB" :
           inn.save([["lastProsessedExpiration", lastExpiration]])
       })
       .then((dynemoDBResponds: any) => {
-        log.info("dynemoDBResponds: " + JSON.stringify(dynemoDBResponds))
+        log.info("dynemoDBResponds", dynemoDBResponds)
         return {
           "GRID": context.awsRequestId,
           "data": "saved lastProsessedExpiration: " + lastExpiration,

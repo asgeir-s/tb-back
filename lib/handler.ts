@@ -2,6 +2,7 @@ import * as Promise from "bluebird"
 
 import { Context } from "./typings/aws-lambda"
 import { Responds } from "./typings/responds"
+import { log } from "../lib/logger"
 
 export function handle(
   action: (inject: any, event: any, context: Context) => Promise<Responds>,
@@ -11,22 +12,26 @@ export function handle(
   printEvent: boolean = true) {
 
   if (printEvent) {
-    console.log("[EVENT] " + JSON.stringify(event))
+    log.log("EVENT", "received new event", { "event": event })
   }
 
   action(inject, event, context)
     .then(result => {
       if (result.success) {
-        console.info("[RESULT-SUCCESS] " + JSON.stringify(result))
+        log.log("RESULT", "SUCCESS", { "result": result })
         context.done(null, result)
       }
       else {
-        console.info("[RESULT-FAILE] " + JSON.stringify(result))
+        log.log("RESULT", "FAILE", { "result": result })
         context.done(result, null)
       }
     })
     .catch((error: any) => {
-      console.error("[RESULT-EXCEPTION] " + error)
+      log.log("RESULT", "EXCEPTION", {
+        "exceptionName": error.name,
+        "exceptionMessage": error.message,
+        "stack": error.stack
+      })
       return context.done({
         "GRID": context.awsRequestId,
         "data": "Internal Server Error",

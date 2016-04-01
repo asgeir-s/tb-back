@@ -7,7 +7,7 @@ import { Crypto, CryptedData } from "../../lib/crypto"
 import { Coinbase } from "../../lib/coinbase"
 import { Stream } from "../../lib/typings/stream"
 import { Context } from "../../lib/typings/aws-lambda"
-import { logger } from "../../lib/logger"
+import { log } from "../../lib/logger"
 import { Responds } from "../../lib/typings/responds"
 import { SubscriptionRequest } from "../../lib/typings/subscription-request"
 import { Subscription } from "../../lib/typings/subscription"
@@ -34,13 +34,13 @@ export interface Inject {
 
 export module CoinbaseNotification {
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
-    const log = logger(context.awsRequestId)
 
     return inn.decryptSubscriptionInfo(event.data.metadata)
       .then(subscriptionInfo => {
         if (event.type === "wallet:orders:paid") {
-          log.info("received order paid")
-          log.info("subscriptionInfo: " + JSON.stringify(subscriptionInfo))
+          log.info("received order paid", {
+            "subscriptionInfo": subscriptionInfo
+          })
 
           const renewing = _.prop("oldexpirationTime", subscriptionInfo) !== undefined
           const oldexpirationTime = renewing ? subscriptionInfo.oldexpirationTime : -1
@@ -68,7 +68,7 @@ export module CoinbaseNotification {
             apiSecret: subscriptionInfo.apiSecret,
           })
             .then(res => {
-              log.info("responds from addSubscription: " + JSON.stringify(res))
+              log.info("responds from addSubscription", res)
               return inn.getStream(subscriptionInfo.streamId)
             })
             .then(stream => {
@@ -90,8 +90,8 @@ export module CoinbaseNotification {
                 idem: orderId + "Publisher",
               }
 
-              log.info("CLUDA PAYOUT: " + JSON.stringify(cludaPayout))
-              log.info("PUBLISHER PAYOUT: " + JSON.stringify(publisherPayout))
+              log.info("CLUDA PAYOUT", + cludaPayout)
+              log.info("PUBLISHER PAYOUT", publisherPayout)
 
               if (subscriptionInfo.autoTrader) {
                 return Promise.all([
@@ -113,12 +113,12 @@ export module CoinbaseNotification {
               }
             })
             .then(res => {
-              log.info("CLUDA PAYOUT RESPONDS: " + JSON.stringify(res[0]))
-              log.info("PUBLISHER PAYOUT RESPONDS: " + JSON.stringify(res[1]))
-              log.info("SNS EMAIL-NOTIFY SUBSCRIPTION RESPONDS: " + JSON.stringify(res[2]))
+              log.info("CLUDA PAYOUT RESPONDS", res[0])
+              log.info("PUBLISHER PAYOUT RESPONDS", res[1])
+              log.info("SNS EMAIL-NOTIFY SUBSCRIPTION RESPONDS", res[2])
 
               if (subscriptionInfo.autoTrader) {
-                log.info("SNS TRADE-GENERATOR SUBSCRIPTION RESPONDS: " + JSON.stringify(res[3]))
+                log.info("SNS TRADE-GENERATOR SUBSCRIPTION RESPONDS", res[3])
               }
 
               const respondsData: any = {
@@ -135,8 +135,9 @@ export module CoinbaseNotification {
         }
 
         else if (event.type === "wallet:orders:mispaid") {
-          log.info("received order mispaid")
-          log.info("subscriptionInfo: " + JSON.stringify(subscriptionInfo))
+          log.info("received order mispaid", {
+            "subscriptionInfo": subscriptionInfo
+          })
           inn.alert("received order mispaid for subscription: email:" + subscriptionInfo.email +
             ", streamId:" + subscriptionInfo.streamId + ", oldexpirationTime:" + subscriptionInfo.oldexpirationTime +
             ", coinbaseNotification: " + JSON.stringify(event))
@@ -148,7 +149,9 @@ export module CoinbaseNotification {
         }
 
         else {
-          log.info("received unknown notification type: " + event.type)
+          log.info("received unknown notification type", {
+            "event": event.type
+          })
           return {
             "GRID": context.awsRequestId,
             "data": "nothing done. Unknown notification type",

@@ -5,7 +5,7 @@ import { Context } from "../../lib/typings/aws-lambda"
 import { EmailTemplete } from "../../lib/email-template"
 import { SES, DynamoDb } from "../../lib/aws"
 import { Subscriptions } from "../../lib/subscriptions"
-import { logger } from "../../lib/logger"
+import { log } from "../../lib/logger"
 import { Responds } from "../../lib/typings/responds"
 
 export interface Inject {
@@ -17,16 +17,16 @@ export interface Inject {
 export module NotifyEmail {
 
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
-    const log = logger(context.awsRequestId)
-
     const message = JSON.parse(event.Records[0].Sns.Message)
-    log.info("streamId: " + message.streamId + ", subscriptionTable:" + process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE +
-      ", signals:" + JSON.stringify(message.signals))
+    log.info("SNS message", {
+      "message": message,
+      "subscriptionTable": process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE
+    })
 
     return inn.getActiveSubscriptions(message.streamId, inn.timeNow())
       .then((subscriptions: any) => {
         if (_.isEmpty(subscriptions)) {
-          log.info("theire are no active email subscribers for stream with id: " + message.streamId)
+          log.info("theire are no active email subscribers", {"streamId": message.streamId})
           return {
             "GRID": context.awsRequestId,
             "data": "no active email subscribers",
@@ -41,7 +41,7 @@ export module NotifyEmail {
           }
           const logEmail = _.clone(email)
           logEmail.body = logEmail.body.substr(0, 20)
-          log.info("sending email: " + JSON.stringify(logEmail))
+          log.info("sending email", logEmail)
 
           return inn.sendEmail(email).then((responds: any) => {
             return {

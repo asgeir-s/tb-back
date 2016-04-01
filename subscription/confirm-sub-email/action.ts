@@ -2,7 +2,7 @@ import * as _ from "ramda"
 import * as Promise from "bluebird"
 
 import { Context } from "../../lib/typings/aws-lambda"
-import { logger } from "../../lib/logger"
+import { log } from "../../lib/logger"
 import { SES } from "../../lib/aws"
 import { EmailTemplete } from "../../lib/email-template"
 import { Streams } from "../../lib/streams"
@@ -17,10 +17,10 @@ export interface Inject {
 
 export module ConfirmSubscriptionEmail {
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
-    const log = logger(context.awsRequestId)
 
     if (event.Records.length !== 1) {
-      log.error("noe emails sent, wrong number of records. Should be 1, but was " + event.Records.length + ".")
+      log.error("noe emails sent, wrong number of records. Should be 1, but was " + event.Records.length + ".",
+        { "event": event })
       throw new Error("noe emails sent, wrong number of records. Should be 1, but was " + event.Records.length + ".")
     }
     else {
@@ -32,8 +32,6 @@ export module ConfirmSubscriptionEmail {
 
         return inn.getStream(streamId)
           .then(stream => {
-            log.info("stream: " + stream.id)
-
             let emailBody = ""
             if (stream.lastSignal.signal === 0) {
               emailBody = EmailTemplete.newEmailBody(
@@ -62,8 +60,8 @@ export module ConfirmSubscriptionEmail {
               body: emailBody,
               resipians: [newSubscriberEmail]
             }).then((res: any) => {
-              log.info("email sent to: " + newSubscriberEmail)
-              log.info("SES send email responds: " + JSON.stringify(res))
+              log.info("email sent to", newSubscriberEmail)
+              log.info("SES send email responds", res)
               return {
                 "GRID": context.awsRequestId,
                 "data": "confirm email sent to subscriber",
@@ -73,7 +71,9 @@ export module ConfirmSubscriptionEmail {
           })
       }
       else {
-        log.info('noe emails sent, this was not a "INSERT" event. Event type was: ' + record.eventName + ".")
+        log.info('noe emails sent, this was not a "INSERT" event', {
+          "eventType": record.eventName
+        })
         return Promise.resolve({
           "GRID": context.awsRequestId,
           "data": "not relevant event type",

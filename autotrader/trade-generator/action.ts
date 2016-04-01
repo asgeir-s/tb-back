@@ -3,7 +3,7 @@ import * as Promise from "bluebird"
 
 import { Context } from "../../lib/typings/aws-lambda"
 import { SNS } from "../../lib/aws"
-import { logger } from "../../lib/logger"
+import { log } from "../../lib/logger"
 import { Responds } from "../../lib/typings/responds"
 
 export interface Inject {
@@ -15,7 +15,6 @@ export interface Inject {
 export module TradeGenerator {
 
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
-    const log = logger(context.awsRequestId)
     const message = JSON.parse(event.Records[0].Sns.Message)
 
     // get active-autotrader sbuscriptions for stream
@@ -30,7 +29,7 @@ export module TradeGenerator {
       // handle responds to the caller
       .then(respondses => {
         if (_.isEmpty(respondses)) {
-          log.info("theire are no active autotrader subscribers for stream with id: " + message.streamId)
+          log.info("theire are no active autotrader subscribers for stream", { "streamId": message.streamId })
           // stop subscribing to this stream topic
           return {
             "GRID": context.awsRequestId,
@@ -43,7 +42,7 @@ export module TradeGenerator {
           const failed = respondses.filter(x => typeof x.MessageId === "undefined" || x.MessageId === null)
 
           if (_.isEmpty(failed)) {
-            log.info("published trade for " + respondses.length + " subscribers")
+            log.info("published trade for " + respondses.length + " subscribers", respondses)
             return {
               "GRID": context.awsRequestId,
               "data": "published trade for " + respondses.length + " subscribers",
@@ -52,8 +51,7 @@ export module TradeGenerator {
           }
           else {
             log.error("failed to publish " + failed.length + " out of " +
-              respondses.length + " to trade SNS topic")
-            log.error("The failed respondses: " + JSON.stringify(failed))
+              respondses.length + " to trade SNS topic", { "failed": failed })
 
             return {
               "GRID": context.awsRequestId,

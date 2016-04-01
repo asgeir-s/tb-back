@@ -7,7 +7,7 @@ import { Crypto, CryptedData } from "../../lib/crypto"
 import { Coinbase } from "../../lib/coinbase"
 import { Stream } from "../../lib/typings/stream"
 import { Context } from "../../lib/typings/aws-lambda"
-import { logger } from "../../lib/logger"
+import { log } from "../../lib/logger"
 import { Responds } from "../../lib/typings/responds"
 import { SubscriptionRequest } from "../../lib/typings/subscription-request"
 
@@ -22,7 +22,6 @@ export interface Inject {
 
 export module GetPaymentCode {
   export function action(inn: Inject, event: SubscriptionRequest, context: Context): Promise<Responds> {
-    const log = logger(context.awsRequestId)
 
     // todo: encrypt apikey and secret with password
     let subscriptionRequest: SubscriptionRequest = _.clone(event)
@@ -30,7 +29,7 @@ export module GetPaymentCode {
       subscriptionRequest.apiKey = inn.encryptApiKey(event.apiKey)
       subscriptionRequest.apiSecret = inn.encryptApiKey(event.apiSecret)
     }
-    console.log("[EVENT (keys encrypted)] " + JSON.stringify(subscriptionRequest))
+    log.log("EVENT (keys encrypted)", "received new event", { "subscriptionRequest": subscriptionRequest })
 
     return Promise.all([inn.getStream(subscriptionRequest.streamId), inn.encryptSubscriptionInfo(subscriptionRequest)])
       .then(res => {
@@ -39,13 +38,11 @@ export module GetPaymentCode {
         const price = totalPrice(stream.subscriptionPriceUSD, subscriptionRequest.autoTrader,
           inn.autoTraderPrice)
 
-        log.info("stream: " + stream.id + ", price: " + price)
-
         return inn.createCheckout("Stream Subscription", price.toString(), "Subscription to stream: " +
           stream.name + ", autoTrader: " + subscriptionRequest.autoTrader, encryptedSubscriptionInfo)
       })
       .then(checkout => {
-        log.info("checkout: " + JSON.stringify(checkout))
+        log.info("checkout from coinbase", checkout)
         return {
           "GRID": context.awsRequestId,
           "success": true,
