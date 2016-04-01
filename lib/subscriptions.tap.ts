@@ -6,13 +6,13 @@ import { Subscriptions } from "./subscriptions"
 import { Subscription } from "./typings/subscription"
 import * as sinon from "sinon"
 
-test("Subscriptions.addSubscription/.getActiveAutotraderSubscriptions:" +
-  " - should be possible to add and get back subscriptions", (t) => {
-    t.plan(1)
+test("Subscriptions - .addSubscription/.getActiveAutotraderSubscriptions/.getActiveSubscriptions/" +
+  ".getExpieringSubscriptions: - should be possible to add and get back subscriptions", (t) => {
+    t.plan(3)
 
     const databaseCli = DynamoDb.documentClientAsync("us-west-2")
     const timestamp = new Date().getTime()
-    const streamId = "example-test-stream-id"
+    const streamId = "example-test-stream-id-2"
     const expirationTime = timestamp + 100000
 
     const subscription: Subscription = {
@@ -24,10 +24,10 @@ test("Subscriptions.addSubscription/.getActiveAutotraderSubscriptions:" +
       "paymentUSD": 1000,
       "receiveAddress": "receiveAddress",
       "refundAddress": "refundAddress",
-      "renewed": "false",
+      "renewed": false,
       "streamId": streamId,
       "transactionId": "transactionId",
-      "autoTrader": "true",
+      "autoTrader": true,
       "autoTraderData": {
         "field1": 234,
         "filed2": "hei"
@@ -41,7 +41,22 @@ test("Subscriptions.addSubscription/.getActiveAutotraderSubscriptions:" +
         Subscriptions.getActiveAutotraderSubscriptions(databaseCli, "subscriptions-staging", streamId, timestamp)
           .then((res: Array<Subscription>) => {
             t.equal(_.filter((sub: Subscription) => sub.expirationTime === expirationTime, res).length, 1,
-              "should contain the reacintly added subscription")
+              "should contain the reacintly added subscription (.getActiveAutotraderSubscriptions)")
+          })
+      })
+      .then(res => {
+        Subscriptions.getActiveSubscriptions(databaseCli, "subscriptions-staging", streamId, timestamp)
+          .then((res: Array<Subscription>) => {
+            t.equal(_.filter((sub: Subscription) => sub.expirationTime === expirationTime, res).length, 1,
+              "should contain the reacintly added subscription (.getActiveSubscriptions)")
+          })
+      })
+      .then(res => {
+        Subscriptions.getExpieringSubscriptions(databaseCli, "subscriptions-staging", expirationTime - 10000,
+          expirationTime + 10000)
+          .then((res: Array<Subscription>) => {
+            t.equal(_.filter((sub: Subscription) => sub.expirationTime === expirationTime, res).length, 1,
+              "should contain the reacintly added subscription (.getActiveSubscriptions)")
           })
       })
   })

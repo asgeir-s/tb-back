@@ -7,9 +7,12 @@ export function handle(
   action: (inject: any, event: any, context: Context) => Promise<Responds>,
   inject: any,
   event: any,
-  context: Context) {
+  context: Context,
+  printEvent: boolean = true) {
 
-  console.log("[EVENT] " + JSON.stringify(event))
+  if (printEvent) {
+    console.log("[EVENT] " + JSON.stringify(event))
+  }
 
   action(inject, event, context)
     .then(result => {

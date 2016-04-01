@@ -7,10 +7,10 @@ export interface Subscription {
   paymentUSD: number
   receiveAddress: string
   refundAddress: string
-  renewed?: string
+  renewed?: boolean
   streamId: string
   transactionId: string
-  autoTrader?: string
+  autoTrader?: boolean
   autoTraderData?: any
   apiKey: string
   apiSecret: string

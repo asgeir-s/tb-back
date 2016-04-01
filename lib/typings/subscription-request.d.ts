@@ -1,7 +1,7 @@
 export interface SubscriptionRequest {
   email: string
   streamId: string
-  autoTrader?: string
+  autoTrader?: boolean
   apiKey?: string
   apiSecret?: string
   oldexpirationTime?: number

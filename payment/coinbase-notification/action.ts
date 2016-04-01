@@ -59,7 +59,7 @@ export module CoinbaseNotification {
             paymentUSD: event.data.amount.amount,
             receiveAddress: event.data.bitcoin_address,
             refundAddress: event.data.refund_address,
-            renewed: renewing.toString(),
+            renewed: renewing,
             streamId: subscriptionInfo.streamId,
             transactionId: event.data.transaction.id,
             autoTrader: subscriptionInfo.autoTrader,
@@ -93,7 +93,7 @@ export module CoinbaseNotification {
               log.info("CLUDA PAYOUT: " + JSON.stringify(cludaPayout))
               log.info("PUBLISHER PAYOUT: " + JSON.stringify(publisherPayout))
 
-              if (subscriptionInfo.autoTrader === "true") {
+              if (subscriptionInfo.autoTrader) {
                 return Promise.all([
                   inn.transferMoney(cludaPayout),
                   inn.sendMoney(publisherPayout),
@@ -117,7 +117,7 @@ export module CoinbaseNotification {
               log.info("PUBLISHER PAYOUT RESPONDS: " + JSON.stringify(res[1]))
               log.info("SNS EMAIL-NOTIFY SUBSCRIPTION RESPONDS: " + JSON.stringify(res[2]))
 
-              if (subscriptionInfo.autoTrader === "true") {
+              if (subscriptionInfo.autoTrader) {
                 log.info("SNS TRADE-GENERATOR SUBSCRIPTION RESPONDS: " + JSON.stringify(res[3]))
               }
 

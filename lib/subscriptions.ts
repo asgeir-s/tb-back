@@ -2,12 +2,12 @@ import * as Promise from "bluebird"
 
 import { Subscription } from "./typings/subscription"
 
-  export interface AddSubscriptionResponds {
-    streamId: string
-    expirationTime: number,
-    new: boolean
-  }
-  
+export interface AddSubscriptionResponds {
+  streamId: string
+  expirationTime: number,
+  new: boolean
+}
+
 export module Subscriptions {
 
   export function getActiveSubscriptions(documentClient: any, subscriptionTable: string,
@@ -16,11 +16,11 @@ export module Subscriptions {
     return documentClient.queryAsync({
       TableName: subscriptionTable,
       KeyConditionExpression: "streamId = :streamId AND expirationTime >= :timeNow",
-      FilterExpression: "(attribute_not_exists (renewed) OR renewed = :falseString)",
+      FilterExpression: "attribute_not_exists (renewed) OR renewed = :false",
       ExpressionAttributeValues: {
         ":streamId": streamId,
         ":timeNow": time,
-        ":falseString": "false",
+        ":false": false
       }
     }).then((responds: any) => responds.Items)
   }
@@ -31,12 +31,12 @@ export module Subscriptions {
     return documentClient.queryAsync({
       TableName: subscriptionTable,
       KeyConditionExpression: "streamId = :streamId AND expirationTime >= :timeNow",
-      FilterExpression: "autoTrader = :trueString AND (attribute_not_exists (renewed) OR renewed = :falseString)",
+      FilterExpression: "autoTrader = :true AND (attribute_not_exists (renewed) OR renewed = :false)",
       ExpressionAttributeValues: {
         ":streamId": streamId,
         ":timeNow": time,
-        ":falseString": "false",
-        ":trueString": "true"
+        ":false": false,
+        ":true": true
       }
     }).then((responds: any) => responds.Items)
   }

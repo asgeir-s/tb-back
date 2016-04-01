@@ -1,4 +1,5 @@
 import * as Promise from "bluebird"
+import * as _ from "ramda"
 
 import { Streams, AuthLevel } from "../../lib/streams"
 import { DynamoDb } from "../../lib/aws"
@@ -14,6 +15,7 @@ import { SubscriptionRequest } from "../../lib/typings/subscription-request"
 export interface Inject {
   getStream: (streamId: string) => Promise<Stream>
   encryptSubscriptionInfo: (subscriptionInfo: SubscriptionRequest) => Promise<CryptedData>
+  encryptApiKey: (content: string) => string
   createCheckout: (name: string, priceUSD: string, description: string, cryptedMetadata: any) => Promise<any>
   autoTraderPrice: number
 }
@@ -23,17 +25,24 @@ export module GetPaymentCode {
     const log = logger(context.awsRequestId)
 
     // todo: encrypt apikey and secret with password
+    let subscriptionRequest: SubscriptionRequest = _.clone(event)
+    if (subscriptionRequest.autoTrader) {
+      subscriptionRequest.apiKey = inn.encryptApiKey(event.apiKey)
+      subscriptionRequest.apiSecret = inn.encryptApiKey(event.apiSecret)
+    }
+    console.log("[EVENT (keys encrypted)] " + JSON.stringify(subscriptionRequest))
 
-    return Promise.all([inn.getStream(event.streamId), inn.encryptSubscriptionInfo(event)])
+    return Promise.all([inn.getStream(subscriptionRequest.streamId), inn.encryptSubscriptionInfo(subscriptionRequest)])
       .then(res => {
         const stream = res[0]
         const encryptedSubscriptionInfo = res[1]
-        const price = totalPrice(stream.subscriptionPriceUSD, event.autoTrader === "true", inn.autoTraderPrice)
+        const price = totalPrice(stream.subscriptionPriceUSD, subscriptionRequest.autoTrader,
+          inn.autoTraderPrice)
 
         log.info("stream: " + stream.id + ", price: " + price)
 
         return inn.createCheckout("Stream Subscription", price.toString(), "Subscription to stream: " +
-          stream.name + ", autoTrader: " + event.autoTrader, encryptedSubscriptionInfo)
+          stream.name + ", autoTrader: " + subscriptionRequest.autoTrader, encryptedSubscriptionInfo)
       })
       .then(checkout => {
         log.info("checkout: " + JSON.stringify(checkout))
@@ -47,9 +56,9 @@ export module GetPaymentCode {
       })
   }
 
-/**
- * returns price with 8 decimal places (whats excetped by Coinbase)
- */
+  /**
+   * returns price with 8 decimal places (whats excetped by Coinbase)
+   */
   function totalPrice(subscriptionPriceUsd: number, autoTrader: boolean, autoTraderPriceUsd: number): string {
     if (autoTrader) {
       return (subscriptionPriceUsd + autoTraderPriceUsd).toFixed(8)

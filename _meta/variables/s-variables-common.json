@@ -31,5 +31,6 @@
   "autotrader_price_usd": "15",
   "lambda-region": "us-west-2",
   "lambda-arn-tradeGenerator": "arn:aws:lambda:us-west-2:525932482084:function:tb-back_autotrader_trade-generator:dev",
-  "lambda-arn-notifyEmail": "arn:aws:lambda:us-west-2:525932482084:function:tb-back_notify_notify-email:dev"
+  "lambda-arn-notifyEmail": "arn:aws:lambda:us-west-2:525932482084:function:tb-back_notify_notify-email:dev",
+  "crypto-key-bitfinex-apiKeys": "password123"
 }
