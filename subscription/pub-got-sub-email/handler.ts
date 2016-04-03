@@ -13,7 +13,7 @@ const inject: Inject = {
     process.env.FROM_EMAIL_SUBSCRIPTION_INFO),
   getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
     process.env.DYNAMO_TABLE_STREAMS, AuthLevel.Private),
-  getUserEmail: _.curry(Users.getUserEmail)(process.env.AUTH0_GET_USER_SECRET),
+  getUserEmail: _.curry(Users.getUser)(process.env.AUTH0_GET_USER_SECRET, "email"),
   timeNow: () => new Date().getTime()
 }
 

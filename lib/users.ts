@@ -6,11 +6,13 @@ import { Stream } from "./typings/stream"
 const requestAsync = Promise.promisify(request)
 
 export module Users {
-
-  export function getUserEmail(auth0GetUserSecret: string, userId: string): Promise<string> {
+/**
+ * fields: should be a comaseperated string. "email,name,test"
+ */
+  export function getUser(auth0GetUserSecret: string, fields: string, userId: string): Promise<string> {
     return requestAsync({
       method: "GET",
-      uri: "https://cluda.auth0.com/api/v2/users/" + userId + "?fields=email",
+      uri: "https://cluda.auth0.com/api/v2/users/" + userId + "?fields=" + fields,
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + auth0GetUserSecret
