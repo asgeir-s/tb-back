@@ -16,27 +16,38 @@ export function handle(
   }
 
   action(inject, event, context)
+    .catch((error: Error) => {
+      log.exception("unknow exception", error)
+      return {
+        "GRID": context.awsRequestId,
+        "statusCode": 500,
+        "data": "internal server error",
+        "success": false
+      }
+    })
     .then(result => {
       if (result.success) {
-        log.log("RESULT", "SUCCESS", { "result": result })
+        log.log("RESULT", "SUCCESS: returning result", {
+          "GRID": result.GRID,
+          "data": result.data instanceof Array ? {
+            "truncatedData": result.data.slice(0, 3),
+            "originalLength": result.data.length
+          } : result.data,
+          "success": result.success
+        })
         context.done(null, result)
       }
       else {
-        log.log("RESULT", "FAILE", { "result": result })
-        context.done(result, null)
+        const statusCode = result.statusCode ? result.statusCode : 500
+        log.log("RESULT", "FAILURE: returning result", {
+          "GRID": result.GRID,
+          "data": result.data,
+          "success": result.success,
+          "statusCode": statusCode
+        })
+        context.done("[" + statusCode + "] " + result.data + ". When contacting support please provide this id: " +
+          result.GRID, null)
       }
-    })
-    .catch((error: any) => {
-      log.log("RESULT", "EXCEPTION", {
-        "exceptionName": error.name,
-        "exceptionMessage": error.message,
-        "stack": error.stack
-      })
-      return context.done({
-        "GRID": context.awsRequestId,
-        "data": "Internal Server Error",
-        "success": false
-      }, null)
     })
 }
 

@@ -155,7 +155,7 @@ export module CoinbaseNotification {
           return {
             "GRID": context.awsRequestId,
             "data": "nothing done. Unknown notification type",
-            "success": true
+            "success": false
           }
         }
       })

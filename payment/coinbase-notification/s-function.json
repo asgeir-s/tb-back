@@ -26,19 +26,7 @@
       "requestTemplates": {
         "application/json": "{\"scuset\":\"$util.urlDecode($input.params('scuset'))\", \"source\":\"$util.urlDecode($input.params('X-Forwarded-For'))\", \"event\": $input.json('$') }"
       },
-      "responses": {
-        "400": {
-          "statusCode": "400"
-        },
-        "default": {
-          "statusCode": "200",
-          "responseParameters": {},
-          "responseModels": {},
-          "responseTemplates": {
-            "application/json": ""
-          }
-        }
-      }
+      "responses": "$${apiGatewayRespondses}"
     }
   ],
   "events": [],

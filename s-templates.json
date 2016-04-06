@@ -1,0 +1,30 @@
+{
+  "apiGatewayRespondses": {
+    "^\\[400\\].*": {
+      "statusCode": "400"
+    },
+    "^\\[401\\].*": {
+      "statusCode": "401"
+    },
+    "^\\[403\\].*": {
+      "statusCode": "403"
+    },
+    "^\\[404\\].*": {
+      "statusCode": "404"
+    },
+    "^\\[409\\].*": {
+      "statusCode": "409"
+    },
+    "^\\[500\\].*": {
+      "statusCode": "500"
+    },
+    "default": {
+      "statusCode": "200",
+      "responseParameters": {},
+      "responseModels": {},
+      "responseTemplates": {
+        "application/json": ""
+      }
+    }
+  }
+}
