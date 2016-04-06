@@ -3,13 +3,13 @@ import * as test from "tape"
 import * as Promise from "bluebird"
 import * as sinon from "sinon"
 
-import { Context } from "../../lib/typings/aws-lambda"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { CoinbaseNotification, Inject } from "./action"
-import { SNS, Lambda } from "../../lib/aws"
+import { SNS, Lambda } from "../../lib/common/aws"
 import { Coinbase } from "../../lib/coinbase"
-import { Crypto } from "../../lib/crypto"
-import { DynamoDb } from "../../lib/aws"
-import { Streams, AuthLevel } from "../../lib/streams"
+import { Crypto } from "../../lib/common/crypto"
+import { DynamoDb } from "../../lib/common/aws"
+import { Streams } from "../../lib/common/streams"
 import { Subscriptions } from "../../lib/subscriptions"
 import { handle } from "../../lib/handler"
 
@@ -48,7 +48,7 @@ test("CoinbaseNotification:", (ot) => {
 
     const inject: Inject = {
       getStream: _.curry(Streams.getStream)(documentClient,
-        STREAMS_TABLE, AuthLevel.Private),
+        STREAMS_TABLE, Streams.AuthLevel.Private),
       decryptSubscriptionInfo: _.curry(Crypto.decrypt)(COINBASE_ENCRYPTION_PASSWORD),
       addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, "subscriptions-staging"),
       sendMoney: _.curry(Coinbase.sendMoney)(coinbaseClient, COINBASE_ACCOUNT_PRIMARY),

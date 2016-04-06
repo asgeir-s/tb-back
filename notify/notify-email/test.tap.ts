@@ -5,8 +5,8 @@ import * as sinon from "sinon"
 
 import { NotifyEmail, Inject } from "./action"
 import { Subscriptions } from "../../lib/subscriptions"
-import { SES, DynamoDb } from "../../lib/aws"
-import { Context } from "../../lib/typings/aws-lambda"
+import { SES, DynamoDb } from "../../lib/common/aws"
+import { Context } from "../../lib/common/typings/aws-lambda"
 
 const event = require("./event.json")
 

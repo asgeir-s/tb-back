@@ -1,11 +1,11 @@
 import * as _ from "ramda"
 
 import { Coinbase } from "../../lib/coinbase"
-import { Crypto } from "../../lib/crypto"
-import { DynamoDb, SNS, Lambda } from "../../lib/aws"
+import { Crypto } from "../../lib/common/crypto"
+import { DynamoDb, SNS, Lambda } from "../../lib/common/aws"
 import { CoinbaseNotification, Inject } from "./action"
-import { Context } from "../../lib/typings/aws-lambda"
-import { Streams, AuthLevel } from "../../lib/streams"
+import { Context } from "../../lib/common/typings/aws-lambda"
+import { Streams } from "../../lib/common/streams"
 import { handle } from "../../lib/handler"
 import { Subscriptions } from "../../lib/subscriptions"
 
@@ -18,7 +18,7 @@ const lambdaClient = Lambda.lambdaClientAsync(process.env.LAMBDA_REGION)
 
 const inject: Inject = {
   getStream: _.curry(Streams.getStream)(documentClient,
-    process.env.STREAMS_TABLE, AuthLevel.Private),
+    process.env.STREAMS_TABLE, Streams.AuthLevel.Private),
   decryptSubscriptionInfo: _.curry(Crypto.decrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
   addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, "subscriptions-staging"),
   sendMoney: _.curry(Coinbase.sendMoney)(coinbaseClient, process.env.COINBASE_ACCOUNT_PRIMARY),

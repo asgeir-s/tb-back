@@ -1,7 +1,6 @@
 import * as test from "tape"
 import { DynamoDb, SES, SNS, Lambda } from "./aws"
 import * as _ from "ramda"
-import { success } from "./test-util"
 import * as sinon from "sinon"
 
 

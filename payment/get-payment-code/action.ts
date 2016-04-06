@@ -1,15 +1,15 @@
 import * as Promise from "bluebird"
 import * as _ from "ramda"
 
-import { Streams, AuthLevel } from "../../lib/streams"
-import { DynamoDb } from "../../lib/aws"
-import { Crypto, CryptedData } from "../../lib/crypto"
+import { Streams } from "../../lib/common/streams"
+import { DynamoDb } from "../../lib/common/aws"
+import { Crypto, CryptedData } from "../../lib/common/crypto"
 import { Coinbase } from "../../lib/coinbase"
-import { Stream } from "../../lib/typings/stream"
-import { Context } from "../../lib/typings/aws-lambda"
+import { Stream } from "../../lib/common/typings/stream"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { log } from "../../lib/logger"
-import { Responds } from "../../lib/typings/responds"
-import { SubscriptionRequest } from "../../lib/typings/subscription-request"
+import { Responds } from "../../lib/common/typings/responds"
+import { SubscriptionRequest } from "../../lib/common/typings/subscription-request"
 
 
 export interface Inject {

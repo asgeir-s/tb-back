@@ -1,7 +1,7 @@
 import * as Promise from "bluebird"
 
-import { Context } from "./typings/aws-lambda"
-import { Responds } from "./typings/responds"
+import { Context } from "./common/typings/aws-lambda"
+import { Responds } from "./common/typings/responds"
 import { log } from "../lib/logger"
 
 export function handle(

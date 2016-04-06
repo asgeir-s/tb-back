@@ -3,13 +3,13 @@ import * as test from "tape"
 import * as Promise from "bluebird"
 import * as sinon from "sinon"
 
-import { Context } from "../../lib/typings/aws-lambda"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { GetPaymentCode, Inject } from "./action"
-import { SNS } from "../../lib/aws"
+import { SNS } from "../../lib/common/aws"
 import { Coinbase } from "../../lib/coinbase"
-import { Crypto } from "../../lib/crypto"
-import { DynamoDb } from "../../lib/aws"
-import { Streams, AuthLevel } from "../../lib/streams"
+import { Crypto } from "../../lib/common/crypto"
+import { DynamoDb } from "../../lib/common/aws"
+import { Streams } from "../../lib/common/streams"
 import { handle } from "../../lib/handler"
 
 const event = require("./event.json")
@@ -29,7 +29,7 @@ test("GetPaymentCode:", (ot) => {
 
   const inject: Inject = {
     getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(DYNAMO_REGION),
-      STREAMS_TABLE, AuthLevel.Public),
+      STREAMS_TABLE, Streams.AuthLevel.Public),
     encryptSubscriptionInfo: _.curry(Crypto.encrypt)(COINBASE_ENCRYPTION_PASSWORD),
     createCheckout: _.curry(Coinbase.createCheckout)(Coinbase.coinbaseClient(COINBASE_SANDBOX,
       COINBASE_APIKEY, COINBASE_APISECRET)),

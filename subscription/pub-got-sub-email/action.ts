@@ -1,12 +1,12 @@
 import * as _ from "ramda"
 import * as Promise from "bluebird"
 
-import { Context } from "../../lib/typings/aws-lambda"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { log } from "../../lib/logger"
-import { SES } from "../../lib/aws"
+import { SES } from "../../lib/common/aws"
 import { EmailTemplete } from "../../lib/email-template"
-import { Stream } from "../../lib/typings/stream"
-import { Responds } from "../../lib/typings/responds"
+import { Stream } from "../../lib/common/typings/stream"
+import { Responds } from "../../lib/common/typings/responds"
 
 export interface Inject {
   sendEmail: (email: SES.Email) => Promise<any>

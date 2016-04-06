@@ -1,9 +1,9 @@
 import * as test from "tape"
 import * as Promise from "bluebird"
 import * as sinon from "sinon"
-import { Context } from "../../lib/typings/aws-lambda"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { TradeGenerator, Inject } from "./action"
-import { SNS } from "../../lib/aws"
+import { SNS } from "../../lib/common/aws"
 
 const event = require("./event.json")
 

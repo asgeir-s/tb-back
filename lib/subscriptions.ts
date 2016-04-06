@@ -1,6 +1,6 @@
 import * as Promise from "bluebird"
 
-import { Subscription } from "./typings/subscription"
+import { Subscription } from "./common/typings/subscription"
 
 export interface AddSubscriptionResponds {
   streamId: string

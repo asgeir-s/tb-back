@@ -1,16 +1,16 @@
 import * as _ from "ramda"
 import * as Promise from "bluebird"
 
-import { DynamoDb, SES } from "../../lib/aws"
-import { Context } from "../../lib/typings/aws-lambda"
+import { DynamoDb, SES } from "../../lib/common/aws"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { EmailTemplete } from "../../lib/email-template"
 import { Subscriptions } from "../../lib/subscriptions"
-import { SubscriptionRequest } from "../../lib/payment"
+import { SubscriptionRequest } from "../../lib/common/typings/subscription-request"
 import { log } from "../../lib/logger"
-import { Subscription } from "../../lib/typings/subscription"
-import { Responds } from "../../lib/typings/responds"
-import { Stream } from "../../lib/typings/stream"
-import { CryptedData } from "../../lib/crypto"
+import { Subscription } from "../../lib/common/typings/subscription"
+import { Responds } from "../../lib/common/typings/responds"
+import { Stream } from "../../lib/common/typings/stream"
+import { CryptedData } from "../../lib/common/crypto"
 
 
 export interface Inject {

@@ -1,15 +1,15 @@
 import * as _ from "ramda"
 import * as Promise from "bluebird"
 
-import { DynamoDb, SES } from "../../lib/aws"
-import { Context } from "../../lib/typings/aws-lambda"
-import { Stream } from "../../lib/typings/stream"
+import { DynamoDb, SES } from "../../lib/common/aws"
+import { Context } from "../../lib/common/typings/aws-lambda"
+import { Stream } from "../../lib/common/typings/stream"
 import { ContinueSubscriptionEmail, Inject } from "./action"
 import { Subscriptions } from "../../lib/subscriptions"
 import { handle } from "../../lib/handler"
-import { Streams, AuthLevel } from "../../lib/streams"
+import { Streams } from "../../lib/common/streams"
 import { Coinbase } from "../../lib/coinbase"
-import { Crypto } from "../../lib/crypto"
+import { Crypto } from "../../lib/common/crypto"
 
 
 const documentClient = DynamoDb.documentClientAsync(process.env.AWS_DYNAMO_REGION)
@@ -24,7 +24,7 @@ const inject: Inject = {
   getExpieringSubscriptions:
   _.curry(Subscriptions.getExpieringSubscriptions)(documentClient, process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE),
   getStream:
-  _.curry(Streams.getStream)(documentClient, process.env.STREAMS_TABLE, AuthLevel.Public),
+  _.curry(Streams.getStream)(documentClient, process.env.STREAMS_TABLE, Streams.AuthLevel.Public),
   encryptSubscriptionInfo:
   _.curry(Crypto.encrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
   createCheckout:

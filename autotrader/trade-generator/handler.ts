@@ -1,10 +1,10 @@
 import * as _ from "ramda"
 import * as Promise from "bluebird"
 
-import { Context } from "../../lib/typings/aws-lambda"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { TradeGenerator, Inject } from "./action"
-import { DynamoDb, SNS } from "../../lib/aws"
-import { Responds } from "../../lib/typings/responds"
+import { DynamoDb, SNS } from "../../lib/common/aws"
+import { Responds } from "../../lib/common/typings/responds"
 import { Subscriptions } from "../../lib/subscriptions"
 import { handle } from "../../lib/handler"
 

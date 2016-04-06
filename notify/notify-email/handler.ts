@@ -1,8 +1,8 @@
 import * as _ from "ramda"
 
-import { Context } from "../../lib/typings/aws-lambda"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { NotifyEmail, Inject } from "./action"
-import { SES, DynamoDb } from "../../lib/aws"
+import { SES, DynamoDb } from "../../lib/common/aws"
 import { Subscriptions } from "../../lib/subscriptions"
 import { handle } from "../../lib/handler"
 

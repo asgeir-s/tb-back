@@ -4,22 +4,34 @@ import * as _ from "ramda"
 
 import { Stream, Stats, StreamPrivate } from "./typings/stream"
 import { Signal } from "./typings/signal"
+import { NewStreamRequest } from "../../lib/common/typings/new-stream-request"
+import { guid } from "./guid"
 
-export enum AuthLevel {
-  Public,
-  Auth,
-  Private
-}
-
-const publicAttributes: Array<string> = ["accumulatedLoss", "accumulatedProfit", "allTimeValueExcl",
-  "allTimeValueIncl", "buyAndHoldChange", "currencyPair", "exchange", "firstPrice", "id", "maxDDMax",
-  "maxDDPrevMax", "maxDDPrevMin", "maxDrawDown", "name", "numberOfClosedTrades", "numberOfLoosingTrades",
-  "numberOfProfitableTrades", "numberOfSignals", "subscriptionPriceUSD", "timeOfFirstSignal"]
+const requestAsync = Promise.promisify(request)
 
 export module Streams {
 
+  export enum AuthLevel {
+    Public,
+    Auth,
+    Private
+  }
+
+  const publicAttributes: Array<string> = ["accumulatedLoss", "accumulatedProfit", "allTimeValueExcl",
+    "allTimeValueIncl", "buyAndHoldChange", "currencyPair", "exchange", "firstPrice", "id", "maxDDMax",
+    "maxDDPrevMax", "maxDDPrevMin", "maxDrawDown", "name", "numberOfClosedTrades", "numberOfLoosingTrades",
+    "numberOfProfitableTrades", "numberOfSignals", "subscriptionPriceUSD", "timeOfFirstSignal"]
+
+
   export function getStream(documentClient: any, streamTableName: string, authLevel: AuthLevel,
     streamId: string): Promise<Stream> {
+    return getStreams(documentClient, streamTableName, authLevel, [streamId])
+      .then(streamArray => streamArray[0])
+  }
+
+  export function getStreams(documentClient: any, streamTableName: string, authLevel: AuthLevel,
+    streamIds: Array<String>): Promise<Array<Stream>> {
+
     let attributesToGet: Array<string>
 
     switch (authLevel) {
@@ -42,19 +54,24 @@ export module Streams {
       }
     }
 
+    let requestItems: any = {}
+    requestItems[streamTableName] = {
+      "Keys": streamIds.map(id => { return { "id": id } }),
+      "AttributesToGet": attributesToGet
+    }
+
     // get stream from dynamo (select variables from auth level)
-    return documentClient.getAsync({
-      TableName: streamTableName,
-      Key: {
-        "id": streamId
-      },
-      AttributesToGet: attributesToGet
-    }).then((responds: any) => json2Stream(authLevel, responds.Item))
+    return documentClient.batchGetAsync({
+      "RequestItems": requestItems
+    })
+      .then((responds: any) => {
+        return responds.Responses[streamTableName]
+      })
+      .map((streamJson: any) => json2Stream(authLevel, streamJson))
   }
 
 
-  export function getAllStremsPublic(documentClient: any, streamTableName: string, authLevel: AuthLevel
-  ): Promise<Array<Stream>> {
+  export function getAllStremsPublic(documentClient: any, streamTableName: string): Promise<Array<Stream>> {
     return documentClient.scanAsync({
       TableName: streamTableName,
       AttributesToGet: _.clone(publicAttributes)
@@ -183,6 +200,69 @@ export module Streams {
         signal: getJsonField("signal", json)
       }
     }
-
   }
+
+  export function getApiKeyId(documentClient: any, streamTableName: string, streamId: string): Promise<string> {
+    const apiKeyId = guid()
+    return documentClient.updateAsync({
+      "Key": { "id": streamId },
+      "TableName": streamTableName,
+      "AttributeUpdates": {
+        "apiKeyId": {
+          "Action": "PUT",
+          "Value": apiKeyId
+        }
+      },
+      "ReturnValues": "UPDATED_NEW"
+    }).then((res: any) => res.Attributes.apiKeyId)
+  }
+
+/**
+ * returns the updated subscriptionPriceUSD
+ */
+  export function updateSubscriptionPrice(documentClient: any, streamTableName: string, streamId: string,
+    newSubscriptionPrice: number): Promise<number> {
+    return documentClient.updateAsync({
+      "Key": { "id": streamId },
+      "TableName": streamTableName,
+      "AttributeUpdates": {
+        "subscriptionPriceUSD": {
+          "Action": "PUT",
+          "Value": newSubscriptionPrice
+        }
+      },
+      "ReturnValues": "UPDATED_NEW"
+    }).then((res: any) => res.Attributes.subscriptionPriceUSD)
+  }
+
+// legacy:
+
+/**
+ * returns the new streamId
+ */
+export function addNewStream(streamServiceUrl: string, streamServiceApiKey: string, GRID: string,
+  newStreamRequest: NewStreamRequest): Promise<string> {
+  return requestAsync({
+    method: "POST",
+    uri: streamServiceUrl + "/streams",
+    headers: {
+      "Global-Request-ID": GRID,
+      "content-type": "application/json",
+      "Authorization": "apikey " + streamServiceApiKey
+    },
+    body: newStreamRequest,
+    json: true
+  })
+    .then((res: any) => {
+      if (res.statusCode === 409) {
+        throw new Error("A stream with this name already exists.")
+      }
+      else if (res.statusCode < 200 || res.statusCode >= 300) {
+        throw new Error(JSON.stringify(res))
+      }
+      else {
+        return res.body.id
+      }
+    })
+}
 }

@@ -1,10 +1,10 @@
 import * as _ from "ramda"
 import * as Promise from "bluebird"
 
-import { Context } from "../../lib/typings/aws-lambda"
-import { SNS } from "../../lib/aws"
+import { Context } from "../../lib/common/typings/aws-lambda"
+import { SNS } from "../../lib/common/aws"
 import { log } from "../../lib/logger"
-import { Responds } from "../../lib/typings/responds"
+import { Responds } from "../../lib/common/typings/responds"
 
 export interface Inject {
   getSubscriptions: (streamId: string, timeNow: number) => Promise<Array<any>>,

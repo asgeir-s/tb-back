@@ -1,9 +1,9 @@
 import * as test from "tape"
-import { DynamoDb } from "./aws"
+import { DynamoDb } from "./common/aws"
 import * as _ from "ramda"
-import { Streams, AuthLevel } from "./streams"
+import { Streams } from "./common/streams"
 import { Subscriptions } from "./subscriptions"
-import { Subscription } from "./typings/subscription"
+import { Subscription } from "./common/typings/subscription"
 import * as sinon from "sinon"
 
 test("Subscriptions - .addSubscription/.getActiveAutotraderSubscriptions/.getActiveSubscriptions/" +

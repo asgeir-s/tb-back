@@ -1,16 +1,16 @@
 import * as _ from "ramda"
 
 import { Coinbase } from "../../lib/coinbase"
-import { Crypto } from "../../lib/crypto"
-import { DynamoDb } from "../../lib/aws"
+import { Crypto } from "../../lib/common/crypto"
+import { DynamoDb } from "../../lib/common/aws"
 import { GetPaymentCode, Inject } from "./action"
-import { Context } from "../../lib/typings/aws-lambda"
-import { Streams, AuthLevel } from "../../lib/streams"
+import { Context } from "../../lib/common/typings/aws-lambda"
+import { Streams } from "../../lib/common/streams"
 import { handle } from "../../lib/handler"
 
 const inject: Inject = {
   getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
-    process.env.STREAMS_TABLE, AuthLevel.Public),
+    process.env.STREAMS_TABLE, Streams.AuthLevel.Public),
   encryptSubscriptionInfo: _.curry(Crypto.encrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
   createCheckout: _.curry(Coinbase.createCheckout)(Coinbase.coinbaseClient(process.env.COINBASE_SANDBOX,
     process.env.COINBASE_APIKEY, process.env.COINBASE_APISECRET)),

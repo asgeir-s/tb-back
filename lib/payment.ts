@@ -1,17 +1,10 @@
-import { Streams, AuthLevel } from "./streams"
-import { DynamoDb } from "./aws"
-import { Crypto } from "./crypto"
+import { Streams } from "./common/streams"
+import { DynamoDb } from "./common/aws"
+import { Crypto } from "./common/crypto"
 import { Coinbase } from "./coinbase"
-import { Stream } from "./typings/stream"
+import { Stream } from "./common/typings/stream"
+import { SubscriptionRequest } from "./common/typings/subscription-request"
 
-export interface SubscriptionRequest {
-  email: string
-  streamId: string
-  autoTrader?: boolean
-  apiKey?: string
-  apiSecret?: string
-  oldexpirationTime?: number
-}
 
 export interface Inject {
   getStream: (streamId: string) => Stream
@@ -25,7 +18,7 @@ export module Payment {
     // encrypt SubscriptionRequest
     const encryptedSubscriptionRequest = Crypto.encrypt(cryptPassword, subscriptionInfo)
     // get stream price
-    return Streams.getStream(documentClient, streamsTableName, AuthLevel.Public, subscriptionInfo.streamId)
+    return Streams.getStream(documentClient, streamsTableName, Streams.AuthLevel.Public, subscriptionInfo.streamId)
 
       // request coinbase for paymentCode
       .then(stream => Coinbase.createCheckout(coinbaseClient, "Stream Subscription",

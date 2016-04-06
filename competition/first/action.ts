@@ -1,13 +1,13 @@
 import * as _ from "ramda"
 import * as Promise from "bluebird"
 
-import { DynamoDb, SES } from "../../lib/aws"
-import { Context } from "../../lib/typings/aws-lambda"
+import { DynamoDb, SES } from "../../lib/common/aws"
+import { Context } from "../../lib/common/typings/aws-lambda"
 import { EmailTemplete } from "../../lib/email-template"
 import { log } from "../../lib/logger"
-import { Streams } from "../../lib/streams"
-import { Signals } from "../../lib/signals"
-import { Responds } from "../../lib/typings/responds"
+import { Streams } from "../../lib/common/streams"
+import { Signals } from "../../lib/common/signals"
+import { Responds } from "../../lib/common/typings/responds"
 
 export interface Inject {
   documentClient: any,
