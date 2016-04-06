@@ -27,7 +27,7 @@
     "IamPolicyLambda": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "${stage}-${project}-lambda",
+        "PolicyName": "prod-tb-back-lambda",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -38,21 +38,21 @@
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
               ],
-              "Resource": "arn:aws:logs:${region}:*:*"
+              "Resource": "arn:aws:logs:us-east-1:*:*"
             },
             {
               "Effect": "Allow",
               "Action": [
                 "ses:SendEmail"
               ],
-              "Resource": "arn:aws:ses:${region}:*:*"
+              "Resource": "arn:aws:ses:us-east-1:*:*"
             },
             {
               "Effect": "Allow",
               "Action": [
                 "lambda:AddPermission"
               ],
-              "Resource": "arn:aws:lambda:${region}:*:*"
+              "Resource": "arn:aws:lambda:us-east-1:*:*"
             },
             {
               "Effect": "Allow",
@@ -60,7 +60,7 @@
                 "sns:Publish",
                 "sns:Subscribe"
               ],
-              "Resource": "arn:aws:sns:${region}:*:*"
+              "Resource": "arn:aws:sns:us-east-1:*:*"
             },
             {
               "Effect": "Allow",
@@ -76,7 +76,7 @@
                 "dynamodb:Scan",
                 "dynamodb:BatchGetItem"
               ],
-              "Resource": "arn:aws:dynamodb:${region}:*:*"
+              "Resource": "arn:aws:dynamodb:us-east-1:*:*"
             }
           ]
         },

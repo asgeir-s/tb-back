@@ -20,7 +20,7 @@ export module Streams {
   const publicAttributes: Array<string> = ["accumulatedLoss", "accumulatedProfit", "allTimeValueExcl",
     "allTimeValueIncl", "buyAndHoldChange", "currencyPair", "exchange", "firstPrice", "id", "maxDDMax",
     "maxDDPrevMax", "maxDDPrevMin", "maxDrawDown", "name", "numberOfClosedTrades", "numberOfLoosingTrades",
-    "numberOfProfitableTrades", "numberOfSignals", "subscriptionPriceUSD", "timeOfFirstSignal"]
+    "numberOfProfitableTrades", "numberOfSignals", "subscriptionPriceUSD", "timeOfFirstSignal", "timeOfLastSignal"]
 
 
   export function getStream(documentClient: any, streamTableName: string, authLevel: AuthLevel,
@@ -40,12 +40,12 @@ export module Streams {
         break
       }
       case AuthLevel.Auth: {
-        attributesToGet = _.concat(publicAttributes, ["timeOfLastSignal", "status", "lastSignal", "idOfLastSignal"])
+        attributesToGet = _.concat(publicAttributes, ["status", "lastSignal", "idOfLastSignal"])
         break
       }
       case AuthLevel.Private: {
         attributesToGet = _.concat(publicAttributes, ["userId", "apiKeyId", "idOfLastSignal",
-          "lastSignal", "payoutAddress", "status", "timeOfLastSignal", "topicArn"])
+          "lastSignal", "payoutAddress", "status", "topicArn"])
         break
       }
       default: {

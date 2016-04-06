@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "resourcesStackName": "tb-back-prod-r",
+  "iamRoleArnLambda": "arn:aws:iam::525932482084:role/tb-back-prod-r-IamRoleLambda-1KI1MLIUAEAHK",
+  "apiGatewayApi": "tb-back",
+  "eventID:subscription_confirm-sub-email": "64034de4-238b-452a-8479-e54e51ac83ff",
+  "eventID:subscription_pub-got-sub-email": "7f8d08c9-913b-4f47-90ad-f3be0f69b24b"
+}
