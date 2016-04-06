@@ -73,7 +73,8 @@
                 "dynamodb:GetItem",
                 "dynamodb:PutItem",
                 "dynamodb:UpdateItem",
-                "dynamodb:Scan"
+                "dynamodb:Scan",
+                "dynamodb:BatchGetItem"
               ],
               "Resource": "arn:aws:dynamodb:us-west-2:*:*"
             }
