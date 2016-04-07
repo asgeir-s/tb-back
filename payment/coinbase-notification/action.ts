@@ -38,9 +38,7 @@ export module CoinbaseNotification {
     return inn.decryptSubscriptionInfo(event.data.metadata)
       .then(subscriptionInfo => {
         if (event.type === "wallet:orders:paid") {
-          log.info("received order paid", {
-            "subscriptionInfo": subscriptionInfo
-          })
+          log.info("received order paid", { "subscriptionInfo": subscriptionInfo })
 
           const renewing = _.prop("oldexpirationTime", subscriptionInfo) !== undefined
           const oldexpirationTime = renewing ? subscriptionInfo.oldexpirationTime : -1

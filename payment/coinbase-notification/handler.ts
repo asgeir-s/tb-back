@@ -18,9 +18,9 @@ const lambdaClient = Lambda.lambdaClientAsync(process.env.LAMBDA_REGION)
 
 const inject: Inject = {
   getStream: _.curry(Streams.getStream)(documentClient,
-    process.env.STREAMS_TABLE, Streams.AuthLevel.Private),
+    process.env.DYNAMO_STREAMS_TABLE, Streams.AuthLevel.Private),
   decryptSubscriptionInfo: _.curry(Crypto.decrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
-  addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, "subscriptions-staging"),
+  addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, process.env.DYNAMO_SUBSCRIPTION_TABLE),
   sendMoney: _.curry(Coinbase.sendMoney)(coinbaseClient, process.env.COINBASE_ACCOUNT_PRIMARY),
   transferMoney: _.curry(Coinbase.transferMoney)(coinbaseClient, process.env.COINBASE_ACCOUNT_PRIMARY),
   alert: _.curry(SNS.publish)(snsClient, process.env.SNS_ALERT_TOPIC), // new
