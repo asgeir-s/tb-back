@@ -36,14 +36,13 @@ export module Bitfinex {
    */
   export function getTradableBalance(apiKey: string, apiSecret: string): Promise<number> {
     const payload = {
-      "request": "/v1/balances",
+      "request": "/v1/margin_infos",
       "nonce": Date.now().toString()
     }
-    return requestPostAsync(sign(payload, apiKey, apiSecret, "https://api.bitfinex.com/v1/balances"))
+    return requestPostAsync(sign(payload, apiKey, apiSecret, "https://api.bitfinex.com/v1/margin_infos"))
       .then((res: any) =>
-        _.find(((item: any) => item.type === "trading" && item.currency === "usd"), JSON.parse(res.body)).available
+        _.find((item: any) => item.on_pair === "BTCUSD", JSON.parse(res.body)[0].margin_limits).tradable_balance
       )
-
   }
 
   export function getOrderStatus(apiKey: string, apiSecret: string, orderId: string): Promise<any> {
