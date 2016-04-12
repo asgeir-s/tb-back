@@ -103,4 +103,20 @@ export module Subscriptions {
       })
 
   }
+
+  export function updateAutoTraderData(documentClient: any, subscriptionTable: string,
+    streamId: string, subscriptionExpirationTime: number, newAutoTraderData: any): Promise<any> {
+
+    return documentClient.updateAsync({
+      TableName: subscriptionTable,
+      Key: {
+        "streamId": streamId,
+        "expirationTime": subscriptionExpirationTime
+      },
+      UpdateExpression: "set autoTraderData=:newAutoTraderData",
+      ExpressionAttributeValues: {
+        ":newAutoTraderData": newAutoTraderData
+      }
+    }).then((responds: any) => responds.Items)
+  }
 }

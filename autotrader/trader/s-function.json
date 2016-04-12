@@ -24,7 +24,9 @@
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "AWS_DYNAMO_REGION": "${dynamo-region}",
+    "AWS_DYNAMO_SUBSCRIPTIONTABLE": "${dynamo-table-subscription}"
   },
   "vpc": {
     "securityGroupIds": [],

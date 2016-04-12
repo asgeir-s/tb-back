@@ -14,7 +14,7 @@ export module Trader {
     (apiKey: string, apiSecret: string, symbol: string, amount: number, position: number) => Promise<any>
     getAvalibleBalance: (apiKey: string, apiSecret: string) => Promise<number>
     getOrderStatus: (apiKey: string, apiSecret: string, orderId: string) => Promise<any>
-    saveAutoTraderData: (orderId: string, data: any) => Promise<any>
+    saveAutoTraderData: (streamId: string, subscriptionExpirationTime: number, newAutoTraderData: any) => Promise<any>
   }
 
   /**
@@ -24,73 +24,89 @@ export module Trader {
    */
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
 
-    const requestedPosition: number = _.maxBy((signal: Signal) => signal.id, event.signals).signal
+    const requestedPosition: number = _.sort((signal1: Signal, signal2: Signal) => signal2.id - signal1.id, event.signals)[0].signal
     const apiKey = event.subscription.apiKey
     const apiSecret = event.subscription.apiSecret
     const autoTraderData = event.subscription.autoTraderData
     const percentToTrade = event.subscription.autoTraderData.percentToTrade
 
-    return inn.getOrderStatus(apiKey, apiSecret, autoTraderData.openOrderId)
-      .then(openOrder => {
 
-        if (requestedPosition === 0) {
-          // close current position
-          return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", openOrder.executed_amount,
-            reverse(autoTraderData.openPosition))
-        }
-        else {
-          return inn.getAvalibleBalance(apiKey, apiSecret)
-            .then(avalibeBalance => {
 
-              // else if openPosition is 0 and requested in 1
-              if (autoTraderData.openPosition === 0 && requestedPosition === 1) {
-                const tradeAmount = avalibeBalance * percentToTrade
-                return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, 1)
-              }
+    const trade = (): Promise<any> => {
+      if (autoTraderData.openPosition === 0) {
+        return inn.getAvalibleBalance(apiKey, apiSecret)
+          .then(avalibeBalance => {
 
-              // else if openPosition is 0 and requested in -1
-              else if (autoTraderData.openPosition === 0 && requestedPosition === -1) {
-                const tradeAmount = avalibeBalance * percentToTrade
-                return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, -1)
-              }
+            // update autoTraderData
 
-              else {
-                let tradeAmount = (avalibeBalance + openOrder.executed_amount) * percentToTrade
-                if (tradeAmount < openOrder.executed_amount) {
-                  tradeAmount = openOrder.executed_amount
-                }
+            // else if openPosition is 0 and requested in 1
+            if (requestedPosition === 1) {
+              const tradeAmount = avalibeBalance * percentToTrade
+              return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, 1)
+            }
 
-                // else if openPosition is 1 and requested in -1
-                if (autoTraderData.openPosition === 1 && requestedPosition === -1) {
-                  return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, -1)
-                }
-
-                // else if openPosition is -1 and requested in 1
-                else if (autoTraderData.openPosition === -1 && requestedPosition === 1) {
-                  return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, 1)
-                }
-              }
-            })
-        }
-      })
-      .then((newOrder: any) => {
-
-        // update autoTraderData
-        let newAutoTraderData = _.clone(autoTraderData)
-        newAutoTraderData.openOrderId = newOrder.order_id
-        newAutoTraderData.openPosition = requestedPosition
-        return inn.saveAutoTraderData(event.subscription.orderId, newAutoTraderData)
-          .then((res: any) => {
-            return {
-              GRID: context.awsRequestId,
-              data: {
-                "newOrder": newOrder,
-                "saveAutoTraderDataResponds": res
-              },
-              success: true
+            // else if openPosition is 0 and requested in -1
+            else if (requestedPosition === -1) {
+              const tradeAmount = avalibeBalance * percentToTrade
+              return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, -1)
             }
           })
-      })
+      }
+      else {
+        // cancle active order if any
+
+        return inn.getOrderStatus(apiKey, apiSecret, autoTraderData.openOrderId)
+          .then(openOrder => {
+
+            if (requestedPosition === 0) {
+              // close current position
+              return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", openOrder.executed_amount,
+                reverse(autoTraderData.openPosition))
+            }
+            else {
+              // reversed trade
+              return inn.getAvalibleBalance(apiKey, apiSecret)
+                .then(avalibeBalance => {
+
+                  let tradeAmount = (avalibeBalance + openOrder.executed_amount) * percentToTrade
+                  if (tradeAmount < openOrder.executed_amount) {
+                    tradeAmount = openOrder.executed_amount
+                  }
+
+                  // else if openPosition is 1 and requested in -1
+                  if (autoTraderData.openPosition === 1 && requestedPosition === -1) {
+                    return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, -1)
+                  }
+
+                  // else if openPosition is -1 and requested in 1
+                  else if (autoTraderData.openPosition === -1 && requestedPosition === 1) {
+                    return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, 1)
+                  }
+
+                })
+            }
+          })
+      }
+    }
+
+    return trade().then((newOrder: any) => {
+
+      // update autoTraderData
+      let newAutoTraderData = _.clone(autoTraderData)
+      newAutoTraderData.openOrderId = newOrder.order_id
+      newAutoTraderData.openPosition = requestedPosition
+      return inn.saveAutoTraderData(event.subscription.streamId, event.subscription.expirationTime, newAutoTraderData)
+        .then((res: any) => {
+          return {
+            GRID: context.awsRequestId,
+            data: {
+              "newOrder": newOrder.order_id,
+              "saveAutoTraderDataResponds": res
+            },
+            success: true
+          }
+        })
+    })
   }
 
   function reverse(position: number): number {

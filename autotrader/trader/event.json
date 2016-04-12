@@ -12,9 +12,13 @@
     "streamId": "dsadsads-dsadsad-dsadsa-dasdsadsadsa",
     "transactionId": "dsagjdhsadsad33",
     "autoTrader": true,
-    "autoTraderData": {},
-    "apiKey": "api-key-test",
-    "apiSecret": "api-secret-test"
+    "autoTraderData": {
+      "openOrderId": "none",
+      "openPosition": 0,
+      "percentToTrade": 1
+    },
+    "apiKey": "HXPk6RertR406iPJQVr6cVGonNR7KkV2kkyRIslHOXE",
+    "apiSecret": "MCWJITafHaoM2Rs6lpoYVTMeuhpNZ2NOqyWV5yoDqzF"
   },
   "signals": [
     {
