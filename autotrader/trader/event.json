@@ -1,0 +1,31 @@
+{
+  "subscription": {
+    "creationTime": 1372826728973902,
+    "email": "test@msn.com",
+    "expirationTime": 14272792793092,
+    "orderId": "dsadsadsa-dsadsadsa-dsadsadsa",
+    "paymentBTC": 0.0572,
+    "paymentUSD": 3,
+    "receiveAddress": "csaduy272g3iyg3jdioeai",
+    "refundAddress": "dsafdsfdsafdsfdsfdsafdsa223",
+    "renewed": false,
+    "streamId": "dsadsads-dsadsad-dsadsa-dasdsadsadsa",
+    "transactionId": "dsagjdhsadsad33",
+    "autoTrader": true,
+    "autoTraderData": {},
+    "apiKey": "api-key-test",
+    "apiSecret": "api-secret-test"
+  },
+  "signals": [
+    {
+      "timestamp": 1430282639369,
+      "price": 421.4,
+      "change": 0.03,
+      "id": 234,
+      "valueInclFee": 1.122,
+      "changeInclFee": 0.01,
+      "value": 1.2029,
+      "signal": 1
+    }
+  ]
+}
