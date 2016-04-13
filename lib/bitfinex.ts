@@ -28,7 +28,7 @@ export module Bitfinex {
                 .then(resStatus => {
                   console.log("openPosition / getOrderStatus (interval) res: " + JSON.stringify(resStatus))
 
-                  if (parseFloat(resStatus.remaining_amount) === 0) {
+                  if (parseFloat(resStatus.remaining_amount) === 0 || !resStatus.is_live) {
                     console.log(">>>>>>>> openPosition DONE!")
 
                     clearInterval(intervalObject)
@@ -43,6 +43,7 @@ export module Bitfinex {
             resolve(resOrder)
           }
         })
+        .catch(e => reject(e))
     })
   }
 
@@ -75,7 +76,7 @@ export module Bitfinex {
                         .then(resStatus => {
                           console.log("closeAllPositions / getOrderStatus (interval) res: " + JSON.stringify(resStatus))
 
-                          if (parseFloat(resStatus.remaining_amount) === 0) {
+                          if (parseFloat(resStatus.remaining_amount) === 0 || !resStatus.is_live) {
                             console.log(">>>>>>>> closeAllPositions DONE!")
                             clearInterval(intervalObject)
                             resolve(resStatus)
@@ -120,7 +121,10 @@ export module Bitfinex {
 
     return requestPostAsync(sign(payload, apiKey, apiSecret, "https://api.bitfinex.com/v1/order/new"))
       .then((res: any) => {
-        console.log(">>>>>>> EXECUTE ORDER. respondse: " + JSON.stringify(res))
+        if (res.statusCode < 200 || res.statusCode > 299) {
+          throw new Error(res.body)
+        }
+        console.log(">>>>>>> EXECUTE ORDER. respondse: " + JSON.stringify(res.body))
         return JSON.parse(res.body)
       })
 

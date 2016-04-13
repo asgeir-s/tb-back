@@ -2,25 +2,17 @@
   "name": "trader",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": false,
+  "customName": "tb-back_autotrader_trader",
   "customRole": false,
-  "handler": "handler.handler",
-  "timeout": 6,
+  "handler": "autotrader/trader/handler.handler",
+  "timeout": 30,
   "memorySize": 1024,
   "authorizer": {},
   "custom": {
     "excludePatterns": []
   },
   "endpoints": [],
-  "events": [
-    {
-      "name": "mySchedule",
-      "type": "schedule",
-      "config": {
-        "schedule": "rate(5 minutes)"
-      }
-    }
-  ],
+  "events": [],
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",

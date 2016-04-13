@@ -27,13 +27,13 @@ export module Trader {
     const apiSecret = event.subscription.apiSecret
     const autoTraderData = event.subscription.autoTraderData
     const percentToTrade =
-      event.subscription.autoTraderData.percentToTrade === 1 ? 0.99 : event.subscription.autoTraderData.percentToTrade
+      event.subscription.autoTraderData.percentToTrade === 1 ? 0.999 : event.subscription.autoTraderData.percentToTrade
     const bitcoinLastPrice = event.signals[0].price
     const signals: Array<Signal> = _.sort((signal1: Signal, signal2: Signal) => signal1.id - signal2.id, event.signals)
 
     return Promise.each(signals, (signal: Signal) => {
       if (autoTraderData.openPosition === signal.signal) {
-        throw new Error("ALERT! Duplicate signal. Should not be possible")
+        console.log("ALERT! Duplicate signal. Should not be possible")
       }
       else {
         autoTraderData.openPosition = signal.signal
@@ -47,9 +47,31 @@ export module Trader {
 
               if (signal.signal === 1) {
                 return inn.openPosition(apiKey, apiSecret, tradeAmountBtc, "LONG")
+                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                  (err: Error) =>
+                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.98, "LONG"))
+                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                  (err: Error) =>
+                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.96, "LONG"))
+                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                  (err: Error) => {
+                    console.log("Was unable to execute trade (three times). Error: " + JSON.stringify(err.message))
+                    throw err
+                  })
               }
               else if (signal.signal === -1) {
                 return inn.openPosition(apiKey, apiSecret, tradeAmountBtc, "SHORT")
+                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                  (err: Error) =>
+                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.98, "SHORT"))
+                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                  (err: Error) =>
+                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.96, "SHORT"))
+                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                  (err: Error) => {
+                    console.log("Was unable to execute trade (three times). Error: " + JSON.stringify(err.message))
+                    throw err
+                  })
               }
             })
 
@@ -76,7 +98,7 @@ export module Trader {
         return {
           GRID: context.awsRequestId,
           data: {
-            "error": err
+            "error": err.message
           },
           success: false
         }

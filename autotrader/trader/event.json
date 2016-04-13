@@ -1,45 +1,22 @@
 {
-  "subscription": {
-    "creationTime": 1372826728973902,
-    "email": "test@msn.com",
-    "expirationTime": 1459496931366,
-    "orderId": "dsadsadsa-dsadsadsa-dsadsadsa",
-    "paymentBTC": 0.0572,
-    "paymentUSD": 3,
-    "receiveAddress": "csaduy272g3iyg3jdioeai",
-    "refundAddress": "dsafdsfdsafdsfdsfdsafdsa223",
-    "renewed": false,
-    "streamId": "example-test-stream-id-2",
-    "transactionId": "dsagjdhsadsad33",
-    "autoTrader": true,
-    "autoTraderData": {
-      "openOrderId": 693529295,
-      "openPosition": 1,
-      "percentToTrade": 1
-    },
-    "apiKey": "HXPk6RertR406iPJQVr6cVGonNR7KkV2kkyRIslHOXE",
-    "apiSecret": "MCWJITafHaoM2Rs6lpoYVTMeuhpNZ2NOqyWV5yoDqzF"
-  },
-  "signals": [
+    "Records": [
         {
-      "timestamp": 1430282639369,
-      "price": 421.4,
-      "change": 0.03,
-      "id": 234,
-      "valueInclFee": 1.122,
-      "changeInclFee": 0.01,
-      "value": 1.2029,
-      "signal": 0
-    },
-    {
-      "timestamp": 1430282639369,
-      "price": 421.4,
-      "change": 0.03,
-      "id": 235,
-      "valueInclFee": 1.122,
-      "changeInclFee": 0.01,
-      "value": 1.2029,
-      "signal": -1
-    }
-  ]
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-1:525932482084:trades-bitfinex:d00e16bc-9f65-4a80-b0e7-f063889bc703",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "f28cfb57-c160-5c7a-a44c-b4df42db8773",
+                "TopicArn": "arn:aws:sns:us-east-1:525932482084:trades-bitfinex",
+                "Subject": null,
+                "Message": "{\"subscription\":{\"renewed\":false,\"receiveAddress\":\"1K3fCwSueMZcbr2CPchJHZMGkWPDe3wvoG\",\"refundAddress\":null,\"streamId\":\"ee1cc14b-3ad6-4868-929e-6365d1717e9a\",\"paymentBTC\":\"0.00712500\",\"orderId\":\"96a16bba-8a83-5590-b31f-a500362a1f14\",\"paymentUSD\":\"3.00\",\"expirationTime\":1462611993430,\"email\":\"sogasg@gmail.com\",\"transactionId\":\"8bd000f2-d76c-5fa7-94aa-52216710754c\",\"creationTime\":1460019993430,\"autoTrader\":true},\"signals\":[{\"timestamp\":1455104851968,\"price\":378.62,\"change\":0,\"id\":3,\"valueInclFee\":1.0040283877,\"changeInclFee\":-0.002,\"value\":1.0080404686,\"signal\":0},{\"timestamp\":1455504851968,\"price\":398.62,\"change\":0,\"id\":4,\"valueInclFee\":1.0040283877,\"changeInclFee\":-0.002,\"value\":1.0080404686,\"signal\":-1}]}",
+                "Timestamp": "2016-04-13T17:27:23.530Z",
+                "SignatureVersion": "1",
+                "Signature": "XONxHuELRCzqYs7+R/4i4XpEKQmE0WLENBHFOcETlA37i7fI8Yu3CHX6ucMBZ0UtBkYD5/51n8j2d0C7fQRyVxE7wmKKxhQxh+hDkth8voPZh+8C5gchqqFPNHR/wv1s8cDj8RZD0Z7yvdoQUhZUU1ulKuysJV2nmoXcCcgvE9H3VxLZE1HWJmothTBA+wEOlG02ougTFU2u9C6fpl1dVgz6RJ8MtvicXlu+vNtBorvbMzRtw5cbu7V1bUVKNSrbkQZbXyZhfsLwwX9rD6QV62ojzxSRqPyD7NDfmlK1rvWuZalwanjKL01Z/3bl5feOBP1oCVz6Z2dcMybDP/DNyQ==",
+                "SigningCertUrl": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-bb750dd426d95ee9390147a5624348ee.pem",
+                "UnsubscribeUrl": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:525932482084:trades-bitfinex:d00e16bc-9f65-4a80-b0e7-f063889bc703",
+                "MessageAttributes": {}
+            }
+        }
+    ]
 }

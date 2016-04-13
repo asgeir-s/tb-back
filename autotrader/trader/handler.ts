@@ -18,5 +18,7 @@ const inject: Trader.Inject = {
 }
 
 export function handler(event: any, context: Context) {
-  handle(Trader.action, inject, event, context)
+  console.log("Event: " + JSON.stringify(event))
+  
+  handle(Trader.action, inject, JSON.parse(event.Records[0].Sns.Message), context)
 }

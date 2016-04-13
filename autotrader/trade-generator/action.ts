@@ -22,8 +22,8 @@ export module TradeGenerator {
       .map((subscription: any) => {
         // publish trads to SNS topic
         return inn.snsPublish({
-          subscription: subscription,
-          signals: message.signals
+          "subscription": subscription,
+          "signals": message.signals
         })
       })
       // handle responds to the caller
