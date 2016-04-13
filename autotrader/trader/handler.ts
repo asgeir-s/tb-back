@@ -10,9 +10,9 @@ import { Bitfinex } from "../../lib/bitfinex"
 import { handle } from "../../lib/handler"
 
 const inject: Trader.Inject = {
-  executeMarketOrder: Bitfinex.executeMarketOrder,
-  getAvalibleBalance: Bitfinex.getTradableBalance,
-  getOrderStatus: Bitfinex.getOrderStatus,
+  openPosition: Bitfinex.openPosition,
+  closeAllPositions: Bitfinex.closeAllPositions,
+  getTradableBalance: Bitfinex.getTradableBalance,
   saveAutoTraderData: _.curry(Subscriptions.updateAutoTraderData)
     (DynamoDb.documentClientAsync(process.env.AWS_DYNAMO_REGION), process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE)
 }

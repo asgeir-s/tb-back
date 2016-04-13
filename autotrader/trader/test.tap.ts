@@ -1,3 +1,4 @@
+/*
 import * as test from "tape"
 import * as Promise from "bluebird"
 import * as sinon from "sinon"
@@ -39,7 +40,7 @@ test("Trader:", (ot) => {
 
     const inn: Trader.Inject = {
       executeMarketOrder: executeMarketOrderMoc,
-      getAvalibleBalance: getAvalibleBalanceMoc,
+      getTradableBalance: getAvalibleBalanceMoc,
       getOrderStatus: getOrderStatusMoc,
       saveAutoTraderData: saveAutoTraderData
     }
@@ -117,7 +118,7 @@ test("Trader:", (ot) => {
 
     const inn: Trader.Inject = {
       executeMarketOrder: executeMarketOrderMoc,
-      getAvalibleBalance: getAvalibleBalanceMoc,
+      getTradableBalance: getAvalibleBalanceMoc,
       getOrderStatus: getOrderStatusMoc,
       saveAutoTraderData: saveAutoTraderData
     }
@@ -195,7 +196,7 @@ test("Trader:", (ot) => {
 
     const inn: Trader.Inject = {
       executeMarketOrder: executeMarketOrderMoc,
-      getAvalibleBalance: getAvalibleBalanceMoc,
+      getTradableBalance: getAvalibleBalanceMoc,
       getOrderStatus: getOrderStatusMoc,
       saveAutoTraderData: saveAutoTraderData
     }
@@ -283,7 +284,7 @@ test("Trader:", (ot) => {
 
     const inn: Trader.Inject = {
       executeMarketOrder: executeMarketOrderMoc,
-      getAvalibleBalance: getAvalibleBalanceMoc,
+      getTradableBalance: getAvalibleBalanceMoc,
       getOrderStatus: getOrderStatusMoc,
       saveAutoTraderData: saveAutoTraderData
     }
@@ -371,7 +372,7 @@ test("Trader:", (ot) => {
 
     const inn: Trader.Inject = {
       executeMarketOrder: executeMarketOrderMoc,
-      getAvalibleBalance: getAvalibleBalanceMoc,
+      getTradableBalance: getAvalibleBalanceMoc,
       getOrderStatus: getOrderStatusMoc,
       saveAutoTraderData: saveAutoTraderData
     }
@@ -418,3 +419,5 @@ test("Trader:", (ot) => {
       })
   })
 })
+
+*/

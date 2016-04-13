@@ -6,14 +6,13 @@ import { log } from "../../lib/logger"
 import { Responds } from "../../lib/common/typings/responds"
 import { Signal } from "../../lib/common/typings/signal"
 
-
 export module Trader {
 
   export interface Inject {
-    executeMarketOrder:
-    (apiKey: string, apiSecret: string, symbol: string, amount: number, position: number) => Promise<any>
-    getAvalibleBalance: (apiKey: string, apiSecret: string) => Promise<number>
-    getOrderStatus: (apiKey: string, apiSecret: string, orderId: string) => Promise<any>
+    openPosition:
+    (apiKey: string, apiSecret: string, amountBtc: number, typePosition: string) => Promise<any>
+    closeAllPositions: (apiKey: string, apiSecret: string) => Promise<any>
+    getTradableBalance: (apiKey: string, apiSecret: string) => Promise<number>
     saveAutoTraderData: (streamId: string, subscriptionExpirationTime: number, newAutoTraderData: any) => Promise<any>
   }
 
@@ -24,100 +23,63 @@ export module Trader {
    */
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
 
-    const requestedPosition: number = _.sort((signal1: Signal, signal2: Signal) => signal2.id - signal1.id, event.signals)[0].signal
     const apiKey = event.subscription.apiKey
     const apiSecret = event.subscription.apiSecret
     const autoTraderData = event.subscription.autoTraderData
-    const percentToTrade = event.subscription.autoTraderData.percentToTrade
+    const percentToTrade =
+      event.subscription.autoTraderData.percentToTrade === 1 ? 0.99 : event.subscription.autoTraderData.percentToTrade
+    const bitcoinLastPrice = event.signals[0].price
+    const signals: Array<Signal> = _.sort((signal1: Signal, signal2: Signal) => signal1.id - signal2.id, event.signals)
 
-
-
-    const trade = (): Promise<any> => {
-      if (autoTraderData.openPosition === 0) {
-        return inn.getAvalibleBalance(apiKey, apiSecret)
-          .then(avalibeBalance => {
-
-            // update autoTraderData
-
-            // else if openPosition is 0 and requested in 1
-            if (requestedPosition === 1) {
-              const tradeAmount = avalibeBalance * percentToTrade
-              return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, 1)
-            }
-
-            // else if openPosition is 0 and requested in -1
-            else if (requestedPosition === -1) {
-              const tradeAmount = avalibeBalance * percentToTrade
-              return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, -1)
-            }
-          })
+    return Promise.each(signals, (signal: Signal) => {
+      if (autoTraderData.openPosition === signal.signal) {
+        throw new Error("ALERT! Duplicate signal. Should not be possible")
       }
       else {
-        // cancle active order if any
+        autoTraderData.openPosition = signal.signal
+        if (signal.signal === 0) {
+          return inn.closeAllPositions(apiKey, apiSecret)
+        }
+        else {
+          return inn.getTradableBalance(apiKey, apiSecret)
+            .then(tradableBalance => {
+              const tradeAmountBtc = (tradableBalance / bitcoinLastPrice) * percentToTrade
 
-        return inn.getOrderStatus(apiKey, apiSecret, autoTraderData.openOrderId)
-          .then(openOrder => {
+              if (signal.signal === 1) {
+                return inn.openPosition(apiKey, apiSecret, tradeAmountBtc, "LONG")
+              }
+              else if (signal.signal === -1) {
+                return inn.openPosition(apiKey, apiSecret, tradeAmountBtc, "SHORT")
+              }
+            })
 
-            if (requestedPosition === 0) {
-              // close current position
-              return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", openOrder.executed_amount,
-                reverse(autoTraderData.openPosition))
-            }
-            else {
-              // reversed trade
-              return inn.getAvalibleBalance(apiKey, apiSecret)
-                .then(avalibeBalance => {
+        }
+      }
 
-                  let tradeAmount = (avalibeBalance + openOrder.executed_amount) * percentToTrade
-                  if (tradeAmount < openOrder.executed_amount) {
-                    tradeAmount = openOrder.executed_amount
-                  }
+    })
+      .then((result: any) => {
+        console.log("newAutoTraderData: " + JSON.stringify(autoTraderData))
 
-                  // else if openPosition is 1 and requested in -1
-                  if (autoTraderData.openPosition === 1 && requestedPosition === -1) {
-                    return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, -1)
-                  }
-
-                  // else if openPosition is -1 and requested in 1
-                  else if (autoTraderData.openPosition === -1 && requestedPosition === 1) {
-                    return inn.executeMarketOrder(apiKey, apiSecret, "btcUSD", tradeAmount, 1)
-                  }
-
-                })
+        return inn.saveAutoTraderData(event.subscription.streamId, event.subscription.expirationTime, autoTraderData)
+          .then((res: any) => {
+            return {
+              GRID: context.awsRequestId,
+              data: {
+                "saveAutoTraderDataResponds": res,
+                "result": result
+              },
+              success: true
             }
           })
-      }
-    }
-
-    return trade().then((newOrder: any) => {
-
-      // update autoTraderData
-      let newAutoTraderData = _.clone(autoTraderData)
-      newAutoTraderData.openOrderId = newOrder.order_id
-      newAutoTraderData.openPosition = requestedPosition
-      return inn.saveAutoTraderData(event.subscription.streamId, event.subscription.expirationTime, newAutoTraderData)
-        .then((res: any) => {
-          return {
-            GRID: context.awsRequestId,
-            data: {
-              "newOrder": newOrder.order_id,
-              "saveAutoTraderDataResponds": res
-            },
-            success: true
-          }
-        })
-    })
-  }
-
-  function reverse(position: number): number {
-    if (position === 0) {
-      return 0
-    }
-    else if (position === 1) {
-      return -1
-    }
-    else if (position === -1) {
-      return 1
-    }
+      })
+      .catch(err => {
+        return {
+          GRID: context.awsRequestId,
+          data: {
+            "error": err
+          },
+          success: false
+        }
+      })
   }
 }
