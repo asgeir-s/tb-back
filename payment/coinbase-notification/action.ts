@@ -67,14 +67,13 @@ export module CoinbaseNotification {
           console.log("cludaAmount: " + cludaAmountString)
           console.log("publisherAmount: " + publisherAmountString)
 
-
           return inn.addSubscription({
             creationTime: inn.timeNow(),
             email: subscriptionInfo.email,
             expirationTime: _.max(inn.timeNow() + monthMS, oldexpirationTime + monthMS),
             orderId: orderId,
-            paymentBTC: event.data.bitcoin_amount.amount,
-            paymentUSD: event.data.amount.amount,
+            paymentBTC: parseFloat(event.data.bitcoin_amount.amount),
+            paymentUSD: parseFloat(event.data.amount.amount),
             receiveAddress: event.data.bitcoin_address,
             refundAddress: event.data.refund_address,
             renewed: renewing,
