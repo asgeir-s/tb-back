@@ -14,7 +14,8 @@ const inject: Inject = {
   getStream: _.curry(Streams.getStream)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
     process.env.DYNAMO_TABLE_STREAMS, Streams.AuthLevel.Private),
   getUserEmail: _.curry(Users.getUser)(process.env.AUTH0_GET_USER_SECRET, "email"),
-  timeNow: () => new Date().getTime()
+  timeNow: () => new Date().getTime(),
+  autoTraderPriceUsd: parseFloat(process.env.AUTOTRADER_PRICE)
 }
 
 export function handler(event: any, context: Context) {

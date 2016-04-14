@@ -33,7 +33,7 @@ test("GetPaymentCode:", (ot) => {
     encryptSubscriptionInfo: _.curry(Crypto.encrypt)(COINBASE_ENCRYPTION_PASSWORD),
     createCheckout: _.curry(Coinbase.createCheckout)(Coinbase.coinbaseClient(COINBASE_SANDBOX,
       COINBASE_APIKEY, COINBASE_APISECRET)),
-    autoTraderPrice: parseFloat(AUTOTRADER_PRICE),
+    autoTraderPriceUsd: parseFloat(AUTOTRADER_PRICE),
     encryptApiKey: _.curry(Crypto.encryptSimple)(APIKEYS_ENCRYPTION_PASSWORD)
   }
 

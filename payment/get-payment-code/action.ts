@@ -17,7 +17,7 @@ export interface Inject {
   encryptSubscriptionInfo: (subscriptionInfo: SubscriptionRequest) => Promise<CryptedData>
   encryptApiKey: (content: string) => string
   createCheckout: (name: string, priceUSD: string, description: string, cryptedMetadata: any) => Promise<any>
-  autoTraderPrice: number
+  autoTraderPriceUsd: number
 }
 
 export module GetPaymentCode {
@@ -36,7 +36,7 @@ export module GetPaymentCode {
         const stream = res[0]
         const encryptedSubscriptionInfo = res[1]
         const price = totalPrice(stream.subscriptionPriceUSD, subscriptionRequest.autoTrader,
-          inn.autoTraderPrice)
+          inn.autoTraderPriceUsd)
 
         return inn.createCheckout("Stream Subscription", price.toString(), "Subscription to stream: " +
           stream.name + ", autoTrader: " + subscriptionRequest.autoTrader, encryptedSubscriptionInfo)

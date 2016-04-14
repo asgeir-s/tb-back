@@ -19,7 +19,7 @@
                     "refundAddress": {
                         "S": "mxySwQbGdDbCzZaDfccB6rzp2tjXm31Heg"
                     },
-                    "paymentUSD": {
+                    "paymentUsd": {
                         "N": "3"
                     },
                     "creationTime": {
@@ -37,7 +37,7 @@
                     "expirationTime": {
                         "N": "1449244472378"
                     },
-                    "paymentBTC": {
+                    "paymentBtc": {
                         "N": "0.003"
                     },
                     "autoTrader": {

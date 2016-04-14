@@ -3,8 +3,8 @@ export interface Subscription {
   email: string
   expirationTime: number
   orderId: string
-  paymentBTC: number
-  paymentUSD: number
+  paymentBtc: number
+  paymentUsd: number
   receiveAddress: string
   refundAddress: string
   renewed?: boolean

@@ -32,6 +32,7 @@
     "FROM_EMAIL_SUBSCRIPTION_INFO": "${fromEmail-subcriptionInfo}",
     "DYNAMO_TABLE_STREAMS": "${dynamo-table-streams}",
     "DYNAMO_REGION": "${dynamo-region}",
+    "AUTOTRADER_PRICE": "${autotrader_price_usd}",
     "AUTH0_GET_USER_SECRET": "${auth0-getUsers-secret}"
   },
   "vpc": {

@@ -14,7 +14,7 @@ const inject: Inject = {
   encryptSubscriptionInfo: _.curry(Crypto.encrypt)(process.env.COINBASE_ENCRYPTION_PASSWORD),
   createCheckout: _.curry(Coinbase.createCheckout)(Coinbase.coinbaseClient(process.env.COINBASE_SANDBOX,
     process.env.COINBASE_APIKEY, process.env.COINBASE_APISECRET)),
-  autoTraderPrice: parseFloat(process.env.AUTOTRADER_PRICE),
+  autoTraderPriceUsd: parseFloat(process.env.AUTOTRADER_PRICE),
   encryptApiKey: _.curry(Crypto.encryptSimple)(process.env.APIKEYS_ENCRYPTION_PASSWORD)
 }
 

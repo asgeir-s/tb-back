@@ -13,10 +13,13 @@ export interface Inject {
   getStream: (streamId: string) => Promise<Stream>
   getUserEmail: (userId: string) => Promise<string>
   timeNow: () => number
+  autoTraderPriceUsd: number
 }
 
 export module PubGotSubEmail {
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
+
+
 
     if (event.Records.length !== 1) {
       log.error("noe emails sent, wrong number of records. Should be 1, but was " + event.Records.length + ".", "")
@@ -25,7 +28,10 @@ export module PubGotSubEmail {
     else {
       const record = event.Records[0]
       if (record.eventName === "INSERT") {
-        const streamId = record.dynamodb.Keys.streamId.S
+        const streamId: string = record.dynamodb.Keys.streamId.S
+        const paymentUsd: number = record.dynamodb.NewImage.paymentUsd.N
+        const paymentBtc: number = record.dynamodb.NewImage.paymentBtc.N
+        const autoTrader: boolean = record.dynamodb.NewImage.autoTrader.B
 
         return inn.getStream(streamId)
           .then(stream => {
@@ -34,12 +40,16 @@ export module PubGotSubEmail {
             // get publisher email form auth0
             return inn.getUserEmail(stream.streamPrivate.userId)
               .then(publisherEmail => {
+
+                const publisherPayoutUsd = autoTrader ? (paymentUsd - inn.autoTraderPriceUsd) * 0.7 : paymentUsd * 0.7
+                const publisherPayoutBtc = (paymentBtc / paymentUsd) * publisherPayoutUsd
+
                 log.info("got publisherEmail", publisherEmail)
                 const emailBody = EmailTemplete.newEmailBody(
                   "Congratulate!<br>You sold a subscription for " + stream.name,
                   `<h2 style="text-align:center;margin-top: 60px;">` +
-                  (record.dynamodb.NewImage.paymentBTC.N * 0.7).toFixed(6) + `฿ &#8776; $` +
-                  (record.dynamodb.NewImage.paymentUSD.N * 0.7).toFixed(2) + `</h2>` +
+                  publisherPayoutBtc.toFixed(6) + `฿ &#8776; $` +
+                  publisherPayoutUsd.toFixed(2) + `</h2>` +
                   `<p style="text-align: center;">
               was transferred to the streams payout address.
               </p>` , streamId)
