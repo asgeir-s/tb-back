@@ -28,7 +28,8 @@ const inject: Inject = {
   cludaVault: process.env.COINBASE_ACCOUNT_VAULT,
   snsSubscribeLambda: _.curry(SNS.subscribeLambda)(snsClient, lambdaClient),
   tradeGeneratorLambdaArn: process.env.LAMBDA_ARN_TRADE_GENERATOR,
-  notifyEmailLambdaArn: process.env.LAMBDA_ARN_NOTIFY_EMAIL
+  notifyEmailLambdaArn: process.env.LAMBDA_ARN_NOTIFY_EMAIL,
+  autoTraderPrice: parseFloat(process.env.AUTOTRADER_PRICE),
 }
 
 export function handler(event: any, context: Context) {

@@ -29,7 +29,9 @@ export interface Inject {
   timeNow: () => number
   cludaVault: string
   tradeGeneratorLambdaArn: string,
-  notifyEmailLambdaArn: string
+  notifyEmailLambdaArn: string,
+  autoTraderPrice: number
+
 }
 
 export module CoinbaseNotification {
@@ -42,11 +44,22 @@ export module CoinbaseNotification {
 
           const renewing = _.prop("oldexpirationTime", subscriptionInfo) !== undefined
           const oldexpirationTime = renewing ? subscriptionInfo.oldexpirationTime : -1
-          const btcAmout = parseFloat(event.data.bitcoin_amount.amount)
           const orderId = event.data.id
+          let btcAmout = parseFloat(event.data.bitcoin_amount.amount)
 
-          const cludaAmount = (btcAmout * 0.3).toFixed(8)
-          const publisherAmount = (btcAmout * 0.7).toFixed(8)
+          let cludaAmount = 0
+          let publisherAmount = 0
+
+          if (subscriptionInfo.autoTrader) {
+            cludaAmount += inn.autoTraderPrice
+            btcAmout -= inn.autoTraderPrice
+          }
+
+          cludaAmount += (btcAmout * 0.3)
+          publisherAmount += (btcAmout * 0.7)
+
+          const cludaAmountString = cludaAmount.toFixed(8)
+          const publisherAmountString = publisherAmount.toFixed(8)
 
           return inn.addSubscription({
             creationTime: inn.timeNow(),
@@ -73,7 +86,7 @@ export module CoinbaseNotification {
               const cludaPayout = {
                 type: "transfer",
                 to: inn.cludaVault,
-                amount: cludaAmount.toString(),
+                amount: cludaAmountString,
                 currency: "BTC",
                 description: "Cluda payout for subscription with order id " + orderId,
                 idem: orderId + "Cluda",
@@ -82,7 +95,7 @@ export module CoinbaseNotification {
               const publisherPayout = {
                 type: "send",
                 to: stream.streamPrivate.payoutAddress,
-                amount: publisherAmount.toString(),
+                amount: publisherAmountString,
                 currency: "BTC",
                 description: "Publisher payout for new subscription",
                 idem: orderId + "Publisher",

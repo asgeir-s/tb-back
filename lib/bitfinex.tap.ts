@@ -10,12 +10,12 @@ test("Bitfinex:", (ot) => {
   const apiKey = "HXPk6RertR406iPJQVr6cVGonNR7KkV2kkyRIslHOXE"
   const apiSecret = "MCWJITafHaoM2Rs6lpoYVTMeuhpNZ2NOqyWV5yoDqzF"
 
-  ot.test("- should be able to create checkout", (t) => {
+  ot.test("- should have a tradable balance", (t) => {
     t.plan(1)
 
     Bitfinex.getTradableBalance(apiKey, apiSecret)
       .then(balance => {
-        t.equal(balance >= 0, true, "should have a balance higher then or equal to 0")
+        t.equal(isNaN(balance), false, "should return a number")
       })
   })
 

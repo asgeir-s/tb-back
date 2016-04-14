@@ -1,6 +1,7 @@
 import * as _ from "ramda"
 import * as Promise from "bluebird"
 
+import { Crypto } from "../../lib/common/crypto"
 import { Context } from "../../lib/common/typings/aws-lambda"
 import { Trader } from "./action"
 import { DynamoDb, SNS } from "../../lib/common/aws"
@@ -14,11 +15,13 @@ const inject: Trader.Inject = {
   closeAllPositions: Bitfinex.closeAllPositions,
   getTradableBalance: Bitfinex.getTradableBalance,
   saveAutoTraderData: _.curry(Subscriptions.updateAutoTraderData)
-    (DynamoDb.documentClientAsync(process.env.AWS_DYNAMO_REGION), process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE)
+    (DynamoDb.documentClientAsync(process.env.AWS_DYNAMO_REGION), process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE),
+  decryptApiKey: _.curry(Crypto.decryptSimple)(process.env.APIKEYS_ENCRYPTION_PASSWORD)
+
 }
 
 export function handler(event: any, context: Context) {
   console.log("Event: " + JSON.stringify(event))
-  
+
   handle(Trader.action, inject, JSON.parse(event.Records[0].Sns.Message), context)
 }

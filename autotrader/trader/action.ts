@@ -14,6 +14,7 @@ export module Trader {
     closeAllPositions: (apiKey: string, apiSecret: string) => Promise<any>
     getTradableBalance: (apiKey: string, apiSecret: string) => Promise<number>
     saveAutoTraderData: (streamId: string, subscriptionExpirationTime: number, newAutoTraderData: any) => Promise<any>
+    decryptApiKey: (content: string) => string
   }
 
   /**
@@ -23,8 +24,8 @@ export module Trader {
    */
   export function action(inn: Inject, event: any, context: Context): Promise<Responds> {
 
-    const apiKey = event.subscription.apiKey
-    const apiSecret = event.subscription.apiSecret
+    const apiKey = inn.decryptApiKey(event.subscription.apiKey)
+    const apiSecret = inn.decryptApiKey(event.subscription.apiSecret)
     const autoTraderData = event.subscription.autoTraderData
     const percentToTrade =
       event.subscription.autoTraderData.percentToTrade === 1 ? 0.999 : event.subscription.autoTraderData.percentToTrade

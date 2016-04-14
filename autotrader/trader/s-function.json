@@ -18,7 +18,8 @@
     "SERVERLESS_STAGE": "${stage}",
     "SERVERLESS_REGION": "${region}",
     "AWS_DYNAMO_REGION": "${dynamo-region}",
-    "AWS_DYNAMO_SUBSCRIPTIONTABLE": "${dynamo-table-subscription}"
+    "AWS_DYNAMO_SUBSCRIPTIONTABLE": "${dynamo-table-subscription}",
+    "APIKEYS_ENCRYPTION_PASSWORD": "${crypto-key-bitfinex-apiKeys}"
   },
   "vpc": {
     "securityGroupIds": [],

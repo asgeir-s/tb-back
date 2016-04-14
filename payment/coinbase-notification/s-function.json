@@ -49,7 +49,8 @@
     "COINBASE_NOTIFICATION_IP_RANGE": "${coinbase-notification-ip-range}",
     "LAMBDA_ARN_TRADE_GENERATOR": "${lambda-arn-tradeGenerator}",
     "LAMBDA_ARN_NOTIFY_EMAIL": "${lambda-arn-notifyEmail}",
-    "LAMBDA_REGION": "${lambda-region}"
+    "LAMBDA_REGION": "${lambda-region}",
+    "AUTOTRADER_PRICE": "${autotrader_price_usd}"
   },
   "vpc": {
     "securityGroupIds": [],

@@ -58,7 +58,9 @@ test("CoinbaseNotification:", (ot) => {
       cludaVault: COINBASE_ACCOUNT_VAULT,
       snsSubscribeLambda: _.curry(SNS.subscribeLambda)(snsClient, lambdaClient),
       tradeGeneratorLambdaArn: LAMBDA_ARN_TRADE_GENERATOR,
-      notifyEmailLambdaArn: LAMBDA_ARN_NOTIFY_EMAIL
+      notifyEmailLambdaArn: LAMBDA_ARN_NOTIFY_EMAIL,
+      autoTraderPrice: parseFloat(AUTOTRADER_PRICE),
+
     }
 
     handle(CoinbaseNotification.action, inject, event.event, <Context>{

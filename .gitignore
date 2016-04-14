@@ -49,3 +49,4 @@ node-comp/coverage
 node-comp/.nyc_output
 **/.trash
 **/npm-debug.log
+**/*.map
