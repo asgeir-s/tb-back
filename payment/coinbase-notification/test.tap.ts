@@ -59,7 +59,7 @@ test("CoinbaseNotification:", (ot) => {
       snsSubscribeLambda: _.curry(SNS.subscribeLambda)(snsClient, lambdaClient),
       tradeGeneratorLambdaArn: LAMBDA_ARN_TRADE_GENERATOR,
       notifyEmailLambdaArn: LAMBDA_ARN_NOTIFY_EMAIL,
-      autoTraderPrice: parseFloat(AUTOTRADER_PRICE),
+      autoTraderPriceUsd: parseFloat(AUTOTRADER_PRICE),
 
     }
 

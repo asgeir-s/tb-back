@@ -30,8 +30,7 @@ export interface Inject {
   cludaVault: string
   tradeGeneratorLambdaArn: string,
   notifyEmailLambdaArn: string,
-  autoTraderPrice: number
-
+  autoTraderPriceUsd: number
 }
 
 export module CoinbaseNotification {
@@ -45,14 +44,18 @@ export module CoinbaseNotification {
           const renewing = _.prop("oldexpirationTime", subscriptionInfo) !== undefined
           const oldexpirationTime = renewing ? subscriptionInfo.oldexpirationTime : -1
           const orderId = event.data.id
+          const usdAmount = parseFloat(event.data.amount.amount)
           let btcAmout = parseFloat(event.data.bitcoin_amount.amount)
+
+          const autoTraderPriceBtc = (btcAmout / usdAmount) * inn.autoTraderPriceUsd
+          console.log("autoTraderPriceBtc: " + autoTraderPriceBtc)
 
           let cludaAmount = 0
           let publisherAmount = 0
 
-          if (subscriptionInfo.autoTrader) {
-            cludaAmount += inn.autoTraderPrice
-            btcAmout -= inn.autoTraderPrice
+          if (subscriptionInfo.autoTrader) {  // autotraders price must be in BTC not usd
+            cludaAmount += autoTraderPriceBtc
+            btcAmout -= autoTraderPriceBtc
           }
 
           cludaAmount += (btcAmout * 0.3)
@@ -60,6 +63,10 @@ export module CoinbaseNotification {
 
           const cludaAmountString = cludaAmount.toFixed(8)
           const publisherAmountString = publisherAmount.toFixed(8)
+
+          console.log("cludaAmount: " + cludaAmountString)
+          console.log("publisherAmount: " + publisherAmountString)
+
 
           return inn.addSubscription({
             creationTime: inn.timeNow(),
