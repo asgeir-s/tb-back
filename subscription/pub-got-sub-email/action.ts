@@ -31,7 +31,7 @@ export module PubGotSubEmail {
         const streamId: string = record.dynamodb.Keys.streamId.S
         const paymentUsd: number = record.dynamodb.NewImage.paymentUsd.N
         const paymentBtc: number = record.dynamodb.NewImage.paymentBtc.N
-        const autoTrader: boolean = record.dynamodb.NewImage.autoTrader.B
+        const autoTrader: boolean = record.dynamodb.NewImage.autoTrader.BOOL
 
         return inn.getStream(streamId)
           .then(stream => {
