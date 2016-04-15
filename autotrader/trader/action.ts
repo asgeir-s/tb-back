@@ -28,63 +28,87 @@ export module Trader {
     const apiSecret = inn.decryptApiKey(event.subscription.apiSecret)
     const autoTraderData = event.subscription.autoTraderData
     const percentToTrade =
-      event.subscription.autoTraderData.percentToTrade === 1 ? 0.999 : event.subscription.autoTraderData.percentToTrade
+      autoTraderData.percentToTrade === 1 ? 0.999 : event.subscription.autoTraderData.percentToTrade
     const bitcoinLastPrice = event.signals[0].price
     const signals: Array<Signal> = _.sort((signal1: Signal, signal2: Signal) => signal1.id - signal2.id, event.signals)
 
+    log.info("New trading signal", {
+      "autoTraderData": autoTraderData,
+      "percentToTrade": percentToTrade,
+      "signals": signals
+    })
+
     return Promise.each(signals, (signal: Signal) => {
       if (autoTraderData.openPosition === signal.signal) {
-        console.log("ALERT! Duplicate signal. Should not be possible")
+        log.error("ALERT! Duplicate signal. Should not be possible",
+          { "openPosition": autoTraderData.openPosition, "newSignal": signal.signal })
       }
       else {
-        autoTraderData.openPosition = signal.signal
         if (signal.signal === 0) {
           return inn.closeAllPositions(apiKey, apiSecret)
+            // if trade is succesfull; set new position on autoTraderData
+            .then(res => {
+              log.info("succesfully closed all signals", { "res": res })
+              autoTraderData.openPosition = signal.signal
+              return res
+            })
         }
         else {
-          return inn.getTradableBalance(apiKey, apiSecret)
+          return new Promise<number>((resolve, reject) => {
+            // if this is the first trade for this autotrader subscription
+            if (autoTraderData.openPosition == null) {
+              inn.closeAllPositions(apiKey, apiSecret)
+                .then(res => {
+                  log.info("This is the first trade for this autotrader subscription: succesfully closed all signals",
+                    { "res": res })
+                  autoTraderData.openPosition = 0
+                  resolve(inn.getTradableBalance(apiKey, apiSecret))
+                })
+            }
+            else {
+              resolve(inn.getTradableBalance(apiKey, apiSecret))
+            }
+          })
             .then(tradableBalance => {
               const tradeAmountBtc = (tradableBalance / bitcoinLastPrice) * percentToTrade
+              const positionToOpen = signal.signal === 1 ? "LONG" : "SHORT"
 
-              if (signal.signal === 1) {
-                return inn.openPosition(apiKey, apiSecret, tradeAmountBtc, "LONG")
-                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
-                  (err: Error) =>
-                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.98, "LONG"))
-                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
-                  (err: Error) =>
-                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.96, "LONG"))
-                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
-                  (err: Error) => {
-                    console.log("Was unable to execute trade (three times). Error: " + JSON.stringify(err.message))
-                    throw err
+              return inn.openPosition(apiKey, apiSecret, tradeAmountBtc, positionToOpen)
+                .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                (err: Error) =>
+                  inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.98, positionToOpen))
+                .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                (err: Error) =>
+                  inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.96, positionToOpen))
+                .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
+                (err: Error) => {
+                  log.exception("Was unable to execute trade (three times).", err)
+                  throw err
+                })
+                // if trade is succesfull; set new position on autoTraderData
+                .then(res => {
+                  autoTraderData.openPosition = signal.signal
+                  log.info("Opend position", {
+                    "tradeAmountBtc": tradeAmountBtc,
+                    "positionToOpen": positionToOpen,
+                    "res": res
                   })
-              }
-              else if (signal.signal === -1) {
-                return inn.openPosition(apiKey, apiSecret, tradeAmountBtc, "SHORT")
-                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
-                  (err: Error) =>
-                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.98, "SHORT"))
-                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
-                  (err: Error) =>
-                    inn.openPosition(apiKey, apiSecret, tradeAmountBtc * 0.96, "SHORT"))
-                  .catch((e: Error) => e.message.indexOf("Invalid order: not enough tradable balance") > -1,
-                  (err: Error) => {
-                    console.log("Was unable to execute trade (three times). Error: " + JSON.stringify(err.message))
-                    throw err
-                  })
-              }
+                  return res
+                })
             })
-
         }
       }
 
     })
       .then((result: any) => {
-        console.log("newAutoTraderData: " + JSON.stringify(autoTraderData))
-
         return inn.saveAutoTraderData(event.subscription.streamId, event.subscription.expirationTime, autoTraderData)
           .then((res: any) => {
+
+            log.info("Saved new autoTraderData", {
+              "autoTraderData": autoTraderData,
+              "res": res
+            })
+
             return {
               GRID: context.awsRequestId,
               data: {
@@ -96,6 +120,7 @@ export module Trader {
           })
       })
       .catch(err => {
+        log.exception("Some (possibly unknown) error", err)
         return {
           GRID: context.awsRequestId,
           data: {

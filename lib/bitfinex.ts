@@ -61,36 +61,41 @@ export module Bitfinex {
             .then(activeBtcUsdPosition => {
               console.log("closeAllPositions / activeBtcUsdPosition res: " + JSON.stringify(activeBtcUsdPosition))
 
-              const executedAmountBtc = parseFloat(activeBtcUsdPosition.amount)
-              const reverseSide = executedAmountBtc > 0 ? "sell" : "buy"
-              executeMarketOrder(apiKey, apiSecret, "btcUSD", Math.abs(executedAmountBtc), reverseSide)
-                .then(resOrder => {
-                  console.log("closeAllPositions / executeMarketOrder res: " + JSON.stringify(resOrder))
+              if (activeBtcUsdPosition == null) {
+                resolve("theire are now open btcusd positions")
+              }
+              else {
+                const executedAmountBtc = parseFloat(activeBtcUsdPosition.amount)
+                const reverseSide = executedAmountBtc > 0 ? "sell" : "buy"
+                executeMarketOrder(apiKey, apiSecret, "btcUSD", Math.abs(executedAmountBtc), reverseSide)
+                  .then(resOrder => {
+                    console.log("closeAllPositions / executeMarketOrder res: " + JSON.stringify(resOrder))
 
 
-                  const orderId = resOrder.order_id
-                  if (parseFloat(resOrder.remaining_amount) !== 0) {
+                    const orderId = resOrder.order_id
+                    if (parseFloat(resOrder.remaining_amount) !== 0) {
 
-                    const intervalObject = setInterval(() => {
-                      getOrderStatus(apiKey, apiSecret, orderId)
-                        .then(resStatus => {
-                          console.log("closeAllPositions / getOrderStatus (interval) res: " + JSON.stringify(resStatus))
+                      const intervalObject = setInterval(() => {
+                        getOrderStatus(apiKey, apiSecret, orderId)
+                          .then(resStatus => {
+                            console.log("closeAllPositions / getOrderStatus (interval) res: " + JSON.stringify(resStatus))
 
-                          if (parseFloat(resStatus.remaining_amount) === 0 || !resStatus.is_live) {
-                            console.log(">>>>>>>> closeAllPositions DONE!")
-                            clearInterval(intervalObject)
-                            resolve(resStatus)
-                          }
-                        })
-                    }, 1000)
+                            if (parseFloat(resStatus.remaining_amount) === 0 || !resStatus.is_live) {
+                              console.log(">>>>>>>> closeAllPositions DONE!")
+                              clearInterval(intervalObject)
+                              resolve(resStatus)
+                            }
+                          })
+                      }, 1000)
 
-                  }
-                  else {
-                    console.log(">>>>>>>> closeAllPositions DONE!")
+                    }
+                    else {
+                      console.log(">>>>>>>> closeAllPositions DONE!")
 
-                    resolve(resOrder)
-                  }
-                })
+                      resolve(resOrder)
+                    }
+                  })
+              }
             })
 
         })
@@ -124,7 +129,7 @@ export module Bitfinex {
         if (res.statusCode < 200 || res.statusCode > 299) {
           throw new Error(res.body)
         }
-        console.log(">>>>>>> EXECUTE ORDER. respondse: " + JSON.stringify(res.body))
+        console.log(">>>>>>> EXECUTE ORDER. respondse: " + JSON.stringify(JSON.parse(res.body)))
         return JSON.parse(res.body)
       })
 
@@ -164,6 +169,9 @@ export module Bitfinex {
   }
 
 
+  /**
+   * Returns undefined if theire are now active btcusd positions
+   */
   export function getActivePositionBtcUsd(apiKey: string, apiSecret: string): Promise<any> {
     const payload = {
       "request": "/v1/positions",
