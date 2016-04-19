@@ -24,7 +24,14 @@
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "AWS_DYNAMO_REGION": "${dynamo-region}",
+    "AWS_STORAGE_TABLE": "${dynamo-table-storage}",
+    "AUTH0_URL": "${auth0-url}",
+    "AUTH0_READUSER_JWT": "${auth0-jwt-secret}",
+    "MAILCHIMP_URL": "${mailchimp-url}",
+    "MAILCHIMP_APIKEY": "${mailchimp-apikey}"
+    
   },
   "vpc": {
     "securityGroupIds": [],

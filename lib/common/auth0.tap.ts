@@ -8,7 +8,7 @@ const AUTH0_URL = "https://cluda.auth0.com"
 const AUTH0_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJLbW8xMFFHcENPeEtIRFg2VEhKQzJzWmJlWEpYMktDbiIsInNjb3BlcyI6eyJ1c2Vyc19hcHBfbWV0YWRhdGEiOnsiYWN0aW9ucyI6WyJ1cGRhdGUiXX0sInVzZXJzIjp7ImFjdGlvbnMiOlsicmVhZCJdfX0sImlhdCI6MTQ1NDUxODQ4NywianRpIjoiMWMxZTkxNjA3ODY3ZTEyYTEwZmQ2OTVjZTYxZWYwNDgifQ.xwh6dCyidm-nxd2Q6YAZcW7K-xQvLIlZQoIHkxSOGb4"
 
 test("Auth0_", (ot) => {
-  ot.plan(3)
+  ot.plan(4)
 
   ot.test("- should be able to getUserInfo", (t) => {
     t.plan(2)
@@ -44,4 +44,14 @@ test("Auth0_", (ot) => {
       })
   })
 
+  ot.test("- should be able to get the emails of new users (getNewUsersExcept)", (t) => {
+    t.plan(1)
+    Auth0.getNewUserEmailsExcept(AUTH0_URL, AUTH0_JWT, 20)
+      .then(newEmails => {
+        t.equal(newEmails.length > 101, true,
+          "should return more then 101 new emails")
+        console.log("newEmails: " + JSON.stringify(newEmails))
+
+      })
+  })
 })

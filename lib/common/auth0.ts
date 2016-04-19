@@ -44,10 +44,8 @@ export module Auth0 {
    * 
    * fields: is a commaseperated list of the fields to retreive
    */
-  export function getNewUsersExcept(auth0Url: string, auth0Jwt: string, fields: string,
-    numberOfUsersToSkip: number): Promise<Array<any>> {
-      
-      
+  export function getNewUserEmailsExcept(auth0Url: string, auth0Jwt: string, numberOfUsersToSkip: number):
+    Promise<Array<any>> {
 
     interface Auth0Responds {
       start: number
@@ -57,11 +55,42 @@ export module Auth0 {
       users: Array<any>
     }
 
-    function request(page: number): Promise<Auth0Responds> {
+    return loop(0, [])
+
+    function loop(page: number, newEmails: Array<string>): Promise<Array<string>> {
+      return new Promise<Array<string>>((resolve, reject) => {
+        getEmails(page)
+          .then(res => {
+            _.map((user => {
+              if (newEmails.length + numberOfUsersToSkip === res.total) {
+                // done
+                return newEmails
+              }
+              else {
+                newEmails.push(user.email)
+              }
+            }), res.users)
+
+            return [res.total, newEmails]
+          })
+          .spread((totalUsers: number, newEmails: Array<string>) => {
+            if (newEmails.length + numberOfUsersToSkip === totalUsers) {
+              // done
+              return resolve(newEmails)
+            }
+            else {
+              return resolve(loop(page + 1, newEmails))
+            }
+          })
+      })
+
+    }
+
+    function getEmails(page: number): Promise<Auth0Responds> {
       return requestAsync({
         method: "GET",
-        uri: auth0Url + "/api/v2/users?page=" + page + "&include_totals=true&sort=created_at%3A-1&fields=" +
-        fields + "&include_fields=true&search_engine=v2",
+        uri: auth0Url + "/api/v2/users?per_page=100&page=" + page + "&include_totals=true&sort=created_at%3A-1&" +
+        "fields=email&include_fields=true&search_engine=v2",
         headers: {
           "Authorization": "Bearer " + auth0Jwt,
           "content-type": "application/json"
@@ -69,6 +98,8 @@ export module Auth0 {
         json: true
       })
         .then((res: any) => {
+          console.log("res: " + JSON.stringify(res))
+
           if (res.statusCode === 200) {
             return res.body
           }
