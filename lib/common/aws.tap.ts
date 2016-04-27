@@ -8,8 +8,8 @@ test("DynamoDb:", (ot) => {
   ot.plan(2)
 
   const databaseCli = DynamoDb.documentClientAsync("us-west-2")
-  const load = _.curry(DynamoDb.load)(databaseCli, "storage-test", "test-id")
-  const save = _.curry(DynamoDb.save)(databaseCli, "storage-test", "test-id")
+  const load = _.curry(DynamoDb.getItemWithAttrebutes)(databaseCli, "storage-test", { "id": "test-id" })
+  const save = _.curry(DynamoDb.storeKeyValue)(databaseCli, "storage-test", "test-id")
   const timestamp = new Date().getTime()
 
   ot.test("- should be able to save and load tings", (t) => {
@@ -77,8 +77,8 @@ test("SNS: should succesfulle subscribe a lambda to a SNS topic", (t) => {
   const statmentId = new Date().getTime().toString()
 
   SNS.subscribeLambda(snsCli, lambdaCli, testTopic, lambdaArn, statmentId)
-    .then((res: any) => {
-      console.log("res: " + JSON.stringify(lambdaArn))
+    .then(subscriptionArn => {
+      console.log("subscriptionArn: " + JSON.stringify(subscriptionArn))
       t.equal(1, 1)
     })
 

@@ -25,7 +25,7 @@ export interface Inject {
   sendMoney: (payout: Coinbase.Payout) => Promise<any>
   transferMoney: (payout: Coinbase.Payout) => Promise<any>
   alert: (message: any) => Promise<any>
-  snsSubscribeLambda: (topicArn: string, lambdaArn: string, statementId: string) => Promise<any>
+  snsSubscribeLambda: (topicArn: string, lambdaArn: string, statementId: string) => Promise<string>
   timeNow: () => number
   cludaVault: string
   tradeGeneratorLambdaArn: string,
@@ -132,10 +132,10 @@ export module CoinbaseNotification {
             .then(res => {
               log.info("CLUDA PAYOUT RESPONDS", res[0])
               log.info("PUBLISHER PAYOUT RESPONDS", res[1])
-              log.info("SNS EMAIL-NOTIFY SUBSCRIPTION RESPONDS", res[2])
+              log.info("SNS EMAIL-NOTIFY SUBSCRIPTION ARN", res[2])
 
               if (subscriptionInfo.autoTrader) {
-                log.info("SNS TRADE-GENERATOR SUBSCRIPTION RESPONDS", res[3])
+                log.info("SNS TRADE-GENERATOR SUBSCRIPTION ARN", res[3])
               }
 
               const respondsData: any = {

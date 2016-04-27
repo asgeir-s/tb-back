@@ -18,9 +18,11 @@ const inject: Inject = {
   sendEmail:
   _.curry(SES.send)(SES.sesClientAsync(process.env.AWS_SNS_REGION), process.env.FROM_EMAIL_SUBSCRIPTION_INFO),
   load:
-  _.curry(DynamoDb.load)(documentClient, process.env.AWS_STORAGE_TABLE, "tb-backend-ContinueSubscriptionEmail"),
+  _.curry(DynamoDb.getItemWithAttrebutes)(documentClient, process.env.AWS_STORAGE_TABLE,
+    { "id": "tb-backend-ContinueSubscriptionEmail" }),
   save:
-  _.curry(DynamoDb.save)(documentClient, process.env.AWS_STORAGE_TABLE, "tb-backend-ContinueSubscriptionEmail"),
+  _.curry(DynamoDb.storeKeyValue)(documentClient, process.env.AWS_STORAGE_TABLE,
+    "tb-backend-ContinueSubscriptionEmail"),
   getExpieringSubscriptions:
   _.curry(Subscriptions.getExpieringSubscriptions)(documentClient, process.env.AWS_DYNAMO_SUBSCRIPTIONTABLE),
   getStream:

@@ -1,0 +1,33 @@
+{
+  "name": "state-recorder",
+  "runtime": "nodejs",
+  "description": "Serverless Lambda function for project: tb-back",
+  "customName": false,
+  "customRole": false,
+  "handler": "handler.handler",
+  "timeout": 6,
+  "memorySize": 1024,
+  "authorizer": {},
+  "custom": {
+    "excludePatterns": []
+  },
+  "endpoints": [],
+  "events": [
+    {
+      "name": "mySchedule",
+      "type": "schedule",
+      "config": {
+        "schedule": "rate(5 minutes)"
+      }
+    }
+  ],
+  "environment": {
+    "SERVERLESS_PROJECT": "${project}",
+    "SERVERLESS_STAGE": "${stage}",
+    "SERVERLESS_REGION": "${region}"
+  },
+  "vpc": {
+    "securityGroupIds": [],
+    "subnetIds": []
+  }
+}

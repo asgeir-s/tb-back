@@ -17,9 +17,10 @@ const documentClient = DynamoDb.documentClientAsync(process.env.AWS_DYNAMO_REGIO
 
 const inject: CollectAuth0Emails.Inject = {
   load:
-  _.curry(DynamoDb.load)(documentClient, process.env.AWS_STORAGE_TABLE, "tb-backend-CollectAuth0Emails"),
+  _.curry(DynamoDb.getItemWithAttrebutes)(documentClient, process.env.AWS_STORAGE_TABLE,
+    { "id": "tb-backend-CollectAuth0Emails" }),
   save:
-  _.curry(DynamoDb.save)(documentClient, process.env.AWS_STORAGE_TABLE, "tb-backend-CollectAuth0Emails"),
+  _.curry(DynamoDb.storeKeyValue)(documentClient, process.env.AWS_STORAGE_TABLE, "tb-backend-CollectAuth0Emails"),
   getNewAuth0Emails: _.curry(Auth0.getNewUserEmailsExcept)(process.env.AUTH0_URL, process.env.AUTH0_READUSER_JWT),
   addEmailsToMailchimp: _.curry(Mailchimp.subscribeEmails)(process.env.MAILCHIMP_URL, process.env.MAILCHIMP_APIKEY)
 }
