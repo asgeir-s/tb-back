@@ -5,7 +5,7 @@ import * as sinon from "sinon"
 
 
 test("DynamoDb:", (ot) => {
-  ot.plan(2)
+  ot.plan(3)
 
   const databaseCli = DynamoDb.documentClientAsync("us-west-2")
   const load = _.curry(DynamoDb.getItemWithAttrebutes)(databaseCli, "storage-test", { "id": "test-id" })
@@ -34,6 +34,21 @@ test("DynamoDb:", (ot) => {
               "the retreived timestamp should be equal to the timestanm that was saved in the test")
           )
       )
+  })
+
+  ot.test("- should not be able to add new item with the same id (.addItemNoReplace)", (t) => {
+    t.plan(1)
+
+    DynamoDb.addItemNoReplace(databaseCli, "storage-test", "id", {
+      "id": "test-id",
+      "data": "test"
+    })
+      .then(okRes => {
+        t.equal(1, 2, "should not be ok")
+      })
+      .catch(errRes => {
+        t.equal(1, 1, "should fail")
+      })
   })
 })
 
@@ -67,19 +82,17 @@ test("SNS: should succesfulle publish message to topic", (t) => {
     "the responds should have a MessageId"))
 })
 
-test("SNS: should succesfulle subscribe a lambda to a SNS topic", (t) => {
+test("SNS: should succesfulle subscribe a lambda to a SNS topic (but not adde premissions if already added)", (t) => {
   t.plan(1)
 
   const testTopic = "arn:aws:sns:us-west-2:525932482084:test-topic"
   const snsCli = SNS.snsClientAsync("us-west-2")
   const lambdaCli = Lambda.lambdaClientAsync("us-west-2")
-  const lambdaArn = "arn:aws:lambda:us-west-2:525932482084:function:test-func:dev"
-  const statmentId = new Date().getTime().toString()
+  const lambdaArn = "arn:aws:lambda:us-west-2:525932482084:function:test-func-2"
 
-  SNS.subscribeLambda(snsCli, lambdaCli, testTopic, lambdaArn, statmentId)
+  SNS.subscribeLambda(snsCli, lambdaCli, testTopic, lambdaArn)
     .then(subscriptionArn => {
-      console.log("subscriptionArn: " + JSON.stringify(subscriptionArn))
-      t.equal(1, 1)
+      t.equal(1, 1, "should succssed")
     })
 
 })

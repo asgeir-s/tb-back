@@ -30,7 +30,7 @@ export module StateRecorder {
         if (typeof stateDataRes.lastSignal === "undefined") {
           return inn.setRecordedData({
             "streamId": message.streamId,
-            "lastSignal": signal
+            "signal": signal
           })
             .then(setRecordedDataRes => inn.snsUnsubscribe(stateDataRes.subscriptionArn))
             .then(snsUnsubscribeRes => {

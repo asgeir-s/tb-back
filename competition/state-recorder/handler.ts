@@ -9,7 +9,7 @@ import { log } from "../../lib/logger"
 
 
 const competitionStartTime = 1457222340000
-const competitionDynamoTable = ""
+const competitionDynamoTable = "comp3"
 
 const documentClient = DynamoDb.documentClientAsync(process.env.DYNAMO_REGION)
 

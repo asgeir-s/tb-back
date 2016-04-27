@@ -132,8 +132,8 @@ export module SNS {
    * 
    * Returns SubscriptionArn
    */
-  export function subscribeLambda(snsClient: any, lambdaClient: any, topicArn: string, lambdaArn: string,
-    statementId: string): Promise<string> {
+  export function subscribeLambda(snsClient: any, lambdaClient: any, topicArn: string, lambdaArn: string):
+    Promise<string> {
     return snsClient.subscribeAsync({
       Protocol: "lambda",
       TopicArn: topicArn,
@@ -141,27 +141,26 @@ export module SNS {
     })
       .then((res: any) => {
         const arnParts = lambdaArn.split(":")
-        if (arnParts.length === 8) {
-          return lambdaClient.addPermissionAsync2({
-            Action: "lambda:InvokeFunction",
-            FunctionName: arnParts[6],
-            Principal: "sns.amazonaws.com",
-            StatementId: statementId,
-            Qualifier: arnParts[7]
-          }).then((lambdaRes: any) => res.SubscriptionArn)
-        }
-        else if (arnParts.length === 7) {
-          return lambdaClient.addPermissionAsync2({
-            Action: "lambda:InvokeFunction",
-            FunctionName: arnParts[6],
-            Principal: "sns.amazonaws.com",
-            StatementId: statementId
-          }).then((lambdaRes: any) => res.SubscriptionArn)
-        }
-        else {
-          return "unable to parse arn. Arn length should be 8 or 7"
+        const statementId = (topicArn + lambdaArn).split(":").join("")
+
+        const prop: any = {
+          Action: "lambda:InvokeFunction",
+          FunctionName: arnParts[6],
+          Principal: "sns.amazonaws.com",
+          StatementId: statementId
         }
 
+        if (arnParts.length === 8) {
+          prop["Qualifier"] = arnParts[7]
+        }
+
+        return lambdaClient.addPermissionAsync2(prop)
+          .then((lambdaRes: any) => res.SubscriptionArn)
+          .catch((e: Error) => (e.name.indexOf("ResourceConflictException") > -1), (error: any) => {
+            console.log("The permission already exists: (ResourceConflictException). Subscription was added with " +
+              "SubscriptionArn:" + res.SubscriptionArn)
+            return res.SubscriptionArn
+          })
       })
   }
 
