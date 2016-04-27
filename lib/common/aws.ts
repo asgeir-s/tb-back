@@ -140,8 +140,28 @@ export module SNS {
       Endpoint: lambdaArn
     })
       .then((res: any) => {
+
+        /**
+         * makes a statementId that is maximun 100 in length
+         */
+        function createStatmentId(topicArnRaw: string, lambdaArnRaw: string) {
+          let topicArn = topicArnRaw.split(":").join("")
+          let lambdaArn = lambdaArnRaw.split(":").join("")
+
+          if (topicArn.length > 50) {
+            const start = topicArn.length - 50
+            topicArn = topicArn.substr(start, 50)
+          }
+
+          if (lambdaArn.length > 50) {
+            const start = lambdaArn.length - 50
+            lambdaArn = lambdaArn.substr(start, 50)
+          }
+
+          return topicArn + lambdaArn
+        }
         const arnParts = lambdaArn.split(":")
-        const statementId = (topicArn + lambdaArn).split(":").join("")
+        const statementId = createStatmentId(topicArn, lambdaArn)
 
         const prop: any = {
           Action: "lambda:InvokeFunction",
