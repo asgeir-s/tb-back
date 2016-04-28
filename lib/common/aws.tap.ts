@@ -5,14 +5,14 @@ import * as sinon from "sinon"
 
 
 test("DynamoDb:", (ot) => {
-  ot.plan(3)
+  ot.plan(4)
 
   const databaseCli = DynamoDb.documentClientAsync("us-west-2")
   const load = _.curry(DynamoDb.getItemWithAttrebutes)(databaseCli, "storage-test", { "id": "test-id" })
   const save = _.curry(DynamoDb.storeKeyValue)(databaseCli, "storage-test", "test-id")
   const timestamp = new Date().getTime()
 
-  ot.test("- should be able to save and load tings", (t) => {
+  ot.test("- should be able to save and load tings", t => {
     t.plan(1)
 
     load(["id", "ting"])
@@ -22,7 +22,7 @@ test("DynamoDb:", (ot) => {
       )
   })
 
-  ot.test("- should be possible to save new things and load them back", (t) => {
+  ot.test("- should be possible to save new things and load them back", t => {
     t.plan(1)
 
     save([["ting", "hus"], ["timestamp", timestamp]])
@@ -36,7 +36,7 @@ test("DynamoDb:", (ot) => {
       )
   })
 
-  ot.test("- should not be able to add new item with the same id (.addItemNoReplace)", (t) => {
+  ot.test("- should not be able to add new item with the same id (.addItemNoReplace)", t => {
     t.plan(1)
 
     DynamoDb.addItemNoReplace(databaseCli, "storage-test", "id", {
@@ -50,9 +50,29 @@ test("DynamoDb:", (ot) => {
         t.equal(1, 1, "should fail")
       })
   })
+
+  ot.test("- should be able to update attributes on an item (.updateAttributes)", t => {
+    t.plan(1)
+
+    DynamoDb.updateAttributes(databaseCli, "storage-test", { "id": "test-id" }, {
+      "testUpdateAttribute": {
+        "Action": "PUT",
+        "Value": {
+          "message": "mat test",
+          "time": timestamp
+        }
+      }
+    })
+      .then(updateAttributesRes => {
+        load(["testUpdateAttribute"])
+          .then(res => {
+            t.equal(res.testUpdateAttribute.time, timestamp, "the time should be updated, with the new timestamp")
+          })
+      })
+  })
 })
 
-test("SES: should send email", (t) => {
+test("SES: should send email", t => {
   t.plan(1)
 
   const sendEmailAsyncSpy = sinon.spy()
@@ -68,7 +88,7 @@ test("SES: should send email", (t) => {
 })
 
 
-test("SNS: should succesfulle publish message to topic", (t) => {
+test("SNS: should succesfulle publish message to topic", t => {
   t.plan(1)
 
   const testTopic = "arn:aws:sns:us-west-2:525932482084:test-topic"
@@ -82,7 +102,7 @@ test("SNS: should succesfulle publish message to topic", (t) => {
     "the responds should have a MessageId"))
 })
 
-test("SNS: should succesfulle subscribe a lambda to a SNS topic (but not adde premissions if already added)", (t) => {
+test("SNS: should succesfulle subscribe a lambda to a SNS topic (but not adde premissions if already added)", t => {
   t.plan(1)
 
   const testTopic = "arn:aws:sns:us-west-2:525932482084:test-topic"

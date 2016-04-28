@@ -8,5 +8,6 @@
   "eventID:subscriptions-table-stream1": "f2a106e4-969d-4136-9142-be110e41bfb9",
   "apiGatewayApi": "tb-back",
   "eventID:subscription_confirm-sub-email": "471026b5-87f4-4ee0-a0e2-0a55e4a767b1",
-  "eventID:subscription_pub-got-sub-email": "7cf061db-ef2c-47d3-80e9-3a7b61b79cba"
+  "eventID:subscription_pub-got-sub-email": "7cf061db-ef2c-47d3-80e9-3a7b61b79cba",
+  "eventID:stream_state-recorder": "0a408200-3ef6-46c2-8154-be3849c2aee0"
 }

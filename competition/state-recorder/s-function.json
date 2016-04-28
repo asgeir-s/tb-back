@@ -2,9 +2,9 @@
   "name": "state-recorder",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: tb-back",
-  "customName": false,
+  "customName": "tb-back_state-recorder",
   "customRole": false,
-  "handler": "handler.handler",
+  "handler": "competition/state-recorder/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -14,17 +14,22 @@
   "endpoints": [],
   "events": [
     {
-      "name": "mySchedule",
-      "type": "schedule",
+      "name": "stream_state-recorder",
+      "type": "dynamodbstream",
       "config": {
-        "schedule": "rate(5 minutes)"
+        "streamArn": "${dynamo-table-streams-stream}",
+        "startingPosition": "LATEST",
+        "batchSize": 50,
+        "enabled": true
       }
     }
   ],
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "DYNAMO_REGION": "${dynamo-region}",
+    "AWS_DYNAMO_STREAMTABLE": "${dynamo-table-streams}"
   },
   "vpc": {
     "securityGroupIds": [],

@@ -62,6 +62,28 @@ export module DynamoDb {
     }).then((res: any) => res.Item)
   }
 
+  /**
+   * Update the attributes of an item.
+   * 
+   * attributeUpdates example: 
+   * 
+   *  {
+   *    someKey: {
+   *      Action: 'ADD | PUT | DELETE',
+   *      Value: someValue // "str" | 10 | true | false | null | [1, "a"] | {a: "b"} 
+   *    },
+   *    // anotherKey: ... 
+   *  }
+   */
+  export function updateAttributes(documentclient: any, tableName: string, primaryKey: any, attributeUpdates: any):
+    Promise<any> {
+    return documentclient.updateAsync({
+      "TableName": tableName,
+      "Key": primaryKey,
+      "AttributeUpdates": attributeUpdates
+    })
+  }
+
 }
 
 export module SES {

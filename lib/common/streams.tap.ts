@@ -19,7 +19,7 @@ test("Streams.getStream:", (ot) => {
   let streamId: string
 
   ot.test("- should be able to get Public stream info", (t) => {
-    t.plan(10)
+    t.plan(11)
 
     Streams.getStream(databaseCli, streamsTableName, Streams.AuthLevel.Public,
       "43a2cfb3-6026-4a85-b3ab-2468f7d963aa")
@@ -29,6 +29,7 @@ test("Streams.getStream:", (ot) => {
         t.equal(_.has("idOfLastSignal", stream), false, "should not return auth fields")
         t.equal(_.has("streamPrivate", stream), false, "should not return private fields")
 
+        t.equal(_.has("recordedState", stream), true, "should return public fields")
         t.equal(_.has("currencyPair", stream), true, "should return public fields")
         t.equal(_.has("name", stream), true, "should return public fields")
         t.equal(_.has("stats", stream), true, "should return public fields")
@@ -39,7 +40,7 @@ test("Streams.getStream:", (ot) => {
   })
 
   ot.test("- BATCH GET", (t) => {
-    t.plan(10)
+    t.plan(11)
 
     Streams.getStreams(databaseCli, streamsTableName, Streams.AuthLevel.Public,
       ["43a2cfb3-6026-4a85-b3ab-2468f7d963aa"])
@@ -50,6 +51,7 @@ test("Streams.getStream:", (ot) => {
         t.equal(_.has("idOfLastSignal", stream), false, "should not return auth fields")
         t.equal(_.has("streamPrivate", stream), false, "should not return private fields")
 
+        t.equal(_.has("recordedState", stream), true, "should return public fields")
         t.equal(_.has("currencyPair", stream), true, "should return public fields")
         t.equal(_.has("name", stream), true, "should return public fields")
         t.equal(_.has("stats", stream), true, "should return public fields")
@@ -70,13 +72,14 @@ test("Streams.getStream:", (ot) => {
   })
 
   ot.test("- should be able to get Auth stream info", (t) => {
-    t.plan(10)
+    t.plan(11)
 
     Streams.getStream(databaseCli, streamsTableName, Streams.AuthLevel.Auth,
       "43a2cfb3-6026-4a85-b3ab-2468f7d963aa")
       .then((stream) => {
         t.equal(_.has("streamPrivate", stream), false, "should not return private fields")
 
+        t.equal(_.has("recordedState", stream), true, "should return public fields")
         t.equal(_.has("currencyPair", stream), true, "should return public fields")
         t.equal(_.has("name", stream), true, "should return public fields")
         t.equal(_.has("stats", stream), true, "should return public fields")
@@ -90,12 +93,13 @@ test("Streams.getStream:", (ot) => {
   })
 
   ot.test("- should be able to get Private stream info", (t) => {
-    t.plan(10)
+    t.plan(11)
 
     Streams.getStream(databaseCli, streamsTableName, Streams.AuthLevel.Private,
       "43a2cfb3-6026-4a85-b3ab-2468f7d963aa")
       .then((stream) => {
         t.equal(_.has("streamPrivate", stream), true, "should return private fields")
+        t.equal(_.has("recordedState", stream), true, "should return public fields")
         t.equal(_.has("currencyPair", stream), true, "should return public fields")
         t.equal(_.has("name", stream), true, "should return public fields")
         t.equal(_.has("stats", stream), true, "should return public fields")
@@ -138,7 +142,7 @@ test("Streams.getStream:", (ot) => {
   })
 
   ot.test("- should get Streams.getAllStremsPublic: ", (t) => {
-    t.plan(30)
+    t.plan(33)
 
     Streams.getAllStremsPublic(databaseCli, streamsTableName)
       .then((streams) => {
@@ -148,6 +152,7 @@ test("Streams.getStream:", (ot) => {
           t.equal(_.has("idOfLastSignal", stream), false, "should not return auth fields")
           t.equal(_.has("streamPrivate", stream), false, "should not return private fields")
 
+          t.equal(_.has("recordedState", stream), true, "should return public fields")
           t.equal(_.has("currencyPair", stream), true, "should return public fields")
           t.equal(_.has("name", stream), true, "should return public fields")
           t.equal(_.has("stats", stream), true, "should return public fields")

@@ -17,46 +17,58 @@ import { Signal } from "../../lib/common/typings/signal"
 export module StateRecorder {
 
   export interface Inject {
-    setRecordedData: (item: any) => Promise<any>, // do not overwrite
-    getRecordedData: (key: any) => Promise<any>,
-    snsUnsubscribe: (subscriptionArn: string) => Promise<any>
+    updateOrAddAttribute: (primaryKey: any, attributeUpdates: any) => Promise<any>,
+    recordeStartTime: number
   }
 
-  export function action(inn: Inject, message: any, context: Context): Promise<Responds> {
-    const signal = message.signals[0] as Signal
+  export function action(inn: Inject, records: Array<any>, context: Context): Promise<Responds> {
 
-    return inn.getRecordedData({ "streamId": message.streamId })
-      .then(stateDataRes => {
-        if (typeof stateDataRes.lastSignal === "undefined") {
-          return inn.setRecordedData({
-            "streamId": message.streamId,
-            "signal": signal
+    return Promise.map(records, record => {
+      const newImage = record.dynamodb.NewImage
+      const alreadyRecorded = _.has("recordedState", newImage) &&
+        _.has(inn.recordeStartTime.toString(), newImage.recordedState.M)
+
+      if (!alreadyRecorded &&
+        newImage.timeOfLastSignal.N >= inn.recordeStartTime) {
+        const lastSignal = JSON.parse(newImage.lastSignal.S)
+
+        return recordState(record.dynamodb.Keys.id.S, inn.recordeStartTime, lastSignal, newImage.recordedState)
+          .then(res => {
+            return {
+              "message": "recorded last signal",
+              "streamId": record.dynamodb.Keys.id.S,
+              "signal": lastSignal
+            }
           })
-            .then(setRecordedDataRes => inn.snsUnsubscribe(stateDataRes.subscriptionArn))
-            .then(snsUnsubscribeRes => {
-              return {
-                "GRID": context.awsRequestId,
-                "data": {
-                  "recordedSignal": signal,
-                  "stateDataRes": stateDataRes,
-                  "unsubscribeLambdaRes": snsUnsubscribeRes
-                },
-                "success": true
-              } as any
-            })
-        }
-        else {
-          // error
-          return {
-            "GRID": context.awsRequestId,
-            "data": {
-              "message": "already recorded",
-              "recordedSignal": signal,
-              "stateDataRes": stateDataRes
-            },
-            "success": false
-          }
+      }
+      else {
+        return Promise.resolve({
+          "message": alreadyRecorded ? "already recorded" : "time is before recordeStartTime or stream has no signals",
+          "streamId": record.dynamodb.Keys.id.S,
+        })
+      }
+    })
+      .then(dataRes => {
+        return {
+          "GRID": context.awsRequestId,
+          "data": dataRes,
+          "success": true
         }
       })
+
+
+    function recordState(streamId: string, timeStamp: number, signal: Signal, previousRecordedState: any):
+      Promise<any> {
+      const newValue = previousRecordedState == null ? {} : previousRecordedState.M
+      newValue[timeStamp.toString()] = { "firstSignal": signal }
+      return inn.updateOrAddAttribute({ "id": streamId },
+        {
+          "recordedState": {
+            "Action": "PUT",
+            "Value": newValue
+          }
+        })
+    }
   }
+
 }

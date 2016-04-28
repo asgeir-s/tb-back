@@ -34,4 +34,5 @@ export interface Stream {
   status?: number
   streamPrivate?: StreamPrivate
   lastSignal?: Signal
+  recordedState?: any
 }

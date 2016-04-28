@@ -1,22 +1,144 @@
 {
   "Records": [
     {
-      "EventSource": "aws:sns",
-      "EventVersion": "1.0",
-      "EventSubscriptionArn": "arn:aws:sns:us-east-1:525932482084:0a9ea22b-5d62-4951-be3b-bf619ab6411d:a73d5cd6-fc05-4d56-8289-b7df906c0ccf",
-      "Sns": {
-        "Type": "Notification",
-        "MessageId": "f48f2b69-b0c2-501c-8e08-645c9511b538",
-        "TopicArn": "arn:aws:sns:us-east-1:525932482084:0a9ea22b-5d62-4951-be3b-bf619ab6411d",
-        "Subject": null,
-        "Message": "{\n  \"streamName\": \"gie89\",\n  \"streamId\": \"0a9ea22b-5d62-4951-be3b-bf619ab6411d\",\n  \"signals\": [{\n    \"timestamp\": 1455104851968,\n    \"price\": 378.6200,\n    \"change\": 0E-10,\n    \"id\": 3,\n    \"valueInclFee\": 1.0040283877,\n    \"changeInclFee\": -0.0020000000,\n    \"value\": 1.0080404686,\n    \"signal\": 0\n  }, {\n    \"timestamp\": 1455504851968,\n    \"price\": 398.6200,\n    \"change\": 0E-10,\n    \"id\": 4,\n    \"valueInclFee\": 1.0040283877,\n    \"changeInclFee\": -0.0020000000,\n    \"value\": 1.0080404686,\n    \"signal\": -1\n  }]\n}",
-        "Timestamp": "2016-02-10T11:48:35.810Z",
-        "SignatureVersion": "1",
-        "Signature": "WwFRE7pOoK4XijDGa/BqYTWfwNkXTe0aI/n7gSdP1HMT27HJr3v6kJ3P//d7ghoxrAdeTH18D02ZWCFzxP1+IwsCm/kUbUqAp/p/+Vj5zKjDaXV3b+q1pyk5yWAjie7Glk9s4lOMz+SQ1Y9/5dqpmOtfFMXEIuyB5yWYwzEq71bZi7LJj0lwOSpiCYSYg9jCCkHTPQXFq28QOoS1p1ra6iyLY69mmb6nV6clnafxeBNQAABCYlwkCETIUBLYX07daweYeDkIXjn4BKeFhsB6+/O8pdEBOodg64olE/sB73dvJWOPFQpNhH///Zoh32HghwRDCMd5JOqYB3VZV/1K/w==",
-        "SigningCertUrl": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-bb750dd426d95ee9390147a5624348ee.pem",
-        "UnsubscribeUrl": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:525932482084:0a9ea22b-5d62-4951-be3b-bf619ab6411d:a73d5cd6-fc05-4d56-8289-b7df906c0ccf",
-        "MessageAttributes": {}
-      }
+      "eventID": "07e6ec639da1ec91449275a6f116d963",
+      "eventName": "MODIFY",
+      "eventVersion": "1.0",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-west-2",
+      "dynamodb": {
+        "Keys": {
+          "id": {
+            "S": "97351592-b632-4987-94e1-1ac5f5f9fe2f"
+          }
+        },
+        "NewImage": {
+          "buyAndHoldChange": {
+            "N": "-0.00131367292225201072386058981233244"
+          },
+          "numberOfSignals": {
+            "N": "25"
+          },
+          "allTimeValueIncl": {
+            "N": "0.9575673425"
+          },
+          "id": {
+            "S": "97351592-b632-4987-94e1-1ac5f5f9fe2f"
+          },
+          "maxDDPrevMax": {
+            "N": "1"
+          },
+          "maxDrawDown": {
+            "N": "0.0424326575"
+          },
+          "subscriptionPriceUSD": {
+            "N": "5"
+          },
+          "allTimeValueExcl": {
+            "N": "0.9986863271"
+          },
+          "payoutAddress": {
+            "S": "1kqHKEYYC8CQPxyV53nCju4Lk2ufpQqA2"
+          },
+          "topicArn": {
+            "S": "arn:aws:sns:us-west-2:525932482084:97351592-b632-4987-94e1-1ac5f5f9fe2f"
+          },
+          "numberOfLoosingTrades": {
+            "N": "12"
+          },
+          "lastSignal": {
+            "S": "{\"timestamp\":1464771273728,\"price\":372.5500,\"change\":0E-10,\"id\":26,\"valueInclFee\":0.9556522078,\"changeInclFee\":-0.0020000000,\"value\":0.9986863271,\"signal\":1}"
+          },
+          "maxDDMax": {
+            "N": "1"
+          },
+          "currencyPair": {
+            "S": "btcUSD"
+          },
+          "numberOfProfitableTrades": {
+            "N": "0"
+          },
+          "apiKeyId": {
+            "S": "none"
+          },
+          "accumulatedProfit": {
+            "N": "0"
+          },
+          "maxDDPrevMin": {
+            "N": "0.9575673425"
+          },
+          "userId": {
+            "S": "auth0|563c81e8ed40b21c524b86ea"
+          },
+          "numberOfClosedTrades": {
+            "N": "12"
+          },
+          "firstPrice": {
+            "N": "373"
+          },
+          "accumulatedLoss": {
+            "N": "0.0493136729"
+          },
+          "timeOfFirstSignal": {
+            "N": "1454770487296"
+          },
+          "idOfLastSignal": {
+            "N": "26"
+          },
+          "name": {
+            "S": "Super Stream673"
+          },
+          "exchange": {
+            "S": "bitfinex"
+          },
+          "timeOfLastSignal": {
+            "N": "1464771273728"
+          },
+          "status": {
+            "N": "1"
+          },
+          "recordedState": {
+            "M": {
+              "1457222340000": {
+                "M": {
+                  "firstSignal": {
+                    "M": {
+                      "change": {
+                        "N": "0"
+                      },
+                      "changeInclFee": {
+                        "N": "-0.002"
+                      },
+                      "id": {
+                        "N": "26"
+                      },
+                      "price": {
+                        "N": "372.55"
+                      },
+                      "signal": {
+                        "N": "1"
+                      },
+                      "timestamp": {
+                        "N": "1464771273728"
+                      },
+                      "value": {
+                        "N": "0.9986863271"
+                      },
+                      "valueInclFee": {
+                        "N": "0.9556522078"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SequenceNumber": "552904200000000003679485137",
+        "SizeBytes": 841,
+        "StreamViewType": "NEW_IMAGE"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-west-2:525932482084:table/streams-staging/stream/2016-04-28T09:14:53.834"
     }
   ]
 }

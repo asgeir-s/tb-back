@@ -20,7 +20,8 @@ export module Streams {
   const publicAttributes: Array<string> = ["accumulatedLoss", "accumulatedProfit", "allTimeValueExcl",
     "allTimeValueIncl", "buyAndHoldChange", "currencyPair", "exchange", "firstPrice", "id", "maxDDMax",
     "maxDDPrevMax", "maxDDPrevMin", "maxDrawDown", "name", "numberOfClosedTrades", "numberOfLoosingTrades",
-    "numberOfProfitableTrades", "numberOfSignals", "subscriptionPriceUSD", "timeOfFirstSignal", "timeOfLastSignal"]
+    "numberOfProfitableTrades", "numberOfSignals", "subscriptionPriceUSD", "timeOfFirstSignal", "timeOfLastSignal",
+    "recordedState"]
 
 
   export function getStream(documentClient: any, streamTableName: string, authLevel: AuthLevel,
@@ -80,7 +81,7 @@ export module Streams {
       .map((rawStreamJson: any) => json2Stream(AuthLevel.Public, rawStreamJson))
   }
 
-  const getJsonField: (p: string, obj: {}) => any = _.propOr("")
+  const getJsonField: (prop: string, objct: {}) => any = _.propOr("")
 
   function json2Stream(authLevel: AuthLevel, json: any): Stream {
     const stats: Stats = {
@@ -107,7 +108,8 @@ export module Streams {
           stats: stats,
           subscriptionPriceUSD: getJsonField("subscriptionPriceUSD", json),
           exchange: getJsonField("exchange", json),
-          id: getJsonField("id", json)
+          id: getJsonField("id", json),
+          recordedState: getJsonField("recordedState", json)
         }
       }
       case AuthLevel.Auth: {
@@ -122,7 +124,8 @@ export module Streams {
             exchange: getJsonField("exchange", json),
             id: getJsonField("id", json),
             idOfLastSignal: getJsonField("idOfLastSignal", json),
-            status: getJsonField("status", json)
+            status: getJsonField("status", json),
+            recordedState: getJsonField("recordedState", json)
           }
         }
         else {
@@ -135,7 +138,8 @@ export module Streams {
             id: getJsonField("id", json),
             idOfLastSignal: getJsonField("idOfLastSignal", json),
             status: getJsonField("status", json),
-            lastSignal: json2Signal(JSON.parse(lastSignalRaw))
+            lastSignal: json2Signal(JSON.parse(lastSignalRaw)),
+            recordedState: getJsonField("recordedState", json)
           }
         }
       }
@@ -158,7 +162,8 @@ export module Streams {
             id: getJsonField("id", json),
             idOfLastSignal: getJsonField("idOfLastSignal", json),
             streamPrivate: streamPrivate,
-            status: getJsonField("status", json)
+            status: getJsonField("status", json),
+            recordedState: getJsonField("recordedState", json)
           }
         }
         else {
@@ -172,7 +177,8 @@ export module Streams {
             idOfLastSignal: getJsonField("idOfLastSignal", json),
             status: getJsonField("status", json),
             streamPrivate: streamPrivate,
-            lastSignal: json2Signal(JSON.parse(lastSignalRaw))
+            lastSignal: json2Signal(JSON.parse(lastSignalRaw)),
+            recordedState: getJsonField("recordedState", json)
           }
         }
       }
@@ -183,7 +189,8 @@ export module Streams {
           stats: stats,
           subscriptionPriceUSD: getJsonField("subscriptionPriceUSD", json),
           exchange: getJsonField("exchange", json),
-          id: getJsonField("id", json)
+          id: getJsonField("id", json),
+          recordedState: getJsonField("recordedState", json)
         }
       }
     }
@@ -217,9 +224,9 @@ export module Streams {
     }).then((res: any) => res.Attributes.apiKeyId)
   }
 
-/**
- * returns the updated subscriptionPriceUSD
- */
+  /**
+   * returns the updated subscriptionPriceUSD
+   */
   export function updateSubscriptionPrice(documentClient: any, streamTableName: string, streamId: string,
     newSubscriptionPrice: number): Promise<number> {
     return documentClient.updateAsync({
@@ -235,34 +242,34 @@ export module Streams {
     }).then((res: any) => res.Attributes.subscriptionPriceUSD)
   }
 
-// legacy:
+  // legacy:
 
-/**
- * returns the new streamId
- */
-export function addNewStream(streamServiceUrl: string, streamServiceApiKey: string, GRID: string,
-  newStreamRequest: NewStreamRequest): Promise<string> {
-  return requestAsync({
-    method: "POST",
-    uri: streamServiceUrl + "/streams",
-    headers: {
-      "Global-Request-ID": GRID,
-      "content-type": "application/json",
-      "Authorization": "apikey " + streamServiceApiKey
-    },
-    body: newStreamRequest,
-    json: true
-  })
-    .then((res: any) => {
-      if (res.statusCode === 409) {
-        throw new Error("A stream with this name already exists.")
-      }
-      else if (res.statusCode < 200 || res.statusCode >= 300) {
-        throw new Error(JSON.stringify(res))
-      }
-      else {
-        return res.body.id
-      }
+  /**
+   * returns the new streamId
+   */
+  export function addNewStream(streamServiceUrl: string, streamServiceApiKey: string, GRID: string,
+    newStreamRequest: NewStreamRequest): Promise<string> {
+    return requestAsync({
+      method: "POST",
+      uri: streamServiceUrl + "/streams",
+      headers: {
+        "Global-Request-ID": GRID,
+        "content-type": "application/json",
+        "Authorization": "apikey " + streamServiceApiKey
+      },
+      body: newStreamRequest,
+      json: true
     })
-}
+      .then((res: any) => {
+        if (res.statusCode === 409) {
+          throw new Error("A stream with this name already exists.")
+        }
+        else if (res.statusCode < 200 || res.statusCode >= 300) {
+          throw new Error(JSON.stringify(res))
+        }
+        else {
+          return res.body.id
+        }
+      })
+  }
 }

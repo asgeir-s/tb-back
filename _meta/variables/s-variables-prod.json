@@ -29,5 +29,6 @@
   "auth0-url": "https://cluda.auth0.com",
   "auth0-jwt-secret": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJLbW8xMFFHcENPeEtIRFg2VEhKQzJzWmJlWEpYMktDbiIsInNjb3BlcyI6eyJ1c2Vyc19hcHBfbWV0YWRhdGEiOnsiYWN0aW9ucyI6WyJ1cGRhdGUiXX0sInVzZXJzIjp7ImFjdGlvbnMiOlsicmVhZCJdfX0sImlhdCI6MTQ1NDUxODQ4NywianRpIjoiMWMxZTkxNjA3ODY3ZTEyYTEwZmQ2OTVjZTYxZWYwNDgifQ.xwh6dCyidm-nxd2Q6YAZcW7K-xQvLIlZQoIHkxSOGb4",
   "mailchimp-url": "https://us10.api.mailchimp.com",
-  "mailchimp-apikey": "2db35d2b1f007300242a7065a49e3b8f-us10"
+  "mailchimp-apikey": "2db35d2b1f007300242a7065a49e3b8f-us10",
+  "dynamo-table-streams-stream": ""
 }
