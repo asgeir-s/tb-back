@@ -10,7 +10,7 @@ import { log } from "../../lib/logger"
 const inject: StateRecorder.Inject = {
     updateOrAddAttribute: _.curry(DynamoDb.updateAttributes)(DynamoDb.documentClientAsync(process.env.DYNAMO_REGION),
         process.env.AWS_DYNAMO_STREAMTABLE),
-    recordeStartTime: 1457222340000
+    recordeStartTime: 1462104000000
 }
 
 export function handler(event: any, context: Context) {
