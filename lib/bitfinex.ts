@@ -57,6 +57,10 @@ export module Bitfinex {
         .then(res => {
           console.log("closeAllPositions / cancleAllOrders res: " + JSON.stringify(res))
 
+          if(res.message.indexOf("Could not find a key matching the given X-BFX-APIKEY") > -1) {
+            reject(res.message)
+          }
+
           getActivePositionBtcUsd(apiKey, apiSecret)
             .then(activeBtcUsdPosition => {
               console.log("closeAllPositions / activeBtcUsdPosition res: " + JSON.stringify(activeBtcUsdPosition))
@@ -144,8 +148,10 @@ export module Bitfinex {
       "nonce": Date.now().toString()
     }
     return requestPostAsync(sign(payload, apiKey, apiSecret, "https://api.bitfinex.com/v1/margin_infos"))
-      .then((res: any) =>
-        _.find((item: any) => item.on_pair === "BTCUSD", JSON.parse(res.body)[0].margin_limits).tradable_balance
+      .then((res: any) => {
+        console.log("getTradableBalance res: " + JSON.stringify(JSON.parse(res.body)))
+        return _.find((item: any) => item.on_pair === "BTCUSD", JSON.parse(res.body)[0].margin_limits).tradable_balance
+        }
       )
   }
 
