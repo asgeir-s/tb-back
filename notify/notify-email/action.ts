@@ -10,7 +10,7 @@ import { Responds } from "../../lib/common/typings/responds"
 
 export interface Inject {
   sendEmail: (email: SES.Email) => Promise<any>,
-  getActiveSubscriptions: (streamId: string, expirationTime: number) => Promise<any>,
+  getActiveSubscriptions: (streamId: string, expirationTime: number) => Promise<Array<any>>,
   timeNow: () => number
 }
 
@@ -24,9 +24,9 @@ export module NotifyEmail {
     })
 
     return inn.getActiveSubscriptions(message.streamId, inn.timeNow())
-      .then((subscriptions: any) => {
+      .then((subscriptions: Array<any>) => {
         if (_.isEmpty(subscriptions)) {
-          log.info("theire are no active email subscribers", {"streamId": message.streamId})
+          log.info("theire are no active email subscribers", { "streamId": message.streamId })
           return {
             "GRID": context.awsRequestId,
             "data": "no active email subscribers",
@@ -34,22 +34,37 @@ export module NotifyEmail {
           }
         }
         else {
-          const email: SES.Email = {
-            subject: generateEmailSubject(message.streamName, message.signals),
-            body: generateEmailBody(message.streamId, message.streamName, message.signals),
-            resipians: _.map(_.prop("email"), subscriptions)
-          }
-          const logEmail = _.clone(email)
-          logEmail.body = logEmail.body.substr(0, 20)
-          log.info("sending email", logEmail)
+          const emails = Array<Promise<any>>()
 
-          return inn.sendEmail(email).then((responds: any) => {
+          subscriptions.forEach(subscription => {
+            const email: SES.Email = {
+              subject: generateEmailSubject(message.streamName, message.signals),
+              body: generateEmailBody(message.streamId, message.streamName, message.signals),
+              resipians: _.map(_.prop("email"), subscription)
+            }
+            const logEmail = _.clone(email)
+            logEmail.body = logEmail.body.substr(0, 20)
+            log.info("sending email", logEmail)
+
+            emails.push(
+              inn.sendEmail(email).then((responds: any) => {
+                return {
+                  "GRID": context.awsRequestId,
+                  "data": responds,
+                  "success": true
+                }
+              })
+            )
+          })
+
+          return Promise.all(emails).then(res => {
             return {
               "GRID": context.awsRequestId,
-              "data": responds,
+              "data": JSON.stringify(res),
               "success": true
             }
           })
+
         }
       })
   }
