@@ -40,7 +40,7 @@ export module NotifyEmail {
             const email: SES.Email = {
               subject: generateEmailSubject(message.streamName, message.signals),
               body: generateEmailBody(message.streamId, message.streamName, message.signals),
-              resipians: _.map(_.prop("email"), subscription)
+              resipians: [subscription.email]
             }
             const logEmail = _.clone(email)
             logEmail.body = logEmail.body.substr(0, 20)
