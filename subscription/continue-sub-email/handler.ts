@@ -33,7 +33,7 @@ const inject: Inject = {
   _.curry(Coinbase.createCheckout)(Coinbase.coinbaseClient(process.env.COINBASE_SANDBOX, process.env.COINBASE_APIKEY,
     process.env.COINBASE_APISECRET)),
   autoTraderPrice:
-  process.env.AUTOTRADER_PRICE,
+  parseFloat(process.env.AUTOTRADER_PRICE),
   timeNow: () =>
     new Date().getTime()
 }

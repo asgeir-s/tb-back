@@ -62,12 +62,12 @@ export module ContinueSubscriptionEmail {
             const encryptedSubscriptionInfo = res[1]
 
             let price = stream.subscriptionPriceUSD
-            if (event.autoTrader === "true") { price += inn.autoTraderPrice }
+            if (subscription.autoTrader === true) { price += inn.autoTraderPrice }
 
             log.info("price", price)
 
             return inn.createCheckout("Stream Subscription", price.toString(), "Subscription to stream: " +
-              stream.name + ", autoTrader: " + event.autoTrader, encryptedSubscriptionInfo)
+              stream.name + ", autoTrader: " + subscription.autoTrader, encryptedSubscriptionInfo)
           })
           .then(checkout => {
             log.info("checkout from coinbase", checkout)
