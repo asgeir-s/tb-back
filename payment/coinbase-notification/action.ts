@@ -76,7 +76,7 @@ export module CoinbaseNotification {
             paymentUsd: parseFloat(event.data.amount.amount),
             receiveAddress: event.data.bitcoin_address,
             refundAddress: event.data.refund_address,
-            renewed: renewing,
+            renewed: false, //renewing TODO the old subscription should get this
             streamId: subscriptionInfo.streamId,
             transactionId: event.data.transaction.id,
             autoTrader: subscriptionInfo.autoTrader,
