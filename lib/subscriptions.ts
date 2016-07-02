@@ -106,7 +106,6 @@ export module Subscriptions {
 
   export function updateAutoTraderData(documentClient: any, subscriptionTable: string,
     streamId: string, subscriptionExpirationTime: number, newAutoTraderData: any): Promise<any> {
-
     return documentClient.updateAsync({
       TableName: subscriptionTable,
       Key: {
@@ -117,6 +116,22 @@ export module Subscriptions {
       ExpressionAttributeValues: {
         ":newAutoTraderData": newAutoTraderData
       }
-    }).then((responds: any) => responds.Items)
+    })
+  }
+
+// for inactivating a subscription
+  export function markSubscriptionRenewed(documentClient: any, subscriptionTable: string,
+    streamId: string, subscriptionExpirationTime: number): Promise<any> {
+    return documentClient.updateAsync({
+      TableName: subscriptionTable,
+      Key: {
+        "streamId": streamId,
+        "expirationTime": subscriptionExpirationTime
+      },
+      UpdateExpression: "set renewed=:trueval",
+      ExpressionAttributeValues: {
+        ":trueval": true
+      }
+    })
   }
 }

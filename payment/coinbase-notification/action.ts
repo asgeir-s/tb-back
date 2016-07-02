@@ -22,6 +22,7 @@ export interface Inject {
   getStream: (streamId: string) => Promise<Stream> // must be stream Private
   decryptSubscriptionInfo: (cryptData: CryptedData) => Promise<SubscriptionRequest>
   addSubscription: (subscription: Subscription) => Promise<AddSubscriptionResponds>
+  markSubscriptionRenewed: (streamId: string, expirationTime: number) => Promise<any>
   sendMoney: (payout: Coinbase.Payout) => Promise<any>
   transferMoney: (payout: Coinbase.Payout) => Promise<any>
   alert: (message: any) => Promise<any>
@@ -76,7 +77,7 @@ export module CoinbaseNotification {
             paymentUsd: parseFloat(event.data.amount.amount),
             receiveAddress: event.data.bitcoin_address,
             refundAddress: event.data.refund_address,
-            renewed: false, //renewing TODO the old subscription should get this
+            renewed: false,
             streamId: subscriptionInfo.streamId,
             transactionId: event.data.transaction.id,
             autoTrader: subscriptionInfo.autoTrader,
@@ -86,7 +87,14 @@ export module CoinbaseNotification {
           })
             .then(res => {
               log.info("responds from addSubscription", res)
-              return inn.getStream(subscriptionInfo.streamId)
+              if (renewing) {
+                log.info("marking old subscrption as renewed", {})
+                return inn.markSubscriptionRenewed(subscriptionInfo.streamId, subscriptionInfo.oldexpirationTime)
+                  .then(res => inn.getStream(subscriptionInfo.streamId))
+              }
+              else {
+                return inn.getStream(subscriptionInfo.streamId)
+              }
             })
             .then(stream => {
               const cludaPayout = {
