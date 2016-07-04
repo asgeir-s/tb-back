@@ -51,6 +51,7 @@ test("CoinbaseNotification:", (ot) => {
         STREAMS_TABLE, Streams.AuthLevel.Private),
       decryptSubscriptionInfo: _.curry(Crypto.decrypt)(COINBASE_ENCRYPTION_PASSWORD),
       addSubscription: _.curry(Subscriptions.addSubscription)(documentClient, "subscriptions-staging"),
+      markSubscriptionRenewed: _.curry(Subscriptions.markSubscriptionRenewed)(documentClient, "subscriptions-staging"),
       sendMoney: _.curry(Coinbase.sendMoney)(coinbaseClient, COINBASE_ACCOUNT_PRIMARY),
       transferMoney: _.curry(Coinbase.transferMoney)(coinbaseClient, COINBASE_ACCOUNT_PRIMARY),
       alert: _.curry(SNS.publish)(snsClient, SNS_ALERT_TOPIC), // new

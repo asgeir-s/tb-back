@@ -12,15 +12,7 @@
     "excludePatterns": []
   },
   "endpoints": [],
-  "events": [
-    {
-      "name": "mySchedule",
-      "type": "schedule",
-      "config": {
-        "schedule": "rate(5 minutes)"
-      }
-    }
-  ],
+  "events": [],
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",

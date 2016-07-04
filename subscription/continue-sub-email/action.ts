@@ -112,7 +112,8 @@ export module ContinueSubscriptionEmail {
         `.</p> <p style="text-align: center;margin-bottom: 30px;font-size: 1.3em;">` +
         `<a style="text-align: center;font-size: 1.3em;" href="https://www.coinbase.com/checkouts/` +
         paymentCode +
-        `" target="_blank">Continue subscription for 30 more days</a></p>`,
+        `" target="_blank">Continue subscription for 30 more days</a></p>` + 
+        `<p><small>If you have any problems opening this link, please try opening it in incognito/private mode.</small></p>`,
         subscription.streamId),
       resipians: [subscription.email]
     }
