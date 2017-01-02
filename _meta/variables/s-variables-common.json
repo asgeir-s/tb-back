@@ -1,6 +1,6 @@
 {
   "project": "tb-back",
-  "auth0-getUsers-secret": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJLbW8xMFFHcENPeEtIRFg2VEhKQzJzWmJlWEpYMktDbiIsInNjb3BlcyI6eyJ1c2VycyI6eyJhY3Rpb25zIjpbInJlYWQiXX19LCJpYXQiOjE0NTUxMTUxODQsImp0aSI6ImMzMjhmOTlhY2M1MjJjODljNjc4OTEyN2I4NTIxMzFlIn0.RWMDR_2XtMs6nfP6Erx1GVSW7S2BHOKxxQdVagOnVvM",
+  "auth0-getUsers-secret": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJLbW8xMFFHcENPeEtINlRISkMyc1piZVhKWDJLQ24iLCJzY29wZXMiOnsidXNlcnMiOnsiYWN0aW9ucyI6WyJyZWFkIl19fSwiaWF0IjoxNDU1MTE1MTg0LCJqdGkiOiJjMzI4Zjk5YWNjNWM4OWM2Nzg5MTI3Yjg1MjEzMWUifQ.8OmfVEuFvhPhdjgOroRMT3kKr6pW5ChKqcxLkygAJuU",
   "coinbase-notification-ip-range": "54.175.255.192/27",
   "autotrader_price_usd": "12"
 }
