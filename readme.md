@@ -1,4 +1,3 @@
-
 Serverless backend (not accessed directly by users) for TradersBit. TradersBit is shut down and open sourced.
 
 This project contains serverless (AWS Lambda) functions that are not directly accessed by a user. It is using the [Serverless framework](https://github.com/serverless/serverless).
@@ -39,7 +38,6 @@ TradersBit will also host trading competitions. For instance, most profitable st
   * () "Compitition Winner Computer"
 
 ## Testing
-
 Currently AWS Lambda runs on Node.js: v0.10.36. Therfore, it must be tested on that version of node:
 
     nvm use 0.10.36
